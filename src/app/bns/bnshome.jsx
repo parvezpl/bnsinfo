@@ -177,7 +177,7 @@ export default function BnsHome() {
 
 
     return (
-        <div className=' flex-col w-full text-black bg-gray-100'>
+        <div className=' flex-col w-full text-black bg-gray-50'>
             <div className='flex flex-col p-2 bg-gray-100 border-b-4 border-gray-200 drop-shadow-black'>
                 <div className=''>
                     <h1 className=' text-3xl font-bold text-center my-4 capitalize'>bharatiya nyaya sanhita 2023</h1>
@@ -189,23 +189,23 @@ export default function BnsHome() {
                     </div>
                     <div className='flex flex-row items-center justify-center gap-2'>
                         <input type="text" placeholder="Search..." className='border border-gray-500 rounded-lg p-2' onChange={searchhandler} />
-                        <button className='bg-blue-500 text-white rounded-lg p-2 ml-2'>Search</button>
+                        <button className='bg-blue-500 text-white rounded-lg p-2 ml-2 select-none touch-manipulation active:bg-green-600'>Search</button>
                     </div>
                 </div>
             </div>
             <div className='flex relative flex-row justify-center '>
-                <div ref={sidebarRef} className={` absolute sm:relative left-0 flex-col items-center w-fit  overflow-auto p-1 bg-gray-400  shadow-md ${sidebar ? 'visible' : 'hidden sm:visible'}`}>
-                    <div className='flex flex-col items-center  justify-center bg-gray-300 rounded-lg shadow-md p-4 '>
+                <div ref={sidebarRef} className={` absolute sm:relative left-0 flex-col items-center w-fit  overflow-auto bg-gray-50 border  shadow-md ${sidebar ? 'visible' : 'hidden sm:visible'}`}>
+                    <div className='flex flex-col items-center  justify-center  rounded-lg shadow-md  '>
                         {
                             chapter.map((item, index) => {
                                 return (
-                                    <div key={index} onClick={() => chapterhanler(item.value)}
+                                    <button  key={index} onClick={() => chapterhanler(item.value)}
                                         className='flex flex-row select-none text-xl cursor-pointer w-max text-black hover:text-gray-100
-                                         hover:bg-green-500 justify-center items-center gap-2  bg-gray-200 p-1 rounded-md  font-bold
-                                         transition-colors duration-150 active:bg-blue-600">
+                                         hover:bg-green-500 justify-center items-center gap-2  p-1 rounded-md  font-bold my-0.5 border-b-1 
+                                         touch-manipulation transition-colors duration-150 active:bg-blue-600 !important">
                                          '>
                                         {item.name}
-                                    </div>
+                                    </button >
                                 )
                             }
                             )
@@ -214,7 +214,7 @@ export default function BnsHome() {
                 </div>
                 <main className='min-h-full w-full flex items-center justify-center  shadow-md  box-border '>
                     <div className=' flex flex-col min-h-full w-fit items-center   bg-gray-100  shadow-md p-4 box-border'>
-                        <div className='col-start-3 flex justify-end'>
+                        <div className=' flex justify-end w-full'>
                             <button
                                 onClick={() => setLanguage(language === 'en' ? 'hi' : 'en')}
                                 className=" px-4 py-1 h-fit bg-blue-600 text-white rounded hover:bg-blue-700"
@@ -229,7 +229,7 @@ export default function BnsHome() {
                         {
                             bns && bns.map((item, index) => {
                                 return (
-                                    <div key={index} className='flex flex-col sm:flex-row min-h-fit justify-center w-full bg-gray-200 gap-2 px-2 py-4'>
+                                    <div key={index} className='flex flex-col sm:flex-row min-h-fit justify-center w-full gap-2 px-2 py-4'>
                                         <div className='flex flex-row  sm:flex-col text-[16px]  justify-center sm:justify-start sm:items-start text-gray-950 font-bold  px-1'>
                                             <span>BNS__  </span> <span className='w-[81px] flex'>ACT :- {getHighlightedText(item.section, searchTerm)}</span>
                                         </div>
