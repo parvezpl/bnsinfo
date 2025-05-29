@@ -2,6 +2,8 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { AiFillCaretLeft, AiFillCaretRight } from "react-icons/ai";
 import { TiThMenu } from "react-icons/ti";
+import LanguageSelector from '../utlty/LanguageSelector';
+import { IoIosSearch } from "react-icons/io";
 
 export default function BnsHome() {
     const [bns, setBns] = useState()
@@ -12,7 +14,6 @@ export default function BnsHome() {
     const [chapters, setChapters] = useState({})
     const [language, setLanguage] = useState('hi')
     const sidebarRef = useRef(null);
-
     const numbers = Array.from({ length: 100 }, (_, i) => i + 1);
     useEffect(() => {
         const md = window.innerWidth <= 768;
@@ -173,33 +174,41 @@ export default function BnsHome() {
         );
         return <div className='whitespace-break-spaces '>{data}</div>
     };
-
-
-    console.log("hello")
     return (
-        <div className=' flex-col w-full text-black bg-gray-50'>
-            <div className='flex flex-col p-2 bg-gray-100 border-b-4 border-gray-200 drop-shadow-black'>
+        <div className=' flex-col w-full text-black bg-white'>
+            <div className='flex flex-col p-2 bg-white border-b-4 border-gray-200 drop-shadow-black'>
                 <div className=''>
                     <h1 className=' text-3xl font-bold text-center my-4 capitalize'>bharatiya nyaya sanhita 2023</h1>
                 </div>
                 <div className='flex flex-row items-center justify-between'>
                     {/* <button></button> */}
-                    <div className='text-3xl text-blue-900 cursor-pointer' onClick={() => setSidebar(prev=>!prev)} >
+                    <div className='text-3xl text-blue-900 cursor-pointer' onClick={() => setSidebar(prev => !prev)} >
                         <TiThMenu />
                     </div>
-                    <div className='flex flex-row items-center justify-center gap-2'>
-                        <input type="text" placeholder="Search..." className='border border-gray-500 rounded-lg p-2' onChange={searchhandler} />
-                        <button className='bg-blue-500 text-white rounded-lg p-2 ml-2 select-none touch-manipulation active:bg-green-600'>Search</button>
+                    <div className='flex flex-row items-center justify-center gap-2 border border-gray-500 rounded-lg'>
+                        <input type="text" placeholder="Search..." className=' p-2' onChange={searchhandler} />
+                        <IoIosSearch className='text-2xl'/>
+                        {/* <button className='bg-blue-500 text-white rounded-lg p-2 ml-2 select-none touch-manipulation active:bg-green-600'>Search</button> */}
+                        {/* <div className=' flex justify-end w-full'>
+                            <button
+                                onClick={() => setLanguage(language === 'en' ? 'hi' : 'en')}
+                                className=" px-4 py-1 h-fit bg-blue-600 text-white rounded hover:bg-blue-700"
+                            >
+                                Switch to {language === 'en' ? 'Hindi' : 'English'}
+                            </button>
+                        </div> */}
+
                     </div>
                 </div>
             </div>
             <div className='flex relative flex-row justify-center '>
                 <div ref={sidebarRef} className={` absolute sm:relative left-0 flex-col items-center w-fit  overflow-auto bg-gray-50 border  shadow-md ${sidebar ? 'visible' : 'hidden sm:visible'}`}>
+
                     <div className='flex flex-col items-center  justify-center  rounded-lg shadow-md  '>
                         {
                             chapter.map((item, index) => {
                                 return (
-                                    <button  key={index} onClick={() => chapterhanler(item)}
+                                    <button key={index} onClick={() => chapterhanler(item)}
                                         className='flex flex-row select-none text-xl cursor-pointer w-max text-black hover:text-gray-100
                                          hover:bg-green-500 justify-center items-center gap-2  p-1 rounded-md  font-bold my-0.5 border-b-1 
                                          touch-manipulation transition-colors duration-150 active:bg-blue-600 !important">
@@ -212,16 +221,12 @@ export default function BnsHome() {
                         }
                     </div>
                 </div>
-                <main className='min-h-full w-full flex items-center justify-center  shadow-md  box-border '>
-                    <div className=' flex flex-col min-h-full w-fit items-center   bg-gray-100  shadow-md p-4 box-border'>
-                        <div className=' flex justify-end w-full'>
-                            <button
-                                onClick={() => setLanguage(language === 'en' ? 'hi' : 'en')}
-                                className=" px-4 py-1 h-fit bg-blue-600 text-white rounded hover:bg-blue-700"
-                            >
-                                Switch to {language === 'en' ? 'Hindi' : 'English'}
-                            </button>
+                <main className=' min-h-full w-full flex items-center justify-center  shadow-md  box-border '>
+                    <div className=' flex  flex-col w-full min-h-full sm:w-fit items-center   bg-white  p-4 box-border'>
+                        <div className='w-full flex justify-end'>
+                            <LanguageSelector setLanguages={(e)=>setLanguage(e)}/>
                         </div>
+
                         <div className={`flex flex-col items-center w-full mb-4 ${searchTerm.length > 0 ? 'hidden' : 'visible'}`}>
                             <h1 className=' text-2xl font-bold'>{chapters.chapter}</h1>
                             <h3 className=' text-xl font-bold text-gray-700'>{chapters.chapter_title}</h3>
