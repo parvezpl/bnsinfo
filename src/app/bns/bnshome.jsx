@@ -177,8 +177,8 @@ export default function BnsHome() {
 
 
     return (
-        <div className=' flex-col w-full bg-gray-300'>
-            <div className='flex flex-col p-2 bg-gray-300 border-b-4 border-gray-400 drop-shadow-black'>
+        <div className=' flex-col w-full text-black bg-gray-100'>
+            <div className='flex flex-col p-2 bg-gray-100 border-b-4 border-gray-200 drop-shadow-black'>
                 <div className='grid gird-col[50px_1fr_50px'>
                     <h1 className='col-start-2 text-3xl font-bold text-center my-4 capitalize'>bharatiya nyaya sanhita 2023</h1>
                     <div className='col-start-3 flex justify-end'>
@@ -208,7 +208,7 @@ export default function BnsHome() {
                             chapter.map((item, index) => {
                                 return (
                                     <div key={index} onClick={() => chapterhanler(item.value)}
-                                        className='flex flex-row text-xl cursor-pointer w-max hover:text-gray-100 hover:bg-green-500 justify-center items-center gap-2  bg-gray-200 p-1 rounded-md  font-bold'>
+                                        className='flex flex-row text-xl cursor-pointer w-max text-black hover:text-gray-100 hover:bg-green-500 justify-center items-center gap-2  bg-gray-200 p-1 rounded-md  font-bold'>
                                         {item.name}
                                     </div>
                                 )
