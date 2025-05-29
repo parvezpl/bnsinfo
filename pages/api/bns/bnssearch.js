@@ -1,16 +1,15 @@
 import { connectDB } from "../../../lib/db";
 import Bnsen from "../../../lib/schema/bnsen";
 
-
+let data =[]
 export default async function handler(req, res) {
     await connectDB()
        
     if (req.method == "GET") {
         const { search } = req.query
 
-        const data = await Bnsen.find()
-        if (!data || data.length === 0) {
-            return res.status(404).json({ error: "No data found" });
+        if (data.length === 0) {
+            data = await Bnsen.find()
         }
 
         const bns = data.flatMap(item =>

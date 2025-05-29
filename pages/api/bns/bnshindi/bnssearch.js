@@ -1,16 +1,15 @@
 import { connectDB } from "../../../../lib/db";
 import Bnshi from "../../../../lib/schema/bnshi";
 
-
+let data =[]
 export default async function handler(req, res) {
     await connectDB()
        
     if (req.method == "GET") {
         const { search } = req.query
         console.log("Search query:", search);
-        const data = await Bnshi.find()
-        if (!data || data.length === 0) {
-            return res.status(404).json({ error: "No data found" });
+        if (data.length === 0) {
+            data = await Bnshi.find()
         }
 
         const bns = data.flatMap(item =>

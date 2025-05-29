@@ -68,7 +68,7 @@ export default function BnsHome() {
         const fetchData = async () => {
             const res = language === "en" ? await fetch('/api/bns/bnsen') : await fetch('/api/bns/bnshindi/bnshi')
             const data = await res.json()
-            setBns(data.bnshi.sections)
+            setBns(data.bnshi?.sections)
         }
         fetchData()
     }, [language])
@@ -100,8 +100,8 @@ export default function BnsHome() {
     }
 
 
-    const chapterhanler = async (value) => {
-        const res = language === "en" ? await fetch('/api/bns/bnschapter?search=' + value) : await fetch('/api/bns/bnshindi/bnschapter?search=' + value)
+    const chapterhanler = async (item) => {
+        const res = language === "en" ? await fetch('/api/bns/bnschapter?search=' + item.value) : await fetch('/api/bns/bnshindi/bnschapter?search=' + item.id)
         if (res.ok) {
             const data = await res.json()
             setChapters(data.chapter)
@@ -175,7 +175,7 @@ export default function BnsHome() {
     };
 
 
-
+    console.log("hello")
     return (
         <div className=' flex-col w-full text-black bg-gray-50'>
             <div className='flex flex-col p-2 bg-gray-100 border-b-4 border-gray-200 drop-shadow-black'>
@@ -199,7 +199,7 @@ export default function BnsHome() {
                         {
                             chapter.map((item, index) => {
                                 return (
-                                    <button  key={index} onClick={() => chapterhanler(item.value)}
+                                    <button  key={index} onClick={() => chapterhanler(item)}
                                         className='flex flex-row select-none text-xl cursor-pointer w-max text-black hover:text-gray-100
                                          hover:bg-green-500 justify-center items-center gap-2  p-1 rounded-md  font-bold my-0.5 border-b-1 
                                          touch-manipulation transition-colors duration-150 active:bg-blue-600 !important">
