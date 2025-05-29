@@ -14,12 +14,12 @@ export default function BnsHome() {
     const sidebarRef = useRef(null);
 
     const numbers = Array.from({ length: 100 }, (_, i) => i + 1);
-    useEffect(()=>{
+    useEffect(() => {
         const md = window.innerWidth <= 768;
         if (md && sidebar) {
             setSidebar(false)
         }
-    },[])
+    }, [])
 
     useEffect(() => {
         function handleClickOutside(event) {
@@ -179,16 +179,8 @@ export default function BnsHome() {
     return (
         <div className=' flex-col w-full text-black bg-gray-100'>
             <div className='flex flex-col p-2 bg-gray-100 border-b-4 border-gray-200 drop-shadow-black'>
-                <div className='grid gird-col[50px_1fr_50px'>
-                    <h1 className='col-start-2 text-3xl font-bold text-center my-4 capitalize'>bharatiya nyaya sanhita 2023</h1>
-                    <div className='col-start-3 flex justify-end'>
-                        <button
-                            onClick={() => setLanguage(language === 'en' ? 'hi' : 'en')}
-                            className=" px-4 py-1 h-fit bg-blue-600 text-white rounded hover:bg-blue-700"
-                        >
-                            Switch to {language === 'en' ? 'Hindi' : 'English'}
-                        </button>
-                    </div>
+                <div className=''>
+                    <h1 className=' text-3xl font-bold text-center my-4 capitalize'>bharatiya nyaya sanhita 2023</h1>
                 </div>
                 <div className='flex flex-row items-center justify-between'>
                     {/* <button></button> */}
@@ -219,6 +211,14 @@ export default function BnsHome() {
                 </div>
                 <main className='min-h-full w-full flex items-center justify-center  shadow-md  box-border '>
                     <div className=' flex flex-col min-h-full w-fit items-center   bg-gray-100  shadow-md p-4 box-border'>
+                        <div className='col-start-3 flex justify-end'>
+                            <button
+                                onClick={() => setLanguage(language === 'en' ? 'hi' : 'en')}
+                                className=" px-4 py-1 h-fit bg-blue-600 text-white rounded hover:bg-blue-700"
+                            >
+                                Switch to {language === 'en' ? 'Hindi' : 'English'}
+                            </button>
+                        </div>
                         <div className={`flex flex-col items-center w-full mb-4 ${searchTerm.length > 0 ? 'hidden' : 'visible'}`}>
                             <h1 className=' text-2xl font-bold'>{chapters.chapter}</h1>
                             <h3 className=' text-xl font-bold text-gray-700'>{chapters.chapter_title}</h3>
