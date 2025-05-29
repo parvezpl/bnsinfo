@@ -200,7 +200,10 @@ export default function BnsHome() {
                             chapter.map((item, index) => {
                                 return (
                                     <div key={index} onClick={() => chapterhanler(item.value)}
-                                        className='flex flex-row select-none text-xl cursor-pointer w-max text-black hover:text-gray-100 hover:bg-green-500 justify-center items-center gap-2  bg-gray-200 p-1 rounded-md  font-bold'>
+                                        className='flex flex-row select-none text-xl cursor-pointer w-max text-black hover:text-gray-100
+                                         hover:bg-green-500 justify-center items-center gap-2  bg-gray-200 p-1 rounded-md  font-bold
+                                         transition-colors duration-150 active:bg-blue-600">
+                                         '>
                                         {item.name}
                                     </div>
                                 )
