@@ -184,7 +184,7 @@ export default function BnsHome() {
                 </div>
                 <div className='flex flex-row items-center justify-between'>
                     {/* <button></button> */}
-                    <div className='text-3xl text-blue-900 cursor-pointer' onClick={() => setSidebar(!sidebar)} >
+                    <div className='text-3xl text-blue-900 cursor-pointer' onClick={() => setSidebar(prev=>!prev)} >
                         <TiThMenu />
                     </div>
                     <div className='flex flex-row items-center justify-center gap-2'>
@@ -200,7 +200,7 @@ export default function BnsHome() {
                             chapter.map((item, index) => {
                                 return (
                                     <div key={index} onClick={() => chapterhanler(item.value)}
-                                        className='flex flex-row text-xl cursor-pointer w-max text-black hover:text-gray-100 hover:bg-green-500 justify-center items-center gap-2  bg-gray-200 p-1 rounded-md  font-bold'>
+                                        className='flex flex-row select-none text-xl cursor-pointer w-max text-black hover:text-gray-100 hover:bg-green-500 justify-center items-center gap-2  bg-gray-200 p-1 rounded-md  font-bold'>
                                         {item.name}
                                     </div>
                                 )
