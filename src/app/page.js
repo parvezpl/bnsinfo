@@ -9,7 +9,7 @@ export default function Home() {
       <main className="flex-grow w-screen ">
         <BnsHome />
       </main>
-      <footer className=" h-[20px gap-[24px] flex flex-wrap items-center justify-center bor">
+      {/* <footer className=" h-[20px gap-[24px] flex flex-wrap items-center justify-center bor">
         <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
           href="https://www.heliusdev.in/bns"
@@ -55,7 +55,7 @@ export default function Home() {
           />
           Go to heliusdev →
         </a>
-      </footer>
+      </footer> */}
     </div>
   );
 }
