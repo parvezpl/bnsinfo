@@ -2,7 +2,7 @@ import Image from "next/image";
 import BnsHome from "./bns/bnshome";
 export default function Home() {
   return (
-    <div className="min-h-screen  bg-amber-300 flex flex-col items-center justify-items-center pb-20  font-[family-name:var(--font-geist-sans)]">
+    <div className="min-h-screen  flex flex-col items-center justify-items-center pb-20 text-black  font-[family-name:var(--font-geist-sans)]">
       {/* <nav className=" flex w-full h-full row-start-1 bg-gray-400">
         hello
       </nav> */}
