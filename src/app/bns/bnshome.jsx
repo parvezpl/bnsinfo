@@ -177,77 +177,73 @@ export default function BnsHome() {
     return (
         <div className=' flex-col w-full text-black bg-white'>
             <div className='flex flex-col p-2 bg-white border-b-4 border-gray-200 drop-shadow-black'>
-                <div className=''>
-                    <h1 className=' text-3xl font-bold text-center my-4 capitalize'>bharatiya nyaya sanhita 2023</h1>
-                </div>
                 <div className='flex flex-row items-center justify-between'>
                     {/* <button></button> */}
-                    <div className='text-3xl text-blue-900 cursor-pointer' onClick={() => setSidebar(prev => !prev)} >
-                        <TiThMenu />
+                    <div className='bg-amber-500 text-black font-bold rounded-md px-4 py-1'>
+                        BNS-INFO
                     </div>
                     <div className='flex flex-row items-center justify-center gap-2 border border-gray-500 rounded-lg'>
                         <input type="text" placeholder="Search..." className=' p-2' onChange={searchhandler} />
-                        <IoIosSearch className='text-2xl'/>
-                        {/* <button className='bg-blue-500 text-white rounded-lg p-2 ml-2 select-none touch-manipulation active:bg-green-600'>Search</button> */}
-                        {/* <div className=' flex justify-end w-full'>
-                            <button
-                                onClick={() => setLanguage(language === 'en' ? 'hi' : 'en')}
-                                className=" px-4 py-1 h-fit bg-blue-600 text-white rounded hover:bg-blue-700"
-                            >
-                                Switch to {language === 'en' ? 'Hindi' : 'English'}
-                            </button>
-                        </div> */}
-
+                        <IoIosSearch className='text-2xl' />
                     </div>
                 </div>
             </div>
             <div className='flex relative flex-row justify-center '>
-                <div ref={sidebarRef} className={` absolute sm:relative left-0 flex-col items-center w-fit  overflow-auto bg-gray-50 border  shadow-md ${sidebar ? 'visible' : 'hidden sm:visible'}`}>
 
-                    <div className='flex flex-col items-center  justify-center  rounded-lg shadow-md  '>
-                        {
-                            chapter.map((item, index) => {
-                                return (
-                                    <button key={index} onClick={() => chapterhanler(item)}
-                                        className='flex flex-row select-none text-xl cursor-pointer w-max text-black hover:text-gray-100
+                <main className=' min-h-full w-full flex flex-col items-center shadow-md box-border  '>
+                    <div className=' relative w-full flex flex-col sm:grid grid-cols-[50px_1fr_200px] bg-green-400 '>
+                        <div className=' absolute sm:sticky top-30 text-3xl text-blue-900 cursor-pointer  flex sm:place-content-center sm:items-center' onClick={() => setSidebar(prev => !prev)} >
+                            <TiThMenu />
+                        </div>
+                        <h1 className=' col-start-2 text-2xl sm:text-3xl  font-bold text-center my-4 capitalize'>bharatiya nyaya sanhita 2023</h1>
+                        <div className=' flex justify-end px-2'>
+                            <LanguageSelector setLanguages={(e) => setLanguage(e)} />
+                        </div>
+                    </div>
+                    <div className='flex w-full '>
+                        <div ref={sidebarRef} className={` absolute sm:relative left-0 flex-col items-center w-fit  overflow-auto bg-green-300 border-b-1 rounded-b-md px-2 shadow-md ${sidebar ? 'visible' : 'hidden sm:visible'}`}>
+                            <div className='flex flex-col items-center  justify-center  rounded-lg shadow-md  '>
+                                {
+                                    chapter.map((item, index) => {
+                                        return (
+                                            <button key={index} onClick={() => chapterhanler(item)}
+                                                className='flex flex-row select-none text-xl cursor-pointer w-max text-black hover:text-gray-100
                                          hover:bg-green-500 justify-center items-center gap-2  p-1 rounded-md  font-bold my-0.5 border-b-1 
                                          touch-manipulation transition-colors duration-150 active:bg-blue-600 !important">
                                          '>
-                                        {item.name}
-                                    </button >
-                                )
-                            }
-                            )
-                        }
-                    </div>
-                </div>
-                <main className=' min-h-full w-full flex items-center justify-center  shadow-md  box-border '>
-                    <div className=' flex  flex-col w-full min-h-full sm:w-fit items-center   bg-white  p-4 box-border'>
-                        <div className='w-full flex justify-end'>
-                            <LanguageSelector setLanguages={(e)=>setLanguage(e)}/>
+                                                {item.name}
+                                            </button >
+                                        )
+                                    }
+                                    )
+                                }
+                            </div>
                         </div>
+                        <div className=' flex flex-col w-full min-h-full sm:w-full items-center border-l-1  p-4 box-border'>
+                            <div className={`flex flex-col items-center w-full mb-4 ${searchTerm.length > 0 ? 'hidden' : 'visible'}`}>
+                                <h1 className=' text-2xl font-bold'>{chapters.chapter}</h1>
+                                <h3 className=' text-xl font-bold text-gray-700'>{chapters.chapter_title}</h3>
+                            </div>
+                            <div className='w-full flex flex-col items-center'>
+                                {
+                                    bns && bns.map((item, index) => {
+                                        return (
+                                            <div key={index} className='flex flex-col sm:flex-row min-h-fit  justify-center w-fit gap-2 px-2 py-4 '>
+                                                <div className='flex flex-row  sm:flex-col text-[16px]  justify-center sm:justify-start sm:items-start text-gray-950 font-bold  px-1'>
+                                                    <span>BNS__  </span> <span className='w-[81px] flex'>ACT :- {getHighlightedText(item.section, searchTerm)}</span>
+                                                </div>
+                                                <div className='flex flex-col gap-2 grow text-justify'>
+                                                    <pre className='text-blue-950 font-bold h-fit sm:w-[50vw] font-sans whitespace-break-spaces'>
+                                                        {getHighlightedText(item.section_title, searchTerm)}
+                                                    </pre>
 
-                        <div className={`flex flex-col items-center w-full mb-4 ${searchTerm.length > 0 ? 'hidden' : 'visible'}`}>
-                            <h1 className=' text-2xl font-bold'>{chapters.chapter}</h1>
-                            <h3 className=' text-xl font-bold text-gray-700'>{chapters.chapter_title}</h3>
+                                                </div>
+                                            </div>
+                                        )
+                                    })
+                                }
+                            </div>
                         </div>
-                        {
-                            bns && bns.map((item, index) => {
-                                return (
-                                    <div key={index} className='flex flex-col sm:flex-row min-h-fit justify-center w-full gap-2 px-2 py-4'>
-                                        <div className='flex flex-row  sm:flex-col text-[16px]  justify-center sm:justify-start sm:items-start text-gray-950 font-bold  px-1'>
-                                            <span>BNS__  </span> <span className='w-[81px] flex'>ACT :- {getHighlightedText(item.section, searchTerm)}</span>
-                                        </div>
-                                        <div className='flex flex-col gap-2 grow text-justify'>
-                                            <pre className='text-blue-950 font-bold h-fit sm:w-[50vw] font-sans whitespace-break-spaces'>
-                                                {getHighlightedText(item.section_title, searchTerm)}
-                                            </pre>
-
-                                        </div>
-                                    </div>
-                                )
-                            })
-                        }
                     </div>
                     {/* <div className='justify-center w-full flex   bg-gray-300 rounded-md p-2 text-2xl text-black'>
                         <AiFillCaretLeft />
