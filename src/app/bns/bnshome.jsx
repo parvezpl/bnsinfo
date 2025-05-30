@@ -230,7 +230,9 @@ export default function BnsHome() {
                                         return (
                                             <div key={index} className='flex flex-col sm:flex-row min-h-fit  justify-center w-fit gap-2 px-2 py-4 '>
                                                 <div className='flex flex-row  sm:flex-col text-[16px]  justify-center sm:justify-start sm:items-start text-gray-950 font-bold  px-1'>
-                                                    <span>BNS__  </span> <span className='w-[81px] flex'>ACT :- {getHighlightedText(item.section, searchTerm)}</span>
+                                                    <div className='flex bg-gray-800 text-white px-4 py-2 rounded-sm '>
+                                                        <span>BNS__  </span> <span className='w-[81px] flex'>ACT :- {getHighlightedText(item.section, searchTerm)}</span>
+                                                    </div>
                                                 </div>
                                                 <div className='flex flex-col gap-2 grow text-justify'>
                                                     <pre className='text-blue-950 font-bold h-fit sm:w-[50vw] font-sans whitespace-break-spaces'>
