@@ -192,7 +192,7 @@ export default function BnsHome() {
 
                 <main className=' min-h-full w-full flex flex-col items-center shadow-md box-border  '>
                     <div className=' relative w-full flex flex-col sm:grid grid-cols-[50px_1fr_200px] bg-green-400 '>
-                        <div className=' absolute sm:sticky top-30 text-3xl text-blue-900 cursor-pointer  flex sm:place-content-center sm:items-center' onClick={() => setSidebar(prev => !prev)} >
+                        <div className=' absolute sm:sticky top-22 text-3xl text-blue-900 cursor-pointer  flex sm:place-content-center sm:items-center' onClick={() => setSidebar(prev => !prev)} >
                             <TiThMenu />
                         </div>
                         <h1 className=' col-start-2 text-2xl sm:text-3xl  font-bold text-center my-4 capitalize'>bharatiya nyaya sanhita 2023</h1>
