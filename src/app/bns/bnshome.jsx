@@ -175,11 +175,11 @@ export default function BnsHome() {
         return <div className='whitespace-break-spaces '>{data}</div>
     };
     return (
-        <div className=' flex-col w-full text-black bg-white'>
-            <div className='flex flex-col p-2 bg-white border-b-4 border-gray-200 drop-shadow-black'>
-                <div className='flex flex-row items-center justify-between'>
+        <div className=' relative flex-col w-full text-black bg-white '>
+            <div className=' fixed w-screen z-50  flex flex-col p-2 bg-green-500  border-gray-200 drop-shadow-black'>
+                <div className='flex flex-row items-center justify-between px-2'>
                     {/* <button></button> */}
-                    <div className='bg-amber-500 text-black font-bold rounded-md px-4 py-1'>
+                    <div className='bg-amber-500 text-black font-bold rounded-md px-4 py-1 select-none'>
                         BNS-INFO
                     </div>
                     <div className='flex flex-row items-center justify-center gap-2 border border-gray-500 rounded-lg'>
@@ -188,10 +188,10 @@ export default function BnsHome() {
                     </div>
                 </div>
             </div>
-            <div className='flex relative flex-row justify-center '>
+            <div className='flex relative flex-row justify-center pt-15 '>
 
                 <main className=' min-h-full w-full flex flex-col items-center shadow-md box-border  '>
-                    <div className=' relative w-full flex flex-col sm:grid grid-cols-[50px_1fr_200px] bg-green-400 '>
+                    <div className=' relative w-full flex flex-col sm:grid grid-cols-[50px_1fr_200px] bg-green-400 px-2 '>
                         <div className=' absolute sm:sticky top-22 text-3xl text-blue-900 cursor-pointer  flex sm:place-content-center sm:items-center' onClick={() => setSidebar(prev => !prev)} >
                             <TiThMenu />
                         </div>
@@ -200,7 +200,7 @@ export default function BnsHome() {
                             <LanguageSelector setLanguages={(e) => setLanguage(e)} />
                         </div>
                     </div>
-                    <div className='flex w-full '>
+                    <div className='flex w-full px-2 '>
                         <div ref={sidebarRef} className={` absolute sm:relative left-0 flex-col items-center w-fit  overflow-auto bg-green-300 border-b-1 rounded-b-md px-2 shadow-md ${sidebar ? 'visible' : 'hidden sm:visible'}`}>
                             <div className='flex flex-col items-center  justify-center  rounded-lg shadow-md  '>
                                 {
