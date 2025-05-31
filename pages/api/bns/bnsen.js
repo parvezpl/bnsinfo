@@ -9,14 +9,14 @@ export default async function handler(req, res) {
        
     if (req.method == "GET") {
         const { search } = req.query
-        const bnsen = await Bnsen.findOne()
+        const bns = await Bnsen.find()
         // console.log(bnsen)
         // const seardata= bns.filter((item) => {
         //     if (item.username.toLowerCase().match(search.toLowerCase())) {
         //         return  item
         //     }
         // })
-        return res.status(200).json({bnsen});
+        return res.status(200).json({bns});
     }
 
 }

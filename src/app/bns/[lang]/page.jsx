@@ -2,8 +2,10 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { AiFillCaretLeft, AiFillCaretRight } from "react-icons/ai";
 import { TiThMenu } from "react-icons/ti";
-import LanguageSelector from '../utlty/LanguageSelector';
+import LanguageSelector from '../../utlty/LanguageSelector';
 import { IoIosSearch } from "react-icons/io";
+import { useParams } from 'next/navigation';
+
 
 export default function BnsHome() {
     const [bns, setBns] = useState([])
@@ -16,9 +18,12 @@ export default function BnsHome() {
     const sidebarRef = useRef(null);
     const [activeIndex, setActiveIndex] = useState(0);
     const sectionRefs = useRef([]);
+     const params = useParams()
 
+     
     const numbers = Array.from({ length: 100 }, (_, i) => i + 1);
     useEffect(() => {
+        // setLanguage(params.lang)
         const md = window.innerWidth <= 768;
         if (md && sidebar) {
             setSidebar(false)
@@ -74,7 +79,7 @@ export default function BnsHome() {
             const res = language === "en" ? await fetch('/api/bns/bnsen') : await fetch('/api/bns/bnshindi/bnshi')
             const data = await res.json()
             // console.log(data)
-            setBns(data.bnshi)
+            setBns(data.bns)
         }
         fetchData()
     }, [language])
@@ -108,13 +113,6 @@ export default function BnsHome() {
     const chapterhanler = async (item, index) => {
         console.log(index)
         sectionRefs.current[index]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-        // const res = language === "en" ? await fetch('/api/bns/bnschapter?search=' + item.value) : await fetch('/api/bns/bnshindi/bnschapter?search=' + item.id)
-        // if (res.ok) {
-        //     const data = await res.json()
-        //     setChapters(data.chapter)
-        //     setBns(data.chapter.sections)
-        // }
     }
 
 
@@ -215,15 +213,10 @@ export default function BnsHome() {
     console.log(activeIndex)
 
     return (
-        <div className=' relative flex-col w-full text-black bg-white mt-[130px] sm:mt-[94px] h-screen overflow-hidden '>
-            <div className=' fixed top-0 w-screen z-50  flex flex-col h-20 py-1  bg-blue-500  border-gray-200 drop-shadow-black'>
-                <div className='relative flex flex-row items-center justify-between px-2'>
-                    <div className='bg-amber-500 flex shrink-0 m-1 justify-center items-center text-[10px] sm:text-[12px] text-black font-bold rounded-md px-2 py-1 h-[20px] w-[80px] select-none'>
-                        BNS-INFO
-                    </div>
-                </div>
-                <div className=' w-full flex justify-between bg-gray-100  text-[12px]  '>
-                    <div className=' text-2xl pl-1 sm:pl-4   text-blue-900 cursor-pointer  flex sm:place-content-center sm:items-center' onClick={() => setSidebar(prev => !prev)} >
+        <div className=' relative flex-col w-full mt-7 text-black bg-white h-screen overflow-hidden '>
+            <div className=' fixed  w-screen z-50  flex flex-col  py-1  bg-blue-500  border-gray-200 drop-shadow-black'>
+                <div className=' px-2 w-full flex justify-between bg-gray-100  text-[12px]  '>
+                    <div className=' text-2xl pl-1 sm:pl-2   text-blue-900 cursor-pointer  flex sm:place-content-center sm:items-center' onClick={() => setSidebar(prev => !prev)} >
                         <TiThMenu />
                     </div>
                     <h1 className=' col-start-2 text-sm sm:text-2xl  font-bold text-center my-1 capitalize'>भारतिय न्याय संहिता 2023</h1>
@@ -232,12 +225,12 @@ export default function BnsHome() {
                     </div>
 
                 </div>
-                <div className=' absolute right-0 -bottom-7   flex w-[300px] items-center justify-center gap-2 border border-gray-500 rounded-lg mr-4'>
+                <div className=' absolute right-0 -bottom-7   flex w-40 sm:w-[300px] items-center justify-center gap-2 border border-gray-500 rounded-lg mr-4'>
                     <input type="text" placeholder="Search..." className=' w-full h-5 p-2 bg-white focus:outline-none ' onChange={searchhandler} />
                     <IoIosSearch className='text-2xl' />
                 </div>
-                <div ref={sidebarRef} className={`sm:fixed  mt-[88px] sm:mt-[94px]  pointer-events-auto absolute top-0 w-40 bg-gray-200 rounded-b-md px-2 shadow-md ${sidebar ? 'visible' : 'hidden sm:visible'}`}>
-                    <div className='flex flex-col items-center justify-center rounded-lg  overflow-auto '>
+                <div ref={sidebarRef} className={`sm:fixed  mt-10 sm:mt-20  pointer-events-auto absolute top-0 w-40 h-screen overflow-y-auto bg-gray-200 rounded-b-md px-2 shadow-md ${sidebar ? 'visible' : 'hidden sm:visible'}`}>
+                    <div className='flex flex-col items-center justify-center rounded-lg'>
                         {
                             chapter.map((item, index) => {
                                 return (
@@ -258,14 +251,13 @@ export default function BnsHome() {
             </div>
             <div className='w-screen box-border'>
                 <main className='min-h-full w-full relative '>
-
                     <div className=' mt-2 h-screen overflow-auto  '>
                         {
-                            bns && bns.map((bnsItem, index) => {
+                            bns.length>0 && bns?.map((bnsItem, index) => {
                                 return (
                                     <div key={index}
                                         ref={(el) => (sectionRefs.current[index] = el)}
-                                        className=' scroll-mt-24 flex flex-col w-full min-h-full sm:w-full items-center p-4 box-border '>
+                                        className=' scroll-mt-20 mt-20 flex flex-col w-full min-h-full sm:w-full items-center p-4 box-border '>
                                         <div className={`flex flex-col items-center w-full mb-4 ${searchTerm.length > 0 ? 'hidden' : 'visible'}`}>
                                             <h1 className=' text-2xl font-bold'>{bnsItem.chapter}</h1>
                                             <h3 className=' text-[16px] font-bold text-gray-700'>{bnsItem.chapter_title}</h3>

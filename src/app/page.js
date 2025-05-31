@@ -1,13 +1,14 @@
 import Image from "next/image";
-import BnsHome from "./bns/bnshome";
+import BnsHome from "./bns/[lang]/page";
+import Navigation from "./utlty/navigation";
+import Mainpage from "./mainpage";
 export default function Home() {
   return (
-    <div className="min-h-screen  flex flex-col items-center justify-items-center text-black  font-[family-name:var(--font-geist-sans)] ">
-      {/* <nav className=" flex w-full h-full row-start-1 bg-gray-400">
-        hello
-      </nav> */}
-      <main className="flex-grow w-screen box-border  ">
-        <BnsHome />
+    <div className="min-h-screen w-screen bg-white flex flex-col items-center justify-items-center text-black  font-[family-name:var(--font-geist-sans)] ">
+      {/* <Navigation className="fixed" /> */}
+      <main className="relative flex-grow w-screen box-border  ">
+        {/* <BnsHome /> */}
+        <Mainpage/>
       </main>
       {/* <footer className=" h-[20px gap-[24px] flex flex-wrap items-center justify-center bor">
         <a
