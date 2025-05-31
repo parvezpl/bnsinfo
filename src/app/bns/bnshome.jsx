@@ -6,7 +6,7 @@ import LanguageSelector from '../utlty/LanguageSelector';
 import { IoIosSearch } from "react-icons/io";
 
 export default function BnsHome() {
-    const [bns, setBns] = useState()
+    const [bns, setBns] = useState([])
     const [sidebar, setSidebar] = useState(true)
     const [act, setAct] = useState()
     const [searchTerm, setSearchTerm] = useState('');
@@ -14,6 +14,9 @@ export default function BnsHome() {
     const [chapters, setChapters] = useState({})
     const [language, setLanguage] = useState('hi')
     const sidebarRef = useRef(null);
+    const [activeIndex, setActiveIndex] = useState(0);
+    const sectionRefs = useRef([]);
+
     const numbers = Array.from({ length: 100 }, (_, i) => i + 1);
     useEffect(() => {
         const md = window.innerWidth <= 768;
@@ -65,11 +68,13 @@ export default function BnsHome() {
 
 
     ]
+
     useEffect(() => {
         const fetchData = async () => {
             const res = language === "en" ? await fetch('/api/bns/bnsen') : await fetch('/api/bns/bnshindi/bnshi')
             const data = await res.json()
-            setBns(data.bnshi?.sections)
+            // console.log(data)
+            setBns(data.bnshi)
         }
         fetchData()
     }, [language])
@@ -84,12 +89,11 @@ export default function BnsHome() {
     }, [searchTerm]);
 
     useEffect(() => {
-
         const fetchResults = async () => {
             const res = language === "en" ? await fetch(`/api/bns/bnssearch?search=${debouncedTerm}`) : await fetch(`/api/bns/bnshindi/bnssearch?search=${debouncedTerm}`)
             const datas = res.json();
             datas.then((data) => {
-                setBns(data.bns)
+                // setBns(data.bns)
             })
         };
 
@@ -101,64 +105,67 @@ export default function BnsHome() {
     }
 
 
-    const chapterhanler = async (item) => {
-        const res = language === "en" ? await fetch('/api/bns/bnschapter?search=' + item.value) : await fetch('/api/bns/bnshindi/bnschapter?search=' + item.id)
-        if (res.ok) {
-            const data = await res.json()
-            setChapters(data.chapter)
-            setBns(data.chapter.sections)
-        }
+    const chapterhanler = async (item, index) => {
+        console.log(index)
+        sectionRefs.current[index]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        // const res = language === "en" ? await fetch('/api/bns/bnschapter?search=' + item.value) : await fetch('/api/bns/bnshindi/bnschapter?search=' + item.id)
+        // if (res.ok) {
+        //     const data = await res.json()
+        //     setChapters(data.chapter)
+        //     setBns(data.chapter.sections)
+        // }
     }
 
 
-    const pagehandler = (e) => {
-        console.log(e.target.innerText)
-        const chapter = e.target.innerText
-        setBns(bns.detail[chapter - 1])
-        // console.log(bns.detail[chapter - 1])
-    }
-    function smartSplit(text) {
-        // const matches = [...text.matchAll(/(?=\((?:[a-z]|\d+)\))/g)];
-        console.log(text)
-        const matches = [...text.matchAll(/(?=\(\w+\))/g)];
-        console.log(matches)
+    // const pagehandler = (e) => {
+    //     console.log(e.target.innerText)
+    //     const chapter = e.target.innerText
+    //     // setBns(bns.detail[chapter - 1])
+    //     // console.log(bns.detail[chapter - 1])
+    // }
+    // function smartSplit(text) {
+    //     // const matches = [...text.matchAll(/(?=\((?:[a-z]|\d+)\))/g)];
+    //     console.log(text)
+    //     const matches = [...text.matchAll(/(?=\(\w+\))/g)];
+    //     console.log(matches)
 
-        const result = [];
+    //     const result = [];
 
-        let lastIndex = 0;
-        let lastSliceHadSubsection = false;
+    //     let lastIndex = 0;
+    //     let lastSliceHadSubsection = false;
 
-        for (const match of matches) {
-            const start = match.index;
-            const segment = text.slice(lastIndex, start);
+    //     for (const match of matches) {
+    //         const start = match.index;
+    //         const segment = text.slice(lastIndex, start);
 
-            if (!segment.toLowerCase().includes("sub-section") && segment.trim()) {
-                result.push(segment.trim());
-                lastSliceHadSubsection = false;
-            } else {
-                // merge with previous if 'sub-section' detected
-                if (result.length > 0) {
-                    result[result.length - 1] += " " + segment.trim();
-                } else {
-                    result.push(segment.trim());
-                }
-                lastSliceHadSubsection = true;
-            }
+    //         if (!segment.toLowerCase().includes("sub-section") && segment.trim()) {
+    //             result.push(segment.trim());
+    //             lastSliceHadSubsection = false;
+    //         } else {
+    //             // merge with previous if 'sub-section' detected
+    //             if (result.length > 0) {
+    //                 result[result.length - 1] += " " + segment.trim();
+    //             } else {
+    //                 result.push(segment.trim());
+    //             }
+    //             lastSliceHadSubsection = true;
+    //         }
 
-            lastIndex = start;
-        }
+    //         lastIndex = start;
+    //     }
 
-        const finalPart = text.slice(lastIndex).trim();
-        if (finalPart) {
-            if (lastSliceHadSubsection && result.length > 0) {
-                result[result.length - 1] += " " + finalPart;
-            } else {
-                result.push(finalPart);
-            }
-        }
+    //     const finalPart = text.slice(lastIndex).trim();
+    //     if (finalPart) {
+    //         if (lastSliceHadSubsection && result.length > 0) {
+    //             result[result.length - 1] += " " + finalPart;
+    //         } else {
+    //             result.push(finalPart);
+    //         }
+    //     }
 
-        return result;
-    }
+    //     return result;
+    // }
 
 
     const getHighlightedText = (text, highlight) => {
@@ -167,85 +174,131 @@ export default function BnsHome() {
         const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
         const data = parts.map((part, i) =>
             part.toLowerCase() === highlight.toLowerCase() ? (
-                <span key={i} className="bg-yellow-300 ">{part}</span>
+                <span key={i} className="bg-yellow-300 text-black ">{part}</span>
             ) : (
                 <span key={i} className=" font-sans  ">{part}</span>
             )
         );
         return <div className='whitespace-break-spaces '>{data}</div>
     };
+
+    useEffect(() => {
+        if (bns.length === 0) return;
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    // console.log(entry.target)
+                    if (entry.isIntersecting) {
+                        const index = sectionRefs.current.findIndex((ref) => ref === entry.target);
+                        setActiveIndex(index);
+                    }
+                });
+            },
+            {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.5,// when 50% visible
+            }
+        );
+
+        sectionRefs.current.forEach((ref) => {
+            if (ref) observer.observe(ref);
+        });
+
+        return () => {
+            sectionRefs.current.forEach((ref) => {
+                if (ref) observer.unobserve(ref);
+            });
+        };
+    }, [bns]);
+
+    console.log(activeIndex)
+
     return (
-        <div className=' relative flex-col w-full text-black bg-white '>
-            <div className=' fixed w-screen z-50  flex flex-col p-2 bg-green-500  border-gray-200 drop-shadow-black'>
-                <div className='flex flex-row items-center justify-between px-2'>
-                    {/* <button></button> */}
-                    <div className='bg-amber-500 text-black font-bold rounded-md px-4 py-1 select-none'>
+        <div className=' relative flex-col w-full text-black bg-white mt-[130px] sm:mt-[94px] h-screen overflow-hidden '>
+            <div className=' fixed top-0 w-screen z-50  flex flex-col h-20 py-1  bg-blue-500  border-gray-200 drop-shadow-black'>
+                <div className='relative flex flex-row items-center justify-between px-2'>
+                    <div className='bg-amber-500 flex shrink-0 m-1 justify-center items-center text-[10px] sm:text-[12px] text-black font-bold rounded-md px-2 py-1 h-[20px] w-[80px] select-none'>
                         BNS-INFO
                     </div>
-                    <div className='flex flex-row items-center justify-center gap-2 border border-gray-500 rounded-lg'>
-                        <input type="text" placeholder="Search..." className=' p-2' onChange={searchhandler} />
-                        <IoIosSearch className='text-2xl' />
+                </div>
+                <div className=' w-full flex justify-between bg-gray-100  text-[12px]  '>
+                    <div className=' text-2xl pl-1 sm:pl-4   text-blue-900 cursor-pointer  flex sm:place-content-center sm:items-center' onClick={() => setSidebar(prev => !prev)} >
+                        <TiThMenu />
+                    </div>
+                    <h1 className=' col-start-2 text-sm sm:text-2xl  font-bold text-center my-1 capitalize'>भारतिय न्याय संहिता 2023</h1>
+                    <div className=' flex justify-end px-2 '>
+                        <LanguageSelector setLanguages={(e) => setLanguage(e)} />
+                    </div>
+
+                </div>
+                <div className=' absolute right-0 -bottom-7   flex w-[300px] items-center justify-center gap-2 border border-gray-500 rounded-lg mr-4'>
+                    <input type="text" placeholder="Search..." className=' w-full h-5 p-2 bg-white focus:outline-none ' onChange={searchhandler} />
+                    <IoIosSearch className='text-2xl' />
+                </div>
+                <div ref={sidebarRef} className={`sm:fixed  mt-[88px] sm:mt-[94px]  pointer-events-auto absolute top-0 w-40 bg-gray-200 rounded-b-md px-2 shadow-md ${sidebar ? 'visible' : 'hidden sm:visible'}`}>
+                    <div className='flex flex-col items-center justify-center rounded-lg  overflow-auto '>
+                        {
+                            chapter.map((item, index) => {
+                                return (
+                                    <button key={index} onClick={() => chapterhanler(item, index)}
+                                        className={`select-none text-sm cursor-pointer w-max text-black hover:text-blue-700
+                                                hover:bg-gray-100 justify-center items-center gap-2  p-1 rounded-md font-semibold my-1 border-b-1 
+                                                touch-manipulation transition-colors duration-150 active:bg-blue-600 !important 
+                                                ${activeIndex === index ? ' bg-blue-300' : 'hover:bg-gray-200'}
+                                                `}>
+                                        {item.name}
+                                    </button >
+                                )
+                            }
+                            )
+                        }
                     </div>
                 </div>
             </div>
-            <div className='flex relative flex-row justify-center pt-15 '>
+            <div className='w-screen box-border'>
+                <main className='min-h-full w-full relative '>
 
-                <main className=' min-h-full w-full flex flex-col items-center shadow-md box-border  '>
-                    <div className=' relative w-full flex flex-col sm:grid grid-cols-[50px_1fr_200px] bg-green-400 px-2 '>
-                        <div className=' absolute sm:sticky top-22 text-3xl text-blue-900 cursor-pointer  flex sm:place-content-center sm:items-center' onClick={() => setSidebar(prev => !prev)} >
-                            <TiThMenu />
-                        </div>
-                        <h1 className=' col-start-2 text-2xl sm:text-3xl  font-bold text-center my-4 capitalize'>bharatiya nyaya sanhita 2023</h1>
-                        <div className=' flex justify-end px-2'>
-                            <LanguageSelector setLanguages={(e) => setLanguage(e)} />
-                        </div>
-                    </div>
-                    <div className='flex w-full px-2 '>
-                        <div ref={sidebarRef} className={` absolute sm:relative left-0 flex-col items-center w-fit  overflow-auto bg-green-300 border-b-1 rounded-b-md px-2 shadow-md ${sidebar ? 'visible' : 'hidden sm:visible'}`}>
-                            <div className='flex flex-col items-center  justify-center  rounded-lg shadow-md  '>
-                                {
-                                    chapter.map((item, index) => {
-                                        return (
-                                            <button key={index} onClick={() => chapterhanler(item)}
-                                                className='flex flex-row select-none text-xl cursor-pointer w-max text-black hover:text-gray-100
-                                         hover:bg-green-500 justify-center items-center gap-2  p-1 rounded-md  font-bold my-0.5 border-b-1 
-                                         touch-manipulation transition-colors duration-150 active:bg-blue-600 !important">
-                                         '>
-                                                {item.name}
-                                            </button >
-                                        )
-                                    }
-                                    )
-                                }
-                            </div>
-                        </div>
-                        <div className=' flex flex-col w-full min-h-full sm:w-full items-center border-l-1  p-4 box-border'>
-                            <div className={`flex flex-col items-center w-full mb-4 ${searchTerm.length > 0 ? 'hidden' : 'visible'}`}>
-                                <h1 className=' text-2xl font-bold'>{chapters.chapter}</h1>
-                                <h3 className=' text-xl font-bold text-gray-700'>{chapters.chapter_title}</h3>
-                            </div>
-                            <div className='w-full flex flex-col items-center'>
-                                {
-                                    bns && bns.map((item, index) => {
-                                        return (
-                                            <div key={index} className='flex flex-col sm:flex-row min-h-fit  justify-center w-fit gap-2 px-2 py-4 '>
-                                                <div className='flex flex-row  sm:flex-col text-[16px]  justify-center sm:justify-start sm:items-start text-gray-950 font-bold  px-1'>
-                                                    <div className='flex bg-gray-800 text-white px-4 py-2 rounded-sm '>
-                                                        <span>BNS__  </span> <span className='w-[81px] flex'>ACT :- {getHighlightedText(item.section, searchTerm)}</span>
-                                                    </div>
-                                                </div>
-                                                <div className='flex flex-col gap-2 grow text-justify'>
-                                                    <pre className='text-blue-950 font-bold h-fit sm:w-[50vw] font-sans whitespace-break-spaces'>
-                                                        {getHighlightedText(item.section_title, searchTerm)}
-                                                    </pre>
+                    <div className=' mt-2 h-screen overflow-auto  '>
+                        {
+                            bns && bns.map((bnsItem, index) => {
+                                return (
+                                    <div key={index}
+                                        ref={(el) => (sectionRefs.current[index] = el)}
+                                        className=' scroll-mt-24 flex flex-col w-full min-h-full sm:w-full items-center p-4 box-border '>
+                                        <div className={`flex flex-col items-center w-full mb-4 ${searchTerm.length > 0 ? 'hidden' : 'visible'}`}>
+                                            <h1 className=' text-2xl font-bold'>{bnsItem.chapter}</h1>
+                                            <h3 className=' text-[16px] font-bold text-gray-700'>{bnsItem.chapter_title}</h3>
+                                        </div>
+                                        <div className='w-full h-[100vh] flex flex-col items-center overflow-auto'>
+                                            {
+                                                bnsItem?.sections.map((item) => {
+                                                    return (
+                                                        < div key={item._id}>
+                                                            <div
+                                                                className='flex flex-col sm:flex-row min-h-fit  justify-center w-fit gap-2 px-2 py-4 '
+                                                            >
+                                                                <div className='flex flex-row  sm:flex-col text-[14px]  justify-center sm:justify-start sm:items-start text-gray-950 font-bold  px-1'>
+                                                                    <div className='flex bg-gray-300 text-blue-900 px-4 py-2 rounded-sm '>
+                                                                        <span>BNS__  </span> <span className='w-[81px] flex'>ACT :- {getHighlightedText(item.section, searchTerm)}</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div className='flex flex-col gap-2 grow text-justify '>
+                                                                    <pre className='text-blue-950 font-bold text-[14px] h-fit sm:w-[50vw] font-sans whitespace-break-spaces'>
+                                                                        {getHighlightedText(item.section_title, searchTerm)}
+                                                                    </pre>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    )
+                                                })
+                                            }
+                                        </div>
 
-                                                </div>
-                                            </div>
-                                        )
-                                    })
-                                }
-                            </div>
-                        </div>
+
+                                    </div>)
+                            })
+                        }
                     </div>
                     {/* <div className='justify-center w-full flex   bg-gray-300 rounded-md p-2 text-2xl text-black'>
                         <AiFillCaretLeft />

@@ -9,7 +9,7 @@ export default async function handler(req, res) {
        
     if (req.method == "GET") {
         const { search } = req.query
-        const bnshi = await Bnshi.findOne()
+        const bnshi = await Bnshi.find()
         // console.log(bnsen)
         // const seardata= bns.filter((item) => {
         //     if (item.username.toLowerCase().match(search.toLowerCase())) {

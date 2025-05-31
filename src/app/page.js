@@ -2,11 +2,11 @@ import Image from "next/image";
 import BnsHome from "./bns/bnshome";
 export default function Home() {
   return (
-    <div className="min-h-screen  flex flex-col items-center justify-items-center pb-20 text-black  font-[family-name:var(--font-geist-sans)]">
+    <div className="min-h-screen  flex flex-col items-center justify-items-center text-black  font-[family-name:var(--font-geist-sans)] ">
       {/* <nav className=" flex w-full h-full row-start-1 bg-gray-400">
         hello
       </nav> */}
-      <main className="flex-grow w-screen ">
+      <main className="flex-grow w-screen box-border  ">
         <BnsHome />
       </main>
       {/* <footer className=" h-[20px gap-[24px] flex flex-wrap items-center justify-center bor">
