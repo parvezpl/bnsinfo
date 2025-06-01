@@ -89,7 +89,7 @@ export default function Page() {
                     sectionlist?.map((section, index) => {
                         return (
                             <li key={index}
-                                
+
                                 onClick={() => sectionrhanler(section, index)} className=' flex my-1 justify-center text-center  hover:bg-blue-400 transition duration-150 active:bg-blue-500 '><span className='hidden sm:block'>ACT-</span> {section.section}</li>
                         )
                     })
@@ -97,19 +97,21 @@ export default function Page() {
             </ul>
             <div className='sm:pl-32 w-[cals(100vw-62)]'>
                 {
-                    searchdata.length>0 ? searchdata?.map((item, index) => {
+                    searchdata.length > 0 ? searchdata?.map((item, index) => {
                         return (
                             <div key={index}
-                            ref={(el) => (sectionRefs.current[index] = el)}
-                             className='flex flex-row items-center text-[13px] sm:text-[16px] justify-center gap-4 scroll-mt-50 sm:scroll-mt-45' >
+
+                                className='flex flex-row items-center text-[13px] sm:text-[16px] justify-center gap-4' >
                                 <div className='flex flex-col items-center'>
                                     <div className='bg-green-400 text-center w-fit px-4 py-1 my-4' >{item.chapter}</div>
                                     <ul className='mx-10 flex flex-col justify-center'>
                                         {
                                             item.sections?.map((val, ind) => {
                                                 return (
-                                                    <li key={ind} className='flex flex-col items-center'>
-                                                        <span className='bg-gray-700 text-white px-4 w-fit'> SECTION: - {val.section}</span>
+                                                    <li key={ind}
+                                                        ref={(el) => (sectionRefs.current[ind] = el)}
+                                                        className='flex flex-col items-center'>
+                                                        <span className='bg-gray-700 text-white px-4 w-fit scroll-mt-50 sm:scroll-mt-45'> SECTION: - {val.section}</span>
                                                         <pre >{getHighlightedText(val.section_title, searchparam)}</pre>
                                                     </li>
                                                 )
@@ -122,7 +124,7 @@ export default function Page() {
                         )
                     })
                         :
-                     
+
 
                         <div className="flex items-center justify-center space-x-2 h-full">
                             <div className="w-4 h-4 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full  animate-bounce"></div>
