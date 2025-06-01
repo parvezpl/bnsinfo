@@ -18,9 +18,9 @@ export default function BnsHome() {
     const sidebarRef = useRef(null);
     const [activeIndex, setActiveIndex] = useState(0);
     const sectionRefs = useRef([]);
-     const params = useParams()
+    const params = useParams()
 
-     
+
     const numbers = Array.from({ length: 100 }, (_, i) => i + 1);
     useEffect(() => {
         // setLanguage(params.lang)
@@ -213,23 +213,22 @@ export default function BnsHome() {
     console.log(activeIndex)
 
     return (
-        <div className=' relative flex-col w-full mt-7 text-black bg-white h-screen overflow-hidden '>
-            <div className=' fixed  w-screen z-50  flex flex-col  py-1  bg-blue-500  border-gray-200 drop-shadow-black'>
-                <div className=' px-2 w-full flex justify-between bg-gray-100  text-[12px]  '>
-                    <div className=' text-2xl pl-1 sm:pl-2   text-blue-900 cursor-pointer  flex sm:place-content-center sm:items-center' onClick={() => setSidebar(prev => !prev)} >
-                        <TiThMenu />
-                    </div>
-                    <h1 className=' col-start-2 text-sm sm:text-2xl  font-bold text-center my-1 capitalize'>भारतिय न्याय संहिता 2023</h1>
+        <div className=' relative flex-col w-full  text-black bg-white h-screen overflow-hidden '>
+            <div className=' fixed z-100 flex gap-1 bg-gray-300 cursor-pointer text-black rounded-sm select-none px-2 py-1  '  >
+                <span className='hover:bg-blue-400 px-1 transition-colors duration-150 active:bg-blue-600' onClick={() => setSidebar(prev => !prev)}>chapter</span>
+                <span className='hover:bg-blue-400 px-1 transition-colors duration-150 active:bg-blue-600'>Section</span>
+            </div>
+            <div className=' fixed  w-screen z-50  flex flex-col  py-1 border-gray-200 drop-shadow-black'>
+                <div className='w-fit flex right-0 absolute'>
+                    {/* <div className='flex w-40 sm:w-[300px] items-center justify-center gap-2 border border-gray-500 rounded-lg mr-4'>
+                        <input type="text" placeholder="Search..." className=' w-full h-5 p-2 bg-white focus:outline-none ' onChange={searchhandler} />
+                        <IoIosSearch className='text-2xl' />
+                    </div> */}
                     <div className=' flex justify-end px-2 '>
                         <LanguageSelector setLanguages={(e) => setLanguage(e)} />
                     </div>
-
                 </div>
-                <div className=' absolute right-0 -bottom-7   flex w-40 sm:w-[300px] items-center justify-center gap-2 border border-gray-500 rounded-lg mr-4'>
-                    <input type="text" placeholder="Search..." className=' w-full h-5 p-2 bg-white focus:outline-none ' onChange={searchhandler} />
-                    <IoIosSearch className='text-2xl' />
-                </div>
-                <div ref={sidebarRef} className={`sm:fixed  mt-10 sm:mt-20  pointer-events-auto absolute top-0 w-40 h-screen overflow-y-auto bg-gray-200 rounded-b-md px-2 shadow-md ${sidebar ? 'visible' : 'hidden sm:visible'}`}>
+                <div ref={sidebarRef} className={`sm:fixed mt-10 sm:mt-[181.5px] h-[calc(100vh-181.5px)]  pointer-events-auto absolute top-0 w-40  overflow-y-auto bg-gray-200 rounded-b-md px-2 shadow-md ${sidebar ? 'visible' : 'hidden sm:visible'}`}>
                     <div className='flex flex-col items-center justify-center rounded-lg'>
                         {
                             chapter.map((item, index) => {
@@ -251,9 +250,9 @@ export default function BnsHome() {
             </div>
             <div className='w-screen box-border'>
                 <main className='min-h-full w-full relative '>
-                    <div className=' mt-2 h-screen overflow-auto  '>
+                    <div className='  h-screen overflow-auto  '>
                         {
-                            bns.length>0 && bns?.map((bnsItem, index) => {
+                            bns.length > 0 ? bns?.map((bnsItem, index) => {
                                 return (
                                     <div key={index}
                                         ref={(el) => (sectionRefs.current[index] = el)}
@@ -289,23 +288,14 @@ export default function BnsHome() {
 
 
                                     </div>)
-                            })
+                            }) :
+                                <div className="flex items-center justify-center space-x-2 h-full">
+                                    <div className="w-4 h-4 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full  animate-bounce"></div>
+                                    <div className="w-4 h-4 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full animate-pulse delay-150"></div>
+                                    <div className="w-4 h-4 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full animate-bounce delay-300"></div>
+                                </div>
                         }
                     </div>
-                    {/* <div className='justify-center w-full flex   bg-gray-300 rounded-md p-2 text-2xl text-black'>
-                        <AiFillCaretLeft />
-                        <div className=' flex w-100 bg-gray-200 mx-2 gap-2 overflow-auto'>
-                            {
-                                numbers.map((num, index) => {
-                                    return (
-                                        <div key={index} onClick={pagehandler} className='flex cursor-pointer hover:text-gray-100 hover:bg-green-500 justify-center items-center gap-2 text-sm bg-gray-300 p-1 rounded-md  font-bold'>
-                                            {num}
-                                        </div>
-                                    )
-                                })}
-                        </div>
-                        <AiFillCaretRight className=' cursor-pointer hover:text-blue-700' />
-                    </div> */}
                 </main>
             </div>
         </div>

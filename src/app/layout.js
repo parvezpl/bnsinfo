@@ -23,8 +23,10 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navigation className={"fixed"}/>
+        <Navigation className={"fixed w-screen"}/>
+        <div className="pt-[201px] sm:pt[213px] md:pt-[183px] xl:pt-[145.5px] ">
         {children}
+        </div>
       </body>
     </html>
   );

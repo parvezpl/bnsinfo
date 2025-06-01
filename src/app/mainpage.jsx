@@ -4,39 +4,7 @@ import './mainpage.css'
 export default function Mainpage() {
     return (
         <div>
-            <div>
-                <div className="top-bar text-[8px]">
-                    <div>
-                        <span><b>Disclaimer:</b> This is a non-governmental site created for educational purposes, aiming to simplify Bharatiya Nyaya Sanhita 2023 for easy understanding.</span>
-                    </div>
-                    <div>Language ▾</div>
-                </div>
-                <div className="header">
-                    <div className=''>
-                        <h1>भारतीय न्याय संहिता 2023 </h1>
-                        <h2>नया कानून गाइड</h2>
-                    </div>
-                    <div className="header-logos">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Digital_India_logo.png" alt="Digital India" />
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/India_Emblem.png/120px-India_Emblem.png" alt="India Code" />
-                    </div>
-                </div>
-                <div className="navbar !text-[8px] sm:!text-[]14px">
-                    <a href="#">🏠 Home</a>
-                    <a href="about.html">About Us</a>
-                    <a href="/bns/en">Bharatiya Nyaya Sanhita 2023</a>
-                    <a href="/bns/hi">भारतीय न्याय संहिता,2023 (Hindi)</a>
-                    <a href="#">Blogs</a>
-                    <a href="#">Forums</a>
-
-
-                    <div className="search-box">
-                        <input type="text" placeholder="चोरी करने के सजा....." />
-                        <button>🔍</button>
-                    </div>
-                </div>
-
-            </div>
+            
 
             <h1>भारतीय न्याय संहिता 2023 जानकारी पोर्टल</h1>
             <p>सरकारी नहीं — केवल शैक्षिक उद्देश्य के लिए</p>
