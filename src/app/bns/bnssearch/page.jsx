@@ -101,10 +101,10 @@ export default function Page() {
                         return (
                             <div key={index}
 
-                                className='flex flex-row items-center text-[13px] sm:text-[16px] justify-center gap-4' >
+                                className='flex flex-row bg-white w-full items-center text-[13px] sm:text-[16px] justify-center gap-4' >
                                 <div className='flex flex-col items-center'>
                                     <div className='bg-green-400 text-center w-fit px-4 py-1 my-4' >{item.chapter}</div>
-                                    <ul className='mx-10 flex flex-col justify-center bg-white'>
+                                    <ul className='mx-10 flex flex-col justify-center '>
                                         {
                                             item.sections?.map((val, ind) => {
                                                 return (
