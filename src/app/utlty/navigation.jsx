@@ -3,11 +3,14 @@ import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import '../mainpage.css'
 import LanguageSelector from './LanguageSelector'
+import useStore from '../../../store/useStore'
 
 export default function Navigation({ className }) {
     const router = useRouter()
     const [searchvalue, setSearchvalue] = useState('')
     const [language, setLanguage] = useState('')
+    const setSearchparam = useStore((state)=>state.setSearchparam)
+
     useEffect(() => {
         localStorage.setItem('lang',  'hi');
         setSearchvalue('')
@@ -17,7 +20,8 @@ export default function Navigation({ className }) {
         setSearchvalue(e)
     }
     const searchbtn = async () => {
-        router.push(`/bns/bnssearch?search=${searchvalue}`)
+        router.push(`/bns/bnssearch`)
+        setSearchparam(searchvalue)
     }
     // console.log(language)
     return (

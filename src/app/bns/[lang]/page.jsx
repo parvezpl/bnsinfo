@@ -4,7 +4,7 @@ import { AiFillCaretLeft, AiFillCaretRight } from "react-icons/ai";
 import { TiThMenu } from "react-icons/ti";
 import LanguageSelector from '../../utlty/LanguageSelector';
 import { IoIosSearch } from "react-icons/io";
-import { useParams } from 'next/navigation';
+
 
 
 export default function BnsHome() {
@@ -18,7 +18,6 @@ export default function BnsHome() {
     const sidebarRef = useRef(null);
     const [activeIndex, setActiveIndex] = useState(0);
     const sectionRefs = useRef([]);
-    const params = useParams()
 
 
     const numbers = Array.from({ length: 100 }, (_, i) => i + 1);
@@ -111,7 +110,6 @@ export default function BnsHome() {
 
 
     const chapterhanler = async (item, index) => {
-        console.log(index)
         sectionRefs.current[index]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
@@ -210,7 +208,6 @@ export default function BnsHome() {
         };
     }, [bns]);
 
-    console.log(activeIndex)
 
     return (
         <div className=' relative flex-col w-full  text-black bg-white h-screen overflow-hidden '>
