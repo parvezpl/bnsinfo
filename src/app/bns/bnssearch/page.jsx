@@ -83,7 +83,7 @@ export default function Page() {
     }, [sectionlist]);
 
     return (
-        <div className=' flex justify-center w-full h-screen '>
+        <div className=' flex justify-center w-full h-screen bg-white '>
             <ul className='fixed left-0 bg-gray-300 text-black w-8 sm:w-32 text-[12px] sm:text-[100%] text-center h-[calc(100vh-181.5px)] overflow-auto cursor-pointer'>
                 {
                     sectionlist?.map((section, index) => {
@@ -95,7 +95,7 @@ export default function Page() {
                     })
                 }
             </ul>
-            <div className='sm:pl-32 w-[cals(100vw-62)]'>
+            <div className='sm:pl-32 w-[cals(100vw-62)] min-h-full  text-black'>
                 {
                     searchdata.length > 0 ? searchdata?.map((item, index) => {
                         return (
