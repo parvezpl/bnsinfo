@@ -83,7 +83,7 @@ export default function Page() {
     }, [sectionlist]);
 
     return (
-        <div className=' flex justify-center w-full h-screen bg-white '>
+        <div className=' flex justify-center w-full h-screen  '>
             <ul className='fixed left-0 bg-gray-300 text-black w-8 sm:w-32 text-[12px] sm:text-[100%] text-center h-[calc(100vh-181.5px)] overflow-auto cursor-pointer'>
                 {
                     sectionlist?.map((section, index) => {
@@ -104,7 +104,7 @@ export default function Page() {
                                 className='flex flex-row items-center text-[13px] sm:text-[16px] justify-center gap-4' >
                                 <div className='flex flex-col items-center'>
                                     <div className='bg-green-400 text-center w-fit px-4 py-1 my-4' >{item.chapter}</div>
-                                    <ul className='mx-10 flex flex-col justify-center'>
+                                    <ul className='mx-10 flex flex-col justify-center bg-white'>
                                         {
                                             item.sections?.map((val, ind) => {
                                                 return (
