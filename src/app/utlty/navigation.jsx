@@ -13,15 +13,16 @@ export default function Navigation({ className }) {
 
     useEffect(() => {
         localStorage.setItem('lang',  'hi');
-        setSearchvalue('')
+        // setSearchvalue('')
     }, [])
 
     const bnsSeachHandler = (e) => {
         setSearchvalue(e)
     }
     const searchbtn = async () => {
-        router.push(`/bns/bnssearch`)
         setSearchparam(searchvalue)
+        router.push(`/bns/bnssearch`)
+        
     }
     // console.log(language)
     return (
