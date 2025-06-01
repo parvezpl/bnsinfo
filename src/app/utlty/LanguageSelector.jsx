@@ -9,11 +9,11 @@ const LanguageSelector = ({setLanguages}) => {
   useEffect(()=>{
     setLanguage(params.lang)
   },[])
-  console.log(params.lang)
-  const handleChange = (e) => {
-    setLanguages(language)
+
+  const handleChange = async (e) => {
     setLanguage(e.target.value);
-    
+    setLanguages(language)
+    await localStorage.setItem('lang',  e.target.value);
     console.log("Selected Language:", e.target.value);
   };
 

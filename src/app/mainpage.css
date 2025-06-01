@@ -215,3 +215,7 @@
         font-size: 14px;
         color: #777;
     }
+
+    .h-screen-minus-nav {
+        height: calc(100vh - 145.5px);
+    }

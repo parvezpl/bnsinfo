@@ -1,10 +1,25 @@
 'use client'
 import { useRouter } from 'next/navigation'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import '../mainpage.css'
+import LanguageSelector from './LanguageSelector'
 
-export default function Navigation({className}) {
+export default function Navigation({ className }) {
     const router = useRouter()
+    const [searchvalue, setSearchvalue] = useState('')
+    const [language, setLanguage] = useState('')
+    useEffect(() => {
+        localStorage.setItem('lang',  'hi');
+        setSearchvalue('')
+    }, [])
+
+    const bnsSeachHandler = (e) => {
+        setSearchvalue(e)
+    }
+    const searchbtn = async () => {
+        router.push(`/bns/bnssearch?search=${searchvalue}`)
+    }
+    // console.log(language)
     return (
         <div className={`flex flex-row w-full items-center justify-between px-2 z-50 bg-blue-600 ${className}`}>
             <div className='w-full'>
@@ -12,7 +27,9 @@ export default function Navigation({className}) {
                     <div>
                         <span><b>Disclaimer:</b> This is a non-governmental site created for educational purposes, aiming to simplify Bharatiya Nyaya Sanhita 2023 for easy understanding.</span>
                     </div>
-                    <div>Language ▾</div>
+                    <div className=' flex justify-end px-2 text-black '>
+                        <LanguageSelector setLanguages={(e) => setLanguage(e)} />
+                    </div>
                 </div>
                 <div className="header">
                     <div className=''>
@@ -34,8 +51,8 @@ export default function Navigation({className}) {
 
 
                     <div className="search-box">
-                        <input type="text" placeholder="चोरी करने के सजा....." />
-                        <button>🔍</button>
+                        <input type="text" placeholder="चोरी करने के सजा....." value={searchvalue} onChange={(e) => bnsSeachHandler(e.target.value)} />
+                        <button onClick={() => searchbtn()}>🔍</button>
                     </div>
                 </div>
             </div>
