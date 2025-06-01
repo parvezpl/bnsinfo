@@ -56,7 +56,7 @@ export default function Navigation({ className }) {
 
                     <div className="search-box">
                         <input type="text" placeholder="चोरी करने के सजा....." value={searchvalue} onChange={(e) => bnsSeachHandler(e.target.value)} />
-                        <button onClick={() => searchbtn()}>🔍</button>
+                        <button onClick={() => searchbtn() } className=' transition duration-150 bg-blue-400' >🔍</button>
                     </div>
                 </div>
             </div>

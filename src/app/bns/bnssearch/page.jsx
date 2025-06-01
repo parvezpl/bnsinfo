@@ -90,18 +90,18 @@ export default function Page() {
                         return (
                             <li key={index}
                                 
-                                onClick={() => sectionrhanler(section, index)} className=' flex my-1 justify-center text-center hover:bg-blue-400 transition duration-150 active:bg-blue-500 '><span className='hidden sm:block'>ACT-</span> {section.section}</li>
+                                onClick={() => sectionrhanler(section, index)} className=' flex my-1 justify-center text-center  hover:bg-blue-400 transition duration-150 active:bg-blue-500 '><span className='hidden sm:block'>ACT-</span> {section.section}</li>
                         )
                     })
                 }
             </ul>
             <div className='sm:pl-32 w-[cals(100vw-62)]'>
                 {
-                    searchdata ? searchdata?.map((item, index) => {
+                    searchdata.length>0 ? searchdata?.map((item, index) => {
                         return (
                             <div key={index}
                             ref={(el) => (sectionRefs.current[index] = el)}
-                             className='flex flex-row items-center justify-center gap-4 scroll-mt-50 sm:scroll-mt-45' >
+                             className='flex flex-row items-center text-[13px] sm:text-[16px] justify-center gap-4 scroll-mt-50 sm:scroll-mt-45' >
                                 <div className='flex flex-col items-center'>
                                     <div className='bg-green-400 text-center w-fit px-4 py-1 my-4' >{item.chapter}</div>
                                     <ul className='mx-10 flex flex-col justify-center'>
@@ -122,13 +122,13 @@ export default function Page() {
                         )
                     })
                         :
+                     
 
                         <div className="flex items-center justify-center space-x-2 h-full">
                             <div className="w-4 h-4 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full  animate-bounce"></div>
                             <div className="w-4 h-4 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full animate-pulse delay-150"></div>
                             <div className="w-4 h-4 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full animate-bounce delay-300"></div>
                         </div>
-
                 }
             </div>
         </div >
