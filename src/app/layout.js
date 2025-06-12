@@ -1,4 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
+import Head from 'next/head';
 import "./globals.css";
 import Navigation from "./utlty/navigation";
 
@@ -20,6 +21,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+<Head>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7440927056234503"
+     crossorigin="anonymous"></script>
+</Head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
