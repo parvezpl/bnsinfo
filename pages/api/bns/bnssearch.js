@@ -7,11 +7,9 @@ export default async function handler(req, res) {
        
     if (req.method == "GET") {
         const { search } = req.query
-
         if (data.length === 0) {
             data = await Bnsen.find()
         }
-
         const bns = data.flatMap(item =>
             item.sections.filter(item1 => 
                 item1.section.toLowerCase().includes(search.toLowerCase()) ||
@@ -19,6 +17,7 @@ export default async function handler(req, res) {
                 // || item1.content.toLowerCase().includes(search.toLowerCase())
             )
         );
+       
         if (bns.length === 0) {
             return res.status(404).json({ error: "No matching sections found" });
         }

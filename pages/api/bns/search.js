@@ -4,19 +4,23 @@ import Bnshindis from "../../../lib/schema/bnshi";
 
 let data = []
 export default async function handler(req, res) {
-     await connectDB()
+    await connectDB()
 
     if (req.method == "GET") {
         // await Bnsenglishs.syncIndexes()
 
         const { search, lang } = req.query
-        console.log("value search",search, lang)
+        console.log("value search", search, lang)
         try {
-            if (lang==="hi") {
+            if (lang === "hi") {
                 const bns = await Bnshindis.find({
                     $text: { $search: search }
                 }).lean();
-                return res.status(200).json(bns);
+
+                if (bns.length === 0) {
+                    return res.status(404).json({ error: "No matching sections found" });
+                }
+                return res.status(200).json({bns});
             } else {
                 const bns = await Bnsenglishs.find({
                     $text: { $search: search }
