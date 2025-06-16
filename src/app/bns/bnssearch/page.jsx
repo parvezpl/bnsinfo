@@ -83,7 +83,7 @@ export default function Page() {
     }, [sectionlist]);
 
     return (
-        <div className=' flex flex-col items-center justify-center w-full   '>
+        <div className=' flex flex-col items-center justify-center w-full bg-gray-50 text-black  '>
             {
                 !searchparam ?
                     <div className='w-full h-[181.5px] z-10 flex items-center justify-center text-black text-xl font-bold'>
@@ -93,46 +93,46 @@ export default function Page() {
                     <div className='w-full flex flex-col items-center justify-center'>
                         <h1 className='text-2xl font-bold text-black py-4'>Search Results for: <span className='text-blue-500'>{searchparam}</span></h1>
                         <div>
-                            <ul className='fixed left-0 top-[150px] bg-gray-300 text-black w-8 sm:w-32 text-[12px] sm:text-[100%] text-center h-[calc(100vh-150px)] overflow-auto cursor-pointer'>
-                                {
-                                    sectionlist?.map((section, index) => {
-                                        return (
-                                            <li key={index}
-
-                                                onClick={() => sectionrhanler(section, index)} className=' flex my-1 justify-center text-center  hover:bg-blue-400 transition duration-150 active:bg-blue-500 '><span className='hidden sm:block'>ACT-</span> {section.section}</li>
-                                        )
-                                    })
-                                }
-                            </ul>
                             <div className='sm:pl-32 w-[cals(100vw-62)] min-h-full  text-black'>
                                 {
-                                    searchdata?
+                                    searchdata ?
                                         searchdata.error ? <h1 className='flex justify-center items-center h-64 text-center'>{searchdata.error}</h1> :
-                                        searchdata.bns?.map((item, index) => {
-                                            return (
-                                                <div key={index}
-                                                    className='flex flex-row bg-white w-full items-center text-[13px] sm:text-[16px] justify-center gap-4' >
-                                                    <div className='flex flex-col items-center'>
-                                                        <div className='bg-green-400 text-center w-fit px-4 py-1 my-4' >{item.chapter}</div>
-                                                        <ul className='mx-10 flex flex-col justify-center '>
+                                            searchdata.bns?.map((item, index) => {
+                                                return (
+                                                    <div key={index}
+                                                        className='flex flex-row bg-white w-full items-center text-[13px] sm:text-[16px] justify-center gap-4' >
+                                                        <ul className='fixed left-0 top-[150px] bg-gray-300 text-black w-8 sm:w-32 text-[12px] sm:text-[100%] text-center h-[calc(100vh-150px)] overflow-auto cursor-pointer'>
                                                             {
-                                                                item.sections?.map((val, ind) => {
+                                                                sectionlist?.map((section, index) => {
                                                                     return (
-                                                                        <li key={ind}
-                                                                            ref={(el) => (sectionRefs.current[ind] = el)}
-                                                                            className='flex flex-col items-center'>
-                                                                            <span className='bg-gray-700 text-white px-4 w-fit scroll-mt-50 sm:scroll-mt-45'> SECTION: - {val.section}</span>
-                                                                            <pre >{getHighlightedText(val.section_title, searchparam)}</pre>
-                                                                        </li>
+                                                                        <li key={index}
+
+                                                                            onClick={() => sectionrhanler(section, index)} className=' flex my-1 justify-center text-center  hover:bg-blue-400 transition duration-150 active:bg-blue-500 '><span className='hidden sm:block'>ACT-</span> {section.section}</li>
                                                                     )
                                                                 })
                                                             }
                                                         </ul>
+                                                        <div className='flex flex-col items-center'>
+                                                            <div className='bg-green-400 text-center w-fit px-4 py-1 my-4' >{item.chapter}</div>
+                                                            <ul className='mx-10 flex flex-col justify-center '>
+                                                                {
+                                                                    item.sections?.map((val, ind) => {
+                                                                        return (
+                                                                            <li key={ind}
+                                                                                ref={(el) => (sectionRefs.current[ind] = el)}
+                                                                                className='flex flex-col items-center'>
+                                                                                <span className='bg-gray-700 text-white px-4 w-fit scroll-mt-50 sm:scroll-mt-45'> SECTION: - {val.section}</span>
+                                                                                <pre >{getHighlightedText(val.section_title, searchparam)}</pre>
+                                                                            </li>
+                                                                        )
+                                                                    })
+                                                                }
+                                                            </ul>
 
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            )
-                                        })
+                                                )
+                                            })
                                         :
 
                                         <div className="flex items-center justify-center space-x-2 h-[200px]">
