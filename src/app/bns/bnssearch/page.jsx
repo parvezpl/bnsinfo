@@ -101,7 +101,7 @@ export default function Page() {
                                                 return (
                                                     <div key={index}
                                                         className='flex flex-row bg-white w-full items-center text-[13px] sm:text-[16px] justify-center gap-4' >
-                                                        <ul className='fixed left-0 top-[150px] bg-gray-300 text-black w-8 sm:w-32 text-[12px] sm:text-[100%] text-center h-[calc(100vh-150px)] overflow-auto cursor-pointer'>
+                                                        <ul className='fixed left-0 top-[210px] sm:top-[150px] bg-gray-300 text-black w-8 sm:w-32 text-[12px] sm:text-[100%] text-center h-[calc(100vh-150px)] overflow-auto cursor-pointer'>
                                                             {
                                                                 sectionlist?.map((section, index) => {
                                                                     return (
@@ -120,8 +120,8 @@ export default function Page() {
                                                                         return (
                                                                             <li key={ind}
                                                                                 ref={(el) => (sectionRefs.current[ind] = el)}
-                                                                                className='flex flex-col items-center'>
-                                                                                <span className='bg-gray-700 text-white px-4 w-fit scroll-mt-50 sm:scroll-mt-45'> SECTION: - {val.section}</span>
+                                                                                className='flex flex-col items-center scroll-mt-54 sm:scroll-mt-40'>
+                                                                                <span className='bg-gray-700 text-white px-4 w-fit '> SECTION: - {val.section}</span>
                                                                                 <pre >{getHighlightedText(val.section_title, searchparam)}</pre>
                                                                             </li>
                                                                         )

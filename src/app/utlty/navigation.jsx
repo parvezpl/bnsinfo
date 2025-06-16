@@ -48,7 +48,7 @@ export default function Navigation({ className }) {
                 </div>
                 <div className="navbar">
                     <a href="/">🏠 Home</a>
-                    <a href="about.html">About Us</a>
+                    <a href="/about">About Us</a>
                     <a href="/bns/en">Bharatiya Nyaya Sanhita 2023</a>
                     <a href="/bns/hi">भारतीय न्याय संहिता,2023 (Hindi)</a>
                     <a href="#">Blogs</a>

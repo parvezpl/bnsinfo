@@ -7,10 +7,8 @@ export default async function handler(req, res) {
     await connectDB()
 
     if (req.method == "GET") {
-        // await Bnsenglishs.syncIndexes()
 
         const { search, lang } = req.query
-        console.log("value search", search, lang)
         try {
             if (lang === "hi") {
                 const bns = await Bnshindis.find({
@@ -25,7 +23,7 @@ export default async function handler(req, res) {
                 const bns = await Bnsenglishs.find({
                     $text: { $search: search }
                 }).lean();
-                return res.status(200).json(bns);
+                return res.status(200).json({bns});
             }
         } catch (error) {
             console.log(error)
