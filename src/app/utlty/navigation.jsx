@@ -51,7 +51,7 @@ export default function Navigation({ className }) {
                     <a href="/about">About Us</a>
                     <a href="/bns/en">Bharatiya Nyaya Sanhita 2023</a>
                     <a href="/bns/hi">भारतीय न्याय संहिता,2023 (Hindi)</a>
-                    <a href="#">Blogs</a>
+                    <a href="/blog">Blogs</a>
                     <a href="#">Forums</a>
 
 

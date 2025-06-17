@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { use, useEffect, useRef, useState } from 'react'
 import { AiFillCaretLeft, AiFillCaretRight } from "react-icons/ai";
 import { TiThMenu } from "react-icons/ti";
 import LanguageSelector from '../../utlty/LanguageSelector';
@@ -7,7 +7,7 @@ import { IoIosSearch } from "react-icons/io";
 
 
 
-export default function BnsHome() {
+export default function BnsHome({params}) {
     const [bns, setBns] = useState([])
     const [sidebar, setSidebar] = useState(true)
     const [act, setAct] = useState()
@@ -18,11 +18,10 @@ export default function BnsHome() {
     const sidebarRef = useRef(null);
     const [activeIndex, setActiveIndex] = useState(0);
     const sectionRefs = useRef([]);
+    const { lang } = use(params)
 
-
-    const numbers = Array.from({ length: 100 }, (_, i) => i + 1);
     useEffect(() => {
-        // setLanguage(params.lang)
+        setLanguage(lang)
         const md = window.innerWidth <= 768;
         if (md && sidebar) {
             setSidebar(false)
@@ -94,6 +93,7 @@ export default function BnsHome() {
 
     useEffect(() => {
         const fetchResults = async () => {
+            console.log("debouncedTerm",language, debouncedTerm)
             const res = language === "en" ? await fetch(`/api/bns/bnssearch?search=${debouncedTerm}`) : await fetch(`/api/bns/bnshindi/bnssearch?search=${debouncedTerm}`)
             const datas = res.json();
             datas.then((data) => {
