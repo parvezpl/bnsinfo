@@ -19,20 +19,20 @@ export default function Page() {
         const fetchdata = async () => {
             const savedLang = await localStorage.getItem('lang');
             if (savedLang) {
-                const res = await fetch(`/api/bns/search?search=${encodeURIComponent(searchparam)}}&lang=${savedLang}`)
+                const res = await fetch(`/api/bns/search?search=${encodeURIComponent(searchparam)}&lang=${savedLang}`)
                 const data = await res.json();
                 console.log(data, searchparam)
-                setSearchdata(data)
-                if (data) {
-                    const sections = []
-                    data.bns?.map((item) => {
-                        // console.log(item)
-                        if (item) {
-                            sections.push(...item.sections)
-                            setSectionlist(sections)
-                        }
-                    })
-                }
+                setSearchdata(data.bns || []);
+                // if (data) {
+                //     const sections = []
+                //     data.bns?.map((item) => {
+                //         // console.log(item)
+                //         if (item) {
+                //             sections.push(...item.sections)
+                //             setSectionlist(sections)
+                //         }
+                //     })
+                // }
             }
         }
         fetchdata()
@@ -81,7 +81,7 @@ export default function Page() {
             });
         };
     }, [sectionlist]);
-
+    console.log("Search Data:", searchdata)
     return (
         <div className=' flex flex-col items-center justify-center w-full bg-gray-50 text-black  '>
             {
@@ -97,42 +97,57 @@ export default function Page() {
                                 {
                                     searchdata ?
                                         searchdata.error ? <h1 className='flex justify-center items-center h-64 text-center'>{searchdata.error}</h1> :
-                                            searchdata.bns?.map((item, index) => {
-                                                return (
-                                                    <div key={index}
-                                                        className='flex flex-row bg-white w-full items-center text-[13px] sm:text-[16px] justify-center gap-4' >
-                                                        <ul className='fixed left-0 top-[210px] sm:top-[150px] bg-gray-300 text-black w-8 sm:w-32 text-[12px] sm:text-[100%] text-center h-[calc(100vh-150px)] overflow-auto cursor-pointer'>
-                                                            {
-                                                                sectionlist?.map((section, index) => {
-                                                                    return (
-                                                                        <li key={index}
+                                            // searchdata.bns?.map((item, index) => {
+                                            //     return (
+                                            //         <div key={index}
+                                            //             className='flex flex-row bg-white w-full items-center text-[13px] sm:text-[16px] justify-center gap-4' >
+                                            //             <ul className='fixed left-0 top-[210px] sm:top-[150px] bg-gray-300 text-black w-8 sm:w-32 text-[12px] sm:text-[100%] text-center h-[calc(100vh-150px)] overflow-auto cursor-pointer'>
+                                            //                 {
+                                            //                     sectionlist?.map((section, index) => {
+                                            //                         return (
+                                            //                             <li key={index}
 
-                                                                            onClick={() => sectionrhanler(section, index)} className=' flex my-1 justify-center text-center  hover:bg-blue-400 transition duration-150 active:bg-blue-500 '><span className='hidden sm:block'>ACT-</span> {section.section}</li>
-                                                                    )
-                                                                })
-                                                            }
-                                                        </ul>
-                                                        <div className='flex flex-col items-center'>
-                                                            <div className='bg-green-400 text-center w-fit px-4 py-1 my-4' >{item.chapter}</div>
-                                                            <ul className='mx-10 flex flex-col justify-center '>
-                                                                {
-                                                                    item.sections?.map((val, ind) => {
-                                                                        return (
-                                                                            <li key={ind}
-                                                                                ref={(el) => (sectionRefs.current[ind] = el)}
-                                                                                className='flex flex-col items-center scroll-mt-54 sm:scroll-mt-40'>
-                                                                                <span className='bg-gray-700 text-white px-4 w-fit '> SECTION: - {val.section}</span>
-                                                                                <pre >{getHighlightedText(val.section_title, searchparam)}</pre>
-                                                                            </li>
-                                                                        )
-                                                                    })
-                                                                }
-                                                            </ul>
+                                            //                                 onClick={() => sectionrhanler(section, index)} className=' flex my-1 justify-center text-center  hover:bg-blue-400 transition duration-150 active:bg-blue-500 '><span className='hidden sm:block'>ACT-</span> {section.section}</li>
+                                            //                         )
+                                            //                     })
+                                            //                 }
+                                            //             </ul>
+                                            //             <div className='flex flex-col items-center'>
+                                            //                 <div className='bg-green-400 text-center w-fit px-4 py-1 my-4' >{item.chapter}</div>
+                                            //                 <ul className='mx-10 flex flex-col justify-center '>
+                                            //                     {
+                                            //                         item.sections?.map((val, ind) => {
+                                            //                             return (
+                                            //                                 <li key={ind}
+                                            //                                     ref={(el) => (sectionRefs.current[ind] = el)}
+                                            //                                     className='flex flex-col items-center scroll-mt-54 sm:scroll-mt-40'>
+                                            //                                     <span className='bg-gray-700 text-white px-4 w-fit '> SECTION: - {val.section}</span>
+                                            //                                     <pre >{getHighlightedText(val.section_title, searchparam)}</pre>
+                                            //                                 </li>
+                                            //                             )
+                                            //                         })
+                                            //                     }
+                                            //                 </ul>
 
-                                                        </div>
-                                                    </div>
-                                                )
-                                            })
+                                            //             </div>
+                                            //         </div>
+                                            //     )
+                                            // })
+                                            < ul className='mx-10 flex flex-col justify-center '>
+                                                {
+                                                    searchdata?.map((bns, index) => {
+                                                        return (
+                                                            <li key={index}
+                                                                ref={(el) => (sectionRefs.current[index] = el)}
+                                                                className='flex flex-col items-center scroll-mt-54 sm:scroll-mt-40'>
+                                                                <span className='bg-gray-700 text-white px-4 w-fit '> SECTION: - {bns?.section}</span>
+                                                                <pre >{getHighlightedText(bns?.section_title, searchparam)}</pre>
+                                                            </li>
+                                                        )
+                                                    })
+                                                }
+                                            </ul>
+
                                         :
 
                                         <div className="flex items-center justify-center space-x-2 h-[200px]">

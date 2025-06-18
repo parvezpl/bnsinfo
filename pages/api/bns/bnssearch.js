@@ -7,6 +7,7 @@ export default async function handler(req, res) {
        
     if (req.method == "GET") {
         const { search } = req.query
+        console.log("Search query:", search);
         if (data.length === 0) {
             data = await Bnsen.find()
         }
