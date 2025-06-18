@@ -17,19 +17,19 @@ const useStore = create((set, get) => ({
 
     bnshindi: [],
     setBnshindi: async (value) => {
-        const lang = get().languages;
-        // if (bnshindi.length > 0) return;
+        const bnshindi = get().bnshindi;
+        if (bnshindi.length > 0) return;
         const res = await fetch(`/api/bns/bnshindi/bnshi`)
         const data = await res.json();
         set({ bnshindi: data.bns || data });
     },
     bnsenglish: [],
     setBnsenglish: async (value) => {
-        const lang = get().languages;
-        if (bnshindi.length > 0) return;
-        const res = await fetch(`/api/bns/bnshindi/bnshi`)
+        const bnsenglish = get().bnsenglish;
+        if (bnsenglish.length > 0) return;
+        const res = await fetch(`/api/bns/bnsen`)
         const data = await res.json();
-        set({ bnshindi: data.bns || data });
+        set({ bnsenglish: data.bns || data });
     }
 }));
 export default useStore;

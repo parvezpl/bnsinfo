@@ -5,11 +5,12 @@ import { TiThMenu } from "react-icons/ti";
 import LanguageSelector from '../../utlty/LanguageSelector';
 import { IoIosSearch } from "react-icons/io";
 import useStore from '../../../../store/useStore';
+import { useParams } from 'next/navigation';
 
 
 
-export default function BnsHome({params}) {
-    // const [bns, setBns] = useState([])
+export default function BnsHome({ params }) {
+    const [bns, setBns] = useState([])
     const [sidebar, setSidebar] = useState(true)
     const [searchTerm, setSearchTerm] = useState('');
     const [debouncedTerm, setDebouncedTerm] = useState('');
@@ -18,10 +19,23 @@ export default function BnsHome({params}) {
     const [activeIndex, setActiveIndex] = useState(0);
     const sectionRefs = useRef([]);
     const lang = useStore((state) => state.languages);
-    const bns = useStore((state) => state.bnshindi);
+    const bnshindi = useStore((state) => state.bnshindi);
     const bnsenglish = useStore((state) => state.bnsenglish);
-    
-  
+    const paramss = useParams();
+
+
+    // const checke = () => {
+    //     console.log("Search bnshindi:", bnshindi);
+    //     console.log("Search bnsenglish:", bnsenglish);
+    // }
+
+
+
+
+    useEffect(() => {
+        paramss.lang === 'en' ? setBns(bnsenglish) : setBns(bnshindi)
+    }, [])
+
 
     useEffect(() => {
         setLanguage(lang)
@@ -82,7 +96,7 @@ export default function BnsHome({params}) {
             // console.log(data)
             setBns(data.bns)
         }
-     
+
     }, [language])
 
 
@@ -94,18 +108,18 @@ export default function BnsHome({params}) {
         return () => clearTimeout(handler); // clear timer on next input
     }, [searchTerm]);
 
-    useEffect(() => {
-        const fetchResults = async () => {
-            console.log("debouncedTerm",language, debouncedTerm)
-            const res = language === "en" ? await fetch(`/api/bns/bnssearch?search=${debouncedTerm}`) : await fetch(`/api/bns/bnshindi/bnssearch?search=${debouncedTerm}`)
-            const datas = res.json();
-            datas.then((data) => {
-                // setBns(data.bns)
-            })
-        };
+    // useEffect(() => {
+    //     const fetchResults = async () => {
+    //         console.log("debouncedTerm",language, debouncedTerm)
+    //         const res = language === "en" ? await fetch(`/api/bns/bnssearch?search=${debouncedTerm}`) : await fetch(`/api/bns/bnshindi/bnssearch?search=${debouncedTerm}`)
+    //         const datas = res.json();
+    //         datas.then((data) => {
+    //             // setBns(data.bns)
+    //         })
+    //     };
 
-        fetchResults();
-    }, [debouncedTerm, language]);
+    //     fetchResults();
+    // }, [debouncedTerm, language]);
 
     const searchhandler = (e) => {
         setSearchTerm(e.target.value)
@@ -218,6 +232,7 @@ export default function BnsHome({params}) {
                 <span className='hover:bg-blue-400 px-1 transition-colors duration-150 active:bg-blue-600' onClick={() => setSidebar(prev => !prev)}>chapter</span>
                 <span className='hover:bg-blue-400 px-1 transition-colors duration-150 active:bg-blue-600'>Section</span>
             </div>
+            
             <div className=' fixed  w-screen z-50  flex flex-col  py-1 border-gray-200 drop-shadow-black'>
                 <div className='w-fit flex right-0 absolute'>
                     {/* <div className='flex w-40 sm:w-[300px] items-center justify-center gap-2 border border-gray-500 rounded-lg mr-4'>
