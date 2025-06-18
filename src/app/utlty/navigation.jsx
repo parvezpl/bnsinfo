@@ -9,9 +9,10 @@ export default function Navigation({ className }) {
     const router = useRouter()
     const [searchvalue, setSearchvalue] = useState('')
     const [language, setLanguage] = useState('')
-    const setSearchbtn= useStore((state => state.setSearchbtn))
-    const setLanguages= useStore((state => state.setLanguages))
+    const setSearchbtn = useStore((state => state.setSearchbtn))
+    const setLanguages = useStore((state => state.setLanguages))
     const setBnshindi = useStore((state) => state.setBnshindi);
+    const setBnsenglish = useStore((state) => state.setBnsenglish);
 
     const bnsSeachHandler = (e) => {
         setSearchvalue(e)
@@ -47,8 +48,14 @@ export default function Navigation({ className }) {
                 <div className="navbar">
                     <a href="/">🏠 Home</a>
                     <a href="/about">About Us</a>
-                    <a href="/bns/en">Bharatiya Nyaya Sanhita 2023</a>
-                    <div onClick={()=>{
+                    <div
+                        onClick={() => {
+                            setBnsenglish()
+                            router.push('/bns/en')
+                        }} className='text-white px-[16px] py-[12px] hover:cursor-pointer hover:bg-blue-700 hover:h-full'
+
+                    >Bharatiya Nyaya Sanhita 2023</div>
+                    <div onClick={() => {
                         setBnshindi()
                         router.push('/bns/hi')
 

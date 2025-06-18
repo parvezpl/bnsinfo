@@ -19,7 +19,9 @@ export default function BnsHome({params}) {
     const sectionRefs = useRef([]);
     const lang = useStore((state) => state.languages);
     const bns = useStore((state) => state.bnshindi);
+    const bnsenglish = useStore((state) => state.bnsenglish);
     
+  
 
     useEffect(() => {
         setLanguage(lang)
