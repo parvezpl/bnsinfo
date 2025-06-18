@@ -12,10 +12,9 @@ export default async function handler(req, res) {
             data = await Bnsen.find()
         }
         const bns = data.flatMap(item =>
-            item.sections.filter(item1 => 
+            item.sections?.filter(item1 => 
                 item1.section.toLowerCase().includes(search.toLowerCase()) ||
                 item1.section_title.toLowerCase().includes(search.toLowerCase())
-                // || item1.content.toLowerCase().includes(search.toLowerCase())
             )
         );
        

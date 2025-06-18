@@ -9,62 +9,22 @@ export default async function handler(req, res) {
     if (req.method == "GET") {
 
         const { search, lang } = req.query
+        console.log("Search Query:", search, "Language:", lang);
         const searchterm = search.split(" ")
-        console.log("Search query:", searchterm, "Language:", lang);
-
         try {
-            if ("en" === "hi") {
+            if (lang === "hi") {
                 const bns = await Bnshindis.find({
                     $text: { $search: search }
                 }).lean();
-                const data = bns.map(item => {
-                    return item.sections?.filter(res => {
-                        if (search.trim().toLowerCase() === res.section.trim().toLowerCase()) {
-                            return res.section;
-                        }
-                    })[0];
-                });
-                // console.log("Filtered sections:", search, data);
+    
+                returnSearchText(bns, searchterm, res);
 
-                if (bns.length === 0) {
-                    return res.status(404).json({ error: "No matching sections found" });
-                }
-                const filteredData = data.filter(item => item !== undefined && item !== null);
-                return res.status(200).json({ bns: filteredData });
-
-
+                // return res.status(200).json({ ...responce });
             } else {
                 const bns = await Bnsenglishs.find({
                     $text: { $search: search }
                 }).lean();
-
-                const data = bns.map(item => {
-                    return item.sections?.filter(res => {
-                        let isMatch = false;
-                        searchterm.forEach(term => {
-                            if (term.trim().toLowerCase() === res.section.trim().toLowerCase()) {
-                                isMatch = true;
-                            }
-                            if (res.section_title.trim().toLowerCase().includes(term.trim().toLowerCase())) {
-                                isMatch = true;
-                            }
-                        })
-                        if (isMatch) {
-                            return true;
-                        }
-
-                    });
-                })[0];
-                
-
-                if (data.length === 0) {
-                    return res.status(404).json({ error: "No matching sections found" });
-                }
-
-
-                const filteredData = data.filter(item => item !== undefined && item !== null);
-                // console.log("Filtered Data:", filteredData);
-                return res.status(200).json({ bns: filteredData });
+                returnSearchText(bns, searchterm, res);
             }
         } catch (error) {
             console.log(error)
@@ -73,4 +33,31 @@ export default async function handler(req, res) {
 
     }
 
+}
+
+
+function returnSearchText(responce, searchterm, res) {
+    const data = responce.map(item => {
+        return item.sections?.filter(res => {
+            let isMatch = false;
+            searchterm.forEach(term => {
+                if (term.trim().toLowerCase() === res.section.trim().toLowerCase()) {
+                    isMatch = true;
+                }
+                if (res.section_title.trim().toLowerCase().includes(term.trim().toLowerCase())) {
+                    isMatch = true;
+                }
+            })
+            if (isMatch) {
+                return true;
+            }
+        });
+    })[0];
+
+    if (data?.length === 0 || data === undefined || data === null) {
+        return res.status(404).json({ error: "No matching sections found" });
+    }
+    const filteredData = data?.filter(item => item !== undefined && item !== null);
+    // console.log("Filtered Data:",  data);
+    return res.status(200).json({ bns: filteredData || [] });
 }

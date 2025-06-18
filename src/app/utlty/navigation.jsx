@@ -9,20 +9,18 @@ export default function Navigation({ className }) {
     const router = useRouter()
     const [searchvalue, setSearchvalue] = useState('')
     const [language, setLanguage] = useState('')
-    const setSearchparam = useStore((state)=>state.setSearchparam)
-
-    useEffect(() => {
-        localStorage.setItem('lang',  'hi');
-        // setSearchvalue('')
-    }, [])
+    const setSearchbtn= useStore((state => state.setSearchbtn))
+    const setLanguages= useStore((state => state.setLanguages))
+    const setBnshindi = useStore((state) => state.setBnshindi);
 
     const bnsSeachHandler = (e) => {
         setSearchvalue(e)
     }
-    const searchbtn = async () => {
-        setSearchparam(searchvalue)
+    const searchbutton = () => {
+        setSearchbtn(searchvalue)
+        // setSearchparam(searchvalue)
         router.push(`/bns/bnssearch`)
-        
+
     }
     // console.log(language)
     return (
@@ -33,7 +31,7 @@ export default function Navigation({ className }) {
                         <span><b>Disclaimer:</b> This is a non-governmental site created for educational purposes, aiming to simplify Bharatiya Nyaya Sanhita 2023 for easy understanding.</span>
                     </div>
                     <div className=' flex justify-end px-2 text-black '>
-                        <LanguageSelector setLanguages={(e) => setLanguage(e)} />
+                        <LanguageSelector setLanguages={(e) => setLanguages(e)} />
                     </div>
                 </div>
                 <div className="header">
@@ -50,14 +48,18 @@ export default function Navigation({ className }) {
                     <a href="/">🏠 Home</a>
                     <a href="/about">About Us</a>
                     <a href="/bns/en">Bharatiya Nyaya Sanhita 2023</a>
-                    <a href="/bns/hi">भारतीय न्याय संहिता,2023 (Hindi)</a>
+                    <div onClick={()=>{
+                        setBnshindi()
+                        router.push('/bns/hi')
+
+                    }} className='text-white px-[16px] py-[12px] hover:cursor-pointer hover:bg-blue-700 hover:h-full'  >भारतीय न्याय संहिता,2023 (Hindi)</div>
                     <a href="/blog">Blogs</a>
                     <a href="#">Forums</a>
 
 
                     <div className="search-box">
                         <input type="text" placeholder="चोरी करने के सजा....." value={searchvalue} onChange={(e) => bnsSeachHandler(e.target.value)} />
-                        <button onClick={() => searchbtn() } className=' transition duration-150 bg-blue-400' >🔍</button>
+                        <button onClick={searchbutton} className=' transition duration-150 bg-blue-400' >🔍</button>
                     </div>
                 </div>
             </div>

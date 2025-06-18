@@ -11,10 +11,9 @@ const LanguageSelector = ({setLanguages}) => {
   },[])
 
   const handleChange = async (e) => {
+    console.log("Language changed to:", e.target.value);
     setLanguage(e.target.value);
-    setLanguages(language)
-    await localStorage.setItem('lang',  e.target.value);
-    console.log("Selected Language:", e.target.value);
+    setLanguages(e.target.value)
   };
 
   return (
@@ -25,7 +24,6 @@ const LanguageSelector = ({setLanguages}) => {
         className="w-full px-0.5 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
         // defaultValue="hi"
       >
-
         <option >Language</option>
         <option value="hi" >हिन्दी (Hindi)</option>
         <option value="en" >English</option>

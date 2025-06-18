@@ -4,21 +4,22 @@ import { AiFillCaretLeft, AiFillCaretRight } from "react-icons/ai";
 import { TiThMenu } from "react-icons/ti";
 import LanguageSelector from '../../utlty/LanguageSelector';
 import { IoIosSearch } from "react-icons/io";
+import useStore from '../../../../store/useStore';
 
 
 
 export default function BnsHome({params}) {
-    const [bns, setBns] = useState([])
+    // const [bns, setBns] = useState([])
     const [sidebar, setSidebar] = useState(true)
-    const [act, setAct] = useState()
     const [searchTerm, setSearchTerm] = useState('');
     const [debouncedTerm, setDebouncedTerm] = useState('');
-    const [chapters, setChapters] = useState({})
     const [language, setLanguage] = useState('hi')
     const sidebarRef = useRef(null);
     const [activeIndex, setActiveIndex] = useState(0);
     const sectionRefs = useRef([]);
-    const { lang } = use(params)
+    const lang = useStore((state) => state.languages);
+    const bns = useStore((state) => state.bnshindi);
+    
 
     useEffect(() => {
         setLanguage(lang)
@@ -79,7 +80,7 @@ export default function BnsHome({params}) {
             // console.log(data)
             setBns(data.bns)
         }
-        fetchData()
+     
     }, [language])
 
 
@@ -260,9 +261,9 @@ export default function BnsHome({params}) {
                                         </div>
                                         <div className='w-full h-[100vh] flex flex-col items-center overflow-auto'>
                                             {
-                                                bnsItem?.sections.map((item) => {
+                                                bnsItem?.sections.map((item, indexs) => {
                                                     return (
-                                                        < div key={item._id}>
+                                                        < div key={indexs}>
                                                             <div
                                                                 className='flex flex-col sm:flex-row min-h-fit  justify-center w-fit gap-2 px-2 py-4 '
                                                             >

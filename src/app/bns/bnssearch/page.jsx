@@ -3,11 +3,14 @@ import React, { useEffect, useRef, useState } from 'react'
 import useStore from '../../../../store/useStore'
 
 export default function Page() {
-    const [searchdata, setSearchdata] = useState([])
     const [sectionlist, setSectionlist] = useState([])
-    const searchparam = useStore((state) => state.searchparam);
     const [activeIndex, setActiveIndex] = useState(0);
     const sectionRefs = useRef([]);
+
+    const searchparam = useStore((state) => state.searchparam);
+    const lang = useStore((state) => state.languages);
+    const searchdata = useStore((state) => state.searchdata);
+
 
     const sectionrhanler = async (item, index) => {
         sectionRefs.current[index]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -15,31 +18,9 @@ export default function Page() {
 
     useEffect(() => {
         setSectionlist([])
-        setSearchdata([])
-        const fetchdata = async () => {
-            const savedLang = await localStorage.getItem('lang');
-            if (savedLang) {
-                const res = await fetch(`/api/bns/search?search=${encodeURIComponent(searchparam)}&lang=${savedLang}`)
-                const data = await res.json();
-                console.log(data, searchparam)
-                setSearchdata(data.bns || []);
-                // if (data) {
-                //     const sections = []
-                //     data.bns?.map((item) => {
-                //         // console.log(item)
-                //         if (item) {
-                //             sections.push(...item.sections)
-                //             setSectionlist(sections)
-                //         }
-                //     })
-                // }
-            }
-        }
-        fetchdata()
     }, [searchparam])
 
     const getHighlightedText = (text, highlight) => {
-        // const text=textbreack(texts)
         if (!highlight) return text;
         const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
         const data = parts.map((part, i) =>
@@ -53,11 +34,10 @@ export default function Page() {
     };
 
     useEffect(() => {
-        if (sectionlist.length === 0) return;
+        if (sectionlist?.length === 0) return;
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
-                    // console.log(entry.target)
                     if (entry.isIntersecting) {
                         const index = sectionRefs.current.findIndex((ref) => ref === entry.target);
                         setActiveIndex(index);
@@ -81,9 +61,15 @@ export default function Page() {
             });
         };
     }, [sectionlist]);
-    console.log("Search Data:", searchdata)
+
+    const checke = () => {
+        console.log("Search Param:", searchparam);
+        console.log("Language:", lang);
+        console.log("Search Data:", searchdata);
+    }
     return (
         <div className=' flex flex-col items-center justify-center w-full bg-gray-50 text-black  '>
+            {/* <button onClick={checke} className='w-fit px-4 py-1 bg-amber-400 hover:bg-amber-600'>hell</button> */}
             {
                 !searchparam ?
                     <div className='w-full h-[181.5px] z-10 flex items-center justify-center text-black text-xl font-bold'>
