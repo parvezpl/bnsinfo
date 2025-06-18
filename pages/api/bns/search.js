@@ -42,31 +42,20 @@ export default async function handler(req, res) {
                     return item.sections?.filter(res => {
                         let isMatch = false;
                         searchterm.forEach(term => {
-                            if(term.trim().toLowerCase() === res.section.trim().toLowerCase()){
+                            if (term.trim().toLowerCase() === res.section.trim().toLowerCase()) {
+                                isMatch = true;
+                            }
+                            if (res.section_title.trim().toLowerCase().includes(term.trim().toLowerCase())) {
                                 isMatch = true;
                             }
                         })
                         if (isMatch) {
                             return true;
                         }
-                       
+
                     });
                 })[0];
-                // console.log("Filtered sections:", data);
-
-                // const findbns= []
-                // const textdata = bns.map(item => {
-                //      const dd= item.sections?.map(res => {
-                //         findbns.push(res)
-                //         const filterdata=  searchterm.map(term => {
-                //             return findbns.filter(content=>content.section_title.trim().toLowerCase().includes(term.trim().toLowerCase()))
-                //         }) 
-                //         return filterdata[0]
-                //     })[0];
-                //     return dd
-                // })[0];
-
-                // console.log("Filtered sections:", textdata);
+                
 
                 if (data.length === 0) {
                     return res.status(404).json({ error: "No matching sections found" });
