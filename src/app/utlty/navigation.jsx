@@ -48,21 +48,23 @@ export default function Navigation({ className }) {
                 <div className="navbar">
                     <a href="/">🏠 Home</a>
                     <a href="/about">About Us</a>
-                    <div
+                    <a
                         onClick={() => {
                             setBnsenglish()
                             router.push('/bns/en')
-                        }} className='text-white px-[16px] py-[12px] hover:cursor-pointer hover:bg-blue-700 hover:h-full'
-
-                    >Bharatiya Nyaya Sanhita 2023</div>
-                    <div onClick={() => {
+                        }}
+                        className='hover:cursor-pointer'
+                    >Bharatiya Nyaya Sanhita 2023
+                    </a>
+                    <a onClick={() => {
                         setBnshindi()
                         router.push('/bns/hi')
-
-                    }} className='text-white px-[16px] py-[12px] hover:cursor-pointer hover:bg-blue-700 hover:h-full'  >भारतीय न्याय संहिता,2023 (Hindi)</div>
+                    }}
+                        className='hover:cursor-pointer'
+                    >भारतीय न्याय संहिता,2023 (Hindi)
+                    </a>
                     <a href="/blog">Blogs</a>
                     <a href="#">Forums</a>
-
 
                     <div className="search-box">
                         <input type="text" placeholder="चोरी करने के सजा....." value={searchvalue} onChange={(e) => bnsSeachHandler(e.target.value)} />

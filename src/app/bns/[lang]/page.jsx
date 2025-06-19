@@ -1,223 +1,182 @@
+// // app/legal/page.tsx
+// 'use client';
+
+// import { useEffect, useState } from "react";
+
+
+// export default function LegalPage() {
+
+//     const [chapters, setChapters] = useState([]);
+//       useEffect(() => {
+//         const fetchdata= async () => {
+//           try {
+//             const res = await fetch('/api/bns/bnsen');
+//             if (!res.ok) {
+//               throw new Error('Network response was not ok');
+//             }
+//             const legal = await res.json();
+//             setChapters(legal.bns );
+//           } catch (error) {
+//             console.error("Error fetching legal data:", error);
+//           }
+//         };
+//         fetchdata();
+//       },[])
+
+
+
+//   return (
+//     <div className="flex min-h-screen bg-gray-100">
+//       <nav className="w-72 bg-white shadow-md p-4">
+//         <h2 className="text-xl font-bold mb-4">Chapters</h2>
+//         <ul>
+//           {chapters.map((chapter) => (
+//             <li key={chapter.chapter} className="group relative">
+//               <span className="block p-2 font-semibold cursor-pointer hover:bg-gray-200">
+//                 {chapter.chapter}
+//               </span>
+//               {/* Section dropdown on hover */}
+//               <ul className="absolute left-full top-0 z-10 hidden group-hover:block w-64 bg-white shadow-lg">
+//                 {chapter.sections.slice(0, 5).map((sec, i) => (
+//                   <li key={i} className="p-2 border-b hover:bg-gray-100 text-sm">
+//                     {sec.section} {sec.section_title}
+//                   </li>
+//                 ))}
+//               </ul>
+//             </li>
+//           ))}
+//         </ul>
+//       </nav>
+
+//       <main className="flex-1 p-6 overflow-auto">
+//         <h1 className="text-3xl font-bold mb-4">Legal Sections Viewer</h1>
+//         {chapters.map((chapter) => (
+//           <div key={chapter.chapter} className="mb-6">
+//             <h2 className="text-xl font-semibold mb-2">{chapter.chapter}: {chapter.chapter_title}</h2>
+//             {chapter.sections.map((sec, i) => (
+//               <div key={i} className="mb-3 p-4 bg-white rounded shadow">
+//                 <h3 className="font-semibold text-lg mb-1">{sec.section} {sec.section_title}</h3>
+//                 <p className="text-gray-700 whitespace-pre-line">{sec.content}</p>
+//               </div>
+//             ))}
+//           </div>
+//         ))}
+//       </main>
+//     </div>
+//   );
+// }
+
+
 'use client'
-import React, { use, useEffect, useRef, useState } from 'react'
-import { AiFillCaretLeft, AiFillCaretRight } from "react-icons/ai";
-import { TiThMenu } from "react-icons/ti";
-import LanguageSelector from '../../utlty/LanguageSelector';
-import { IoIosSearch } from "react-icons/io";
-import useStore from '../../../../store/useStore';
-import { useParams } from 'next/navigation';
 
+import { useEffect, useState } from 'react'
+import { Menu } from 'lucide-react' // optional: for menu icon
 
+export default function LegalPage() {
+  const [data, setData] = useState([])
+  const [activeChapter, setActiveChapter] = useState(null)
+  const [activeSection, setActiveSection] = useState(null)
+  const [mobileOpen, setMobileOpen] = useState(false)
 
-export default function BnsHome({ params }) {
-    const [bns, setBns] = useState([])
-    const [sidebar, setSidebar] = useState(true)
-    const [searchTerm, setSearchTerm] = useState('');
-    const [language, setLanguage] = useState('hi')
-    const sidebarRef = useRef(null);
-    const [activeIndex, setActiveIndex] = useState(0);
-    const sectionRefs = useRef([]);
-    const lang = useStore((state) => state.languages);
-    const bnshindi = useStore((state) => state.bnshindi);
-    const bnsenglish = useStore((state) => state.bnsenglish);
-    const paramss = useParams();
+  useEffect(() => {
+    async function fetchData() {
+      const res = await fetch('/api/bns/bnsen') // Adjust the API endpoint as needed
+      const json = await res.json()
+      setData(json.bns)
+    }
+    fetchData()
+  }, [])
 
+  const handleChapterClick = (chapterId) => {
+    setActiveChapter(chapterId)
+    setActiveSection(null)
+    setMobileOpen(false) // close sidebar on mobile after click
+  }
 
-    useEffect(() => {
-        paramss.lang === 'en' ? setBns(bnsenglish) : setBns(bnshindi)
-    }, [])
+  const handleSectionClick = (chapterId, sectionId) => {
+    setActiveChapter(chapterId)
+    setActiveSection(sectionId)
+    setMobileOpen(false)
+  }
 
-    useEffect(() => {
-        setLanguage(lang)
-        const md = window.innerWidth <= 768;
-        if (md && sidebar) {
-            setSidebar(false)
-        }
-    }, [])
+  const getContent = () => {
+    const chapter = data.find((c) => c.chapter === activeChapter)
+    if (!chapter) return null
 
-    useEffect(() => {
-        function handleClickOutside(event) {
-            const isMobile = window.innerWidth <= 768;
-            if (isMobile && sidebarRef.current && !sidebarRef.current.contains(event.target) && sidebar) {
-                setSidebar(false)
-            }
-        }
-        if (sidebar) {
-            document.addEventListener('mousedown', handleClickOutside)
-        }
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside)
-        }
-    }, [sidebar])
-
-
-    const chapter = [
-        { id: 1, name: "chapter 1", value: 'CHAPTER I' },
-        { id: 2, name: "chapter 2", value: 'CHAPTER II' },
-        { id: 3, name: "chapter 3", value: 'CHAPTER III' },
-        { id: 4, name: "chapter 4", value: 'CHAPTER IV' },
-        { id: 5, name: "chapter 5", value: 'CHAPTER V' },
-        { id: 6, name: "chapter 6", value: 'CHAPTER VI' },
-        { id: 7, name: "chapter 7", value: 'CHAPTER VII' },
-        { id: 8, name: "chapter 8", value: 'CHAPTER VII' },
-        { id: 9, name: "chapter 9", value: 'CHAPTER IX' },
-        { id: 10, name: "chapter 10", value: 'CHAPTER X' },
-        { id: 11, name: "chapter 11", value: 'CHAPTER XI' },
-        { id: 12, name: "chapter 12", value: 'CHAPTER XII' },
-        { id: 13, name: "chapter 13", value: 'CHAPTER XIII' },
-        { id: 14, name: "chapter 14", value: 'CHAPTER XIV' },
-        { id: 15, name: "chapter 15", value: 'CHAPTER XV' },
-        { id: 16, name: "chapter 16", value: 'CHAPTER XVI' },
-        { id: 17, name: "chapter 17", value: 'CHAPTER XVII' },
-        { id: 18, name: "chapter 18", value: 'CHAPTER XVIII' },
-        { id: 19, name: "chapter 19", value: 'CHAPTER XIX' },
-        { id: 20, name: "chapter 20", value: 'CHAPTER XX' },
-
-
-
-
-
-    ]
-
-
-
-    const chapterhanler = async (item, index) => {
-        sectionRefs.current[index]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (activeSection !== null) {
+      const section = chapter.sections[activeSection]
+      return (
+        <div className="bg-green-400 p-4 rounded shadow">
+          <h2 className="text-xl font-semibold mb-2">{section.section}</h2>
+          <p>{section.section_title}</p>
+        </div>
+      )
     }
 
+    return chapter.sections.map((section, index) => (
+      <div key={index} className="mb-4 bg-white p-4 rounded shadow w-[95vw] sm:w-[80vw]  break-all">
+        <h3 className="text-lg font-bold">SECTION : {section.section}</h3>
+        <p className=' flex text-justify font-sans  '>{section.section_title}</p>
+      </div>
+    ))
+  }
 
-
-    const getHighlightedText = (text, highlight) => {
-        // const text=textbreack(texts)
-        if (!highlight) return text;
-        const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
-        const data = parts.map((part, i) =>
-            part.toLowerCase() === highlight.toLowerCase() ? (
-                <span key={i} className="bg-yellow-300 text-black ">{part}</span>
-            ) : (
-                <span key={i} className=" font-sans  ">{part}</span>
-            )
-        );
-        return <div className='whitespace-break-spaces '>{data}</div>
-    };
-
-    useEffect(() => {
-        if (bns.length === 0) return;
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        const index = sectionRefs.current.findIndex((ref) => ref === entry.target);
-                        setActiveIndex(index);
-                    }
-                });
-            },
-            {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.5,// when 50% visible
-            }
-        );
-
-        sectionRefs.current.forEach((ref) => {
-            if (ref) observer.observe(ref);
-        });
-
-        return () => {
-            sectionRefs.current.forEach((ref) => {
-                if (ref) observer.unobserve(ref);
-            });
-        };
-    }, [bns]);
-
-
-    return (
-        <div className=' relative flex-col w-full  text-black bg-white h-screen overflow-hidden '>
-            <div className=' fixed z-100 flex gap-1 bg-gray-300 cursor-pointer text-black rounded-sm select-none px-2 py-1  '  >
-                <span className='hover:bg-blue-400 px-1 transition-colors duration-150 active:bg-blue-600' onClick={() => setSidebar(prev => !prev)}>chapter</span>
-                <span className='hover:bg-blue-400 px-1 transition-colors duration-150 active:bg-blue-600'>Section</span>
-            </div>
-            
-            <div className=' fixed  w-screen z-50  flex flex-col  py-1 border-gray-200 drop-shadow-black'>
-                <div className='w-fit flex right-0 absolute'>
-                    {/* <div className='flex w-40 sm:w-[300px] items-center justify-center gap-2 border border-gray-500 rounded-lg mr-4'>
-                        <input type="text" placeholder="Search..." className=' w-full h-5 p-2 bg-white focus:outline-none ' onChange={searchhandler} />
-                        <IoIosSearch className='text-2xl' />
-                    </div> */}
-                    <div className=' flex justify-end px-2 '>
-                        <LanguageSelector setLanguages={(e) => setLanguage(e)} />
-                    </div>
-                </div>
-                <div ref={sidebarRef} className={`sm:fixed mt-10 sm:mt-[181.5px] h-[calc(100vh-181.5px)]  pointer-events-auto absolute top-0 w-40  overflow-y-auto bg-gray-200 rounded-b-md px-2 shadow-md ${sidebar ? 'visible' : 'hidden sm:visible'}`}>
-                    <div className='flex flex-col items-center justify-center rounded-lg'>
-                        {
-                            chapter.map((item, index) => {
-                                return (
-                                    <button key={index} onClick={() => chapterhanler(item, index)}
-                                        className={`select-none text-sm cursor-pointer w-max text-black hover:text-blue-700
-                                                hover:bg-gray-100 justify-center items-center gap-2  p-1 rounded-md font-semibold my-1 border-b-1 
-                                                touch-manipulation transition-colors duration-150 active:bg-blue-600 !important 
-                                                ${activeIndex === index ? ' bg-blue-300' : 'hover:bg-gray-200'}
-                                                `}>
-                                        {item.name}
-                                    </button >
-                                )
-                            }
-                            )
-                        }
-                    </div>
-                </div>
-            </div>
-            <div className='w-screen box-border'>
-                <main className='min-h-full w-full relative '>
-                    <div className='  h-screen overflow-auto  '>
-                        {
-                            bns.length > 0 ? bns?.map((bnsItem, index) => {
-                                return (
-                                    <div key={index}
-                                        ref={(el) => (sectionRefs.current[index] = el)}
-                                        className=' scroll-mt-20 mt-20 flex flex-col w-full min-h-full sm:w-full items-center p-4 box-border '>
-                                        <div className={`flex flex-col items-center w-full mb-4 ${searchTerm.length > 0 ? 'hidden' : 'visible'}`}>
-                                            <h1 className=' text-2xl font-bold'>{bnsItem.chapter}</h1>
-                                            <h3 className=' text-[16px] font-bold text-gray-700'>{bnsItem.chapter_title}</h3>
-                                        </div>
-                                        <div className='w-full h-[100vh] flex flex-col items-center overflow-auto'>
-                                            {
-                                                bnsItem?.sections.map((item, indexs) => {
-                                                    return (
-                                                        < div key={indexs}>
-                                                            <div
-                                                                className='flex flex-col sm:flex-row min-h-fit  justify-center w-fit gap-2 px-2 py-4 '
-                                                            >
-                                                                <div className='flex flex-row  sm:flex-col text-[14px]  justify-center sm:justify-start sm:items-start text-gray-950 font-bold  px-1'>
-                                                                    <div className='flex bg-gray-300 text-blue-900 px-4 py-2 rounded-sm '>
-                                                                        <span>BNS__  </span> <span className='w-[81px] flex'>ACT :- {getHighlightedText(item.section, searchTerm)}</span>
-                                                                    </div>
-                                                                </div>
-                                                                <div className='flex flex-col gap-2 grow text-justify '>
-                                                                    <pre className='text-blue-950 font-bold text-[14px] h-fit sm:w-[50vw] font-sans whitespace-break-spaces'>
-                                                                        {getHighlightedText(item.section_title, searchTerm)}
-                                                                    </pre>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    )
-                                                })
-                                            }
-                                        </div>
-
-
-                                    </div>)
-                            }) :
-                                <div className="flex items-center justify-center space-x-2 h-full">
-                                    <div className="w-4 h-4 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full  animate-bounce"></div>
-                                    <div className="w-4 h-4 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full animate-pulse delay-150"></div>
-                                    <div className="w-4 h-4 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full animate-bounce delay-300"></div>
-                                </div>
-                        }
-                    </div>
-                </main>
-            </div>
+  return (
+    <div className="flex h-screen overflow-hidden">
+      {/* Sidebar (Fixed) */}
+      <div className={`fixed md:static top-0 left-0 z-40 h-full w-45 bg-gray-100 p-4 border-r shadow transition-transform duration-300
+        ${mobileOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
+        
+        {/* Mobile Close Button */}
+        <div className="flex md:hidden justify-end mb-4">
+          <button onClick={() => setMobileOpen(false)} className="text-sm text-red-500">
+            Close ✕
+          </button>
         </div>
-    )
+
+        <h2 className="text-lg font-bold mb-4">Chapters</h2>
+        <ul>
+          {data.map((chapter, index) => (
+            <li key={index} className="group relative mb-2">
+              <button
+                onClick={() => handleChapterClick(chapter.chapter)}
+                className="w-full text-left font-medium p-2 rounded hover:bg-gray-200"
+              >
+                {chapter.chapter}
+              </button>
+
+              {/* Section Dropdown */}
+              <ul className="absolute left-full top-0 ml-2 bg-white border shadow-md hidden group-hover:block z-10 w-20">
+                {chapter.sections.map((section, secIndex) => (
+                  <li key={secIndex}>
+                    <button
+                      onClick={() => handleSectionClick(chapter.chapter, secIndex)}
+                      className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
+                    >
+                      {section.section}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Content Area */}
+      <div className="flex-1 ml-0 md:ml-0 p-4  bg-white">
+        {/* Mobile Menu Button */}
+        <div className="md:hidden mb-4">
+          <button onClick={() => setMobileOpen(true)} className="text-gray-600 flex items-center">
+            <Menu className="h-6 w-6 mr-2" /> Open Menu
+          </button>
+        </div>
+
+        <h1 className="text-3xl font-bold mb-6 ">BNS 2023</h1>
+        {getContent() || <p className="text-gray-500">Please select a chapter or section.</p>}
+      </div>
+    </div>
+  )
 }
+
+
