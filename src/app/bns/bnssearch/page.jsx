@@ -1,12 +1,13 @@
 'use client'
 import React, { useEffect, useRef, useState } from 'react'
-import useStore from '../../../../store/useStore'
+import useStore from '../../../../store/useStore';
+
 
 export default function Page() {
     const [sectionlist, setSectionlist] = useState([])
     const [activeIndex, setActiveIndex] = useState(0);
     const sectionRefs = useRef([]);
-
+    const searchparam = useStore((state)=>state.searchparam)
     
     const sectionrhanler = async (item, index) => {
         sectionRefs.current[index]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
