@@ -8,6 +8,7 @@ export default function Page() {
     const [activeIndex, setActiveIndex] = useState(0);
     const sectionRefs = useRef([]);
     const searchparam = useStore((state)=>state.searchparam)
+    const searchdata = useStore((state)=>state.searchdata)
     
     const sectionrhanler = async (item, index) => {
         sectionRefs.current[index]?.scrollIntoView({ behavior: 'smooth', block: 'start' });

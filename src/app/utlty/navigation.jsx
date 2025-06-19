@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import '../mainpage.css'
 import LanguageSelector from './LanguageSelector'
 import useStore from '../../../store/useStore'
+import Image from 'next/image';
 
 export default function Navigation({ className }) {
     const router = useRouter()
@@ -41,8 +42,7 @@ export default function Navigation({ className }) {
                         <h2>नया कानून गाइड</h2>
                     </div>
                     <div className="header-logos">
-                        {/* <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Digital_India_logo.png" alt="Digital India" /> */}
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/India_Emblem.png/120px-India_Emblem.png" alt="India Code" />
+                        <Image src="/bnslogo.png" alt="Logo" width={120} height={40} />
                     </div>
                 </div>
                 <div className="navbar">

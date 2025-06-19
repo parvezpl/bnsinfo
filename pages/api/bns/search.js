@@ -16,7 +16,7 @@ export default async function handler(req, res) {
                 const bns = await Bnshindis.find({
                     $text: { $search: search }
                 }).lean();
-    
+                
                 returnSearchText(bns, searchterm, res);
 
                 // return res.status(200).json({ ...responce });
@@ -38,13 +38,14 @@ export default async function handler(req, res) {
 
 function returnSearchText(responce, searchterm, res) {
     const data = responce.map(item => {
-        return item.sections?.filter(res => {
+        return item.sections?.filter(resx => {
             let isMatch = false;
             searchterm.forEach(term => {
-                if (term.trim().toLowerCase() === res.section.trim().toLowerCase()) {
+                console.log("searchterm:", term.length, "responce:", resx.section.length, resx.section.replace(".", ""));
+                if (term.trim() === resx.section.trim().replace(".", "")) {
                     isMatch = true;
                 }
-                if (res.section_title.trim().toLowerCase().includes(term.trim().toLowerCase())) {
+                if (resx.section_title.trim().toLowerCase().includes(term.trim().toLowerCase())) {
                     isMatch = true;
                 }
             })
