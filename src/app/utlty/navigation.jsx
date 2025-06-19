@@ -66,10 +66,33 @@ export default function Navigation({ className }) {
                     <a href="/blog">Blogs</a>
                     <a href="#">Forums</a>
 
-                    <div className="search-box">
-                        <input type="text" placeholder="चोरी करने के सजा....." value={searchvalue} onChange={(e) => bnsSeachHandler(e.target.value)} />
-                        <button onClick={searchbutton} className=' transition duration-150 bg-blue-400' >🔍</button>
-                    </div>
+                    {/* <div className="search-box">
+                        <input id='i' type="text" placeholder="चोरी करने के सजा....." value={searchvalue} onChange={(e) => bnsSeachHandler(e.target.value)} />
+                        <button id='i' type="submit" onClick={searchbutton} className=' transition duration-150 bg-blue-400' >🔍</button>
+                    </div> */}
+                    <form
+                        onSubmit={(e) => {
+                            e.preventDefault(); // Prevent page reload
+                            searchbutton();     // Call your submit function
+                        }}
+                        className="search-box"
+                    >
+                        <input
+                            id="i"
+                            type="text"
+                            placeholder="चोरी करने के सजा....."
+                            value={searchvalue}
+                            onChange={(e) => bnsSeachHandler(e.target.value)}
+                            className="px-2 py-1"
+                        />
+                        <button
+                            type="submit"
+                            className="transition duration-150 bg-blue-400 px-3 py-1"
+                        >
+                            🔍
+                        </button>
+                    </form>
+
                 </div>
             </div>
         </div>
