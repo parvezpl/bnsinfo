@@ -121,7 +121,7 @@ export default function Page() {
                                                                 ref={(el) => (sectionRefs.current[index] = el)}
                                                                 className='flex flex-col items-center scroll-mt-54 sm:scroll-mt-40'>
                                                                 <span className='bg-gray-700 text-white px-4 w-fit '> SECTION: - {bns?.section}</span>
-                                                                <pre >{getHighlightedText(bns?.section_title, searchparam)}</pre>
+                                                                <p >{getHighlightedText(bns?.section_title, searchparam)}</p>
                                                             </li>
                                                         )
                                                     })

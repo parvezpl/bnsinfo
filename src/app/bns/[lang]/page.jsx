@@ -71,16 +71,19 @@
 
 import { useEffect, useState } from 'react'
 import { Menu } from 'lucide-react' // optional: for menu icon
+import { useParams } from 'next/navigation'
 
-export default function LegalPage() {
+export default function Page() {
   const [data, setData] = useState([])
   const [activeChapter, setActiveChapter] = useState(null)
   const [activeSection, setActiveSection] = useState(null)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const lang = useParams().lang || 'en' // Default to 'en' if no lang param
+  const [editable, setEditable] = useState(false)
 
   useEffect(() => {
     async function fetchData() {
-      const res = await fetch('/api/bns/bnsen') // Adjust the API endpoint as needed
+      const res = lang === 'en' ? await fetch('/api/bns/bnsen') : await fetch('/api/bns/bnshindi/bnshi') // Adjust the API endpoint as needed
       const json = await res.json()
       setData(json.bns)
     }
@@ -106,17 +109,27 @@ export default function LegalPage() {
     if (activeSection !== null) {
       const section = chapter.sections[activeSection]
       return (
-        <div className="bg-green-400 p-4 rounded shadow">
+        <div className="bg-white p-4 rounded shadow">
           <h2 className="text-xl font-semibold mb-2">{section.section}</h2>
-          <p>{section.section_title}</p>
+          <p >{section.section_title}</p>
         </div>
       )
     }
 
     return chapter.sections.map((section, index) => (
       <div key={index} className="mb-4 bg-white p-4 rounded shadow w-[95vw] sm:w-[80vw]  break-all">
-        <h3 className="text-lg font-bold">SECTION : {section.section}</h3>
-        <p className=' flex text-justify font-sans  '>{section.section_title}</p>
+        <div className='flex justify-between items-center mb-2'>
+          <h3 className="text-lg font-bold">SECTION : {section.section}</h3>
+          <div className='flex justify-between text-sm text-gray-500 mb-2 gap-2'>
+            <span className='hover:cursor-pointer' onClick={() => setEditable(true)}>edit</span>
+            <span className='hover:cursor-pointer'>update</span>
+          </div>
+        </div>
+        <p 
+        key={index}
+        contentEditable={editable}
+        suppressContentEditableWarning={true}
+         className=' flex text-justify font-sans  '>{section.section_title}</p>
       </div>
     ))
   }
@@ -126,7 +139,7 @@ export default function LegalPage() {
       {/* Sidebar (Fixed) */}
       <div className={`fixed md:static top-0 left-0 z-40 h-full w-45 bg-gray-100 p-4 border-r shadow transition-transform duration-300
         ${mobileOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
-        
+
         {/* Mobile Close Button */}
         <div className="flex md:hidden justify-end mb-4">
           <button onClick={() => setMobileOpen(false)} className="text-sm text-red-500">
@@ -142,7 +155,7 @@ export default function LegalPage() {
                 onClick={() => handleChapterClick(chapter.chapter)}
                 className="w-full text-left font-medium p-2 rounded hover:bg-gray-200"
               >
-                {chapter.chapter}
+                {lang === "hi" && 'अध्याय:'}{chapter.chapter}
               </button>
 
               {/* Section Dropdown */}
