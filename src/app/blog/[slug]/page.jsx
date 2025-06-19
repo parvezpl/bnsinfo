@@ -29,7 +29,7 @@ const blogs = {
 export default function BlogPost({ params }) {
 
     const { slug } = useParams();
-    const [post, setPost] = useState(null);
+    const [post, setPost] = useState({});
     const [error, setError] = useState("");
 
     useEffect(() => {
@@ -55,7 +55,8 @@ export default function BlogPost({ params }) {
         <main className="max-w-3xl mx-auto py-12 px-4">
             <h1 className="text-3xl font-bold text-blue-700 mb-2">{post.title}</h1>
             <p className="text-sm text-gray-500 mb-6">{post.date}</p>
-            <article className="prose max-w-none">{post.content}</article>
+             <div dangerouslySetInnerHTML={{ __html: post.content }} className="prose max-w-none" />
+            {/* <article className="prose max-w-none">{post.content}</article> */}
         </main>
     );
 }

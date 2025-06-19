@@ -13,7 +13,6 @@ export default function BnsHome({ params }) {
     const [bns, setBns] = useState([])
     const [sidebar, setSidebar] = useState(true)
     const [searchTerm, setSearchTerm] = useState('');
-    const [debouncedTerm, setDebouncedTerm] = useState('');
     const [language, setLanguage] = useState('hi')
     const sidebarRef = useRef(null);
     const [activeIndex, setActiveIndex] = useState(0);
@@ -24,18 +23,9 @@ export default function BnsHome({ params }) {
     const paramss = useParams();
 
 
-    // const checke = () => {
-    //     console.log("Search bnshindi:", bnshindi);
-    //     console.log("Search bnsenglish:", bnsenglish);
-    // }
-
-
-
-
     useEffect(() => {
         paramss.lang === 'en' ? setBns(bnsenglish) : setBns(bnshindi)
     }, [])
-
 
     useEffect(() => {
         setLanguage(lang)
@@ -89,96 +79,12 @@ export default function BnsHome({ params }) {
 
     ]
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const res = language === "en" ? await fetch('/api/bns/bnsen') : await fetch('/api/bns/bnshindi/bnshi')
-            const data = await res.json()
-            // console.log(data)
-            setBns(data.bns)
-        }
-
-    }, [language])
-
-
-    useEffect(() => {
-        const handler = setTimeout(() => {
-            setDebouncedTerm(searchTerm);
-        }, 500); // wait 500ms
-
-        return () => clearTimeout(handler); // clear timer on next input
-    }, [searchTerm]);
-
-    // useEffect(() => {
-    //     const fetchResults = async () => {
-    //         console.log("debouncedTerm",language, debouncedTerm)
-    //         const res = language === "en" ? await fetch(`/api/bns/bnssearch?search=${debouncedTerm}`) : await fetch(`/api/bns/bnshindi/bnssearch?search=${debouncedTerm}`)
-    //         const datas = res.json();
-    //         datas.then((data) => {
-    //             // setBns(data.bns)
-    //         })
-    //     };
-
-    //     fetchResults();
-    // }, [debouncedTerm, language]);
-
-    const searchhandler = (e) => {
-        setSearchTerm(e.target.value)
-    }
 
 
     const chapterhanler = async (item, index) => {
         sectionRefs.current[index]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-
-    // const pagehandler = (e) => {
-    //     console.log(e.target.innerText)
-    //     const chapter = e.target.innerText
-    //     // setBns(bns.detail[chapter - 1])
-    //     // console.log(bns.detail[chapter - 1])
-    // }
-    // function smartSplit(text) {
-    //     // const matches = [...text.matchAll(/(?=\((?:[a-z]|\d+)\))/g)];
-    //     console.log(text)
-    //     const matches = [...text.matchAll(/(?=\(\w+\))/g)];
-    //     console.log(matches)
-
-    //     const result = [];
-
-    //     let lastIndex = 0;
-    //     let lastSliceHadSubsection = false;
-
-    //     for (const match of matches) {
-    //         const start = match.index;
-    //         const segment = text.slice(lastIndex, start);
-
-    //         if (!segment.toLowerCase().includes("sub-section") && segment.trim()) {
-    //             result.push(segment.trim());
-    //             lastSliceHadSubsection = false;
-    //         } else {
-    //             // merge with previous if 'sub-section' detected
-    //             if (result.length > 0) {
-    //                 result[result.length - 1] += " " + segment.trim();
-    //             } else {
-    //                 result.push(segment.trim());
-    //             }
-    //             lastSliceHadSubsection = true;
-    //         }
-
-    //         lastIndex = start;
-    //     }
-
-    //     const finalPart = text.slice(lastIndex).trim();
-    //     if (finalPart) {
-    //         if (lastSliceHadSubsection && result.length > 0) {
-    //             result[result.length - 1] += " " + finalPart;
-    //         } else {
-    //             result.push(finalPart);
-    //         }
-    //     }
-
-    //     return result;
-    // }
 
 
     const getHighlightedText = (text, highlight) => {
@@ -200,7 +106,6 @@ export default function BnsHome({ params }) {
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
-                    // console.log(entry.target)
                     if (entry.isIntersecting) {
                         const index = sectionRefs.current.findIndex((ref) => ref === entry.target);
                         setActiveIndex(index);
