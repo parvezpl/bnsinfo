@@ -75,10 +75,10 @@ import { useParams, useRouter } from 'next/navigation'
 
 export default function Page() {
   const [data, setData] = useState([])
-  const [activeChapter, setActiveChapter] = useState(null)
   const [activeSection, setActiveSection] = useState(null)
   const [mobileOpen, setMobileOpen] = useState(false)
   const lang = useParams().lang || 'en' // Default to 'en' if no lang param
+  const [activeChapter, setActiveChapter] = useState(lang ==="en" ? "CHAPTER I" : '1')
   const [editable, setEditable] = useState(false)
   const router= useRouter()
   useEffect(() => {
@@ -91,12 +91,14 @@ export default function Page() {
   }, [])
 
   const handleChapterClick = (chapterId) => {
+    console.log('Chapter clicked:', chapterId)
     setActiveChapter(chapterId)
     setActiveSection(null)
     setMobileOpen(false) // close sidebar on mobile after click
   }
 
   const handleSectionClick = (chapterId, sectionId) => {
+    console.log('Section clicked:', chapterId, sectionId)
     setActiveChapter(chapterId)
     setActiveSection(sectionId)
     setMobileOpen(false)
@@ -129,7 +131,7 @@ export default function Page() {
         key={index}
         // contentEditable={editable}
         // suppressContentEditableWarning={true}
-         className=' flex text-justify font-sans  '>{section.section_title}</p>
+         className=' flex !text-start '>{section.section_title}</p>
       </div>
     ))
   }
@@ -147,19 +149,19 @@ export default function Page() {
           </button>
         </div>
 
-        <h2 className="text-lg font-bold mb-4">Chapters</h2>
-        <ul>
+        <h2 className="text-lg font-bold mb-4 uppercase">Chapters</h2>
+        <ul className="h-[80vh] overflow-y-auto no-scrollbar">
           {data.map((chapter, index) => (
-            <li key={index} className="group relative mb-2">
+            <li key={index} className="group  mb-2">
               <button
                 onClick={() => handleChapterClick(chapter.chapter)}
                 className="w-full text-left font-medium p-2 rounded hover:bg-gray-200"
               >
-                {lang === "hi" && 'अध्याय:'}{chapter.chapter}
+                {lang === "hi" && 'अध्याय: '}{chapter.chapter}
               </button>
 
               {/* Section Dropdown */}
-              <ul className="absolute left-full top-0 ml-2 bg-white border shadow-md hidden group-hover:block z-10 w-20">
+              <ul className="absolute left-full top-0 ml-2 bg-white border shadow-md hidden  group-hover:block z-50 w-20">
                 {chapter.sections.map((section, secIndex) => (
                   <li key={secIndex}>
                     <button
@@ -177,7 +179,7 @@ export default function Page() {
       </div>
 
       {/* Content Area */}
-      <div className="flex-1 ml-0 md:ml-0 p-4  bg-white">
+      <div className="flex-1 ml-0 md:ml-0 p-4 h-screen overflow-x-hidden no-scrollbar  bg-white">
         {/* Mobile Menu Button */}
         <div className="md:hidden mb-4">
           <button onClick={() => setMobileOpen(true)} className="text-gray-600 flex items-center">

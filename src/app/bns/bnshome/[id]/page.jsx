@@ -4,11 +4,12 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { useParams } from 'next/navigation';
 import TextStyle from '@tiptap/extension-text-style';
+import { FontSize } from "@/lib/tiptap/FontSize";
 
 
 export default function Page() {
   const params = useParams();
-  const id = params.id; 
+  const id = params.id;
   const [loading, setLoading] = useState(true);
   const [section, setSection] = useState(null);
 
@@ -16,8 +17,9 @@ export default function Page() {
     extensions: [StarterKit,
       TextStyle
     ],
+    FontSize,
     content: '',
-     editorOptions: {
+    editorOptions: {
       immediatelyRender: false,
     },
 
@@ -51,7 +53,18 @@ export default function Page() {
   return (
     <div className="p-4 max-w-3xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Edit Section {section}</h1>
-      
+      <select
+        onChange={(e) => editor.chain().focus().setFontSize(e.target.value).run()}
+        className="border rounded px-2 py-1"
+      >
+        <option value="">Font Size</option>
+        <option value="12px">12</option>
+        <option value="14px">14</option>
+        <option value="16px">16</option>
+        <option value="18px">18</option>
+        <option value="24px">24</option>
+        <option value="32px">32</option>
+      </select>
       <EditorContent editor={editor} />
       <button onClick={saveContent} className="mt-4 bg-blue-600 text-white px-4 py-2 rounded">
         Save
