@@ -12,7 +12,7 @@ export default async function handler(req, res) {
         console.log("Request ID:", id);
         if (id) {
             const bns = await Bnsen.findOne(
-                { "sections.section": id },  // Match document where section 196 exists
+                { "sections.section": id.replace(".", '') },  // Match document where section 196 exists
                 { "sections.$": 1 }
             ).lean();
             if (!bns) {

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import BnsHome from "./bns/[lang]/text";
+import BnsHome from "./bns/mainpage/[lang]/text";
 import Navigation from "./utlty/navigation";
 import Mainpage from "./mainpage";
 export default function Home() {

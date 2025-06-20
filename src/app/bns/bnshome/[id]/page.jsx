@@ -2,13 +2,13 @@
 import { useEffect, useState } from 'react';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import { useSearchParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import TextStyle from '@tiptap/extension-text-style';
-// import Color from '@tiptap/extension-color';
 
-export default function Page({ params }) {
-  const searchParams = useSearchParams();
-  const id = searchParams.get('id');
+
+export default function Page() {
+  const params = useParams();
+  const id = params.id; 
   const [loading, setLoading] = useState(true);
   const [section, setSection] = useState(null);
 
@@ -17,7 +17,9 @@ export default function Page({ params }) {
       TextStyle
     ],
     content: '',
-    
+     editorOptions: {
+      immediatelyRender: false,
+    },
 
   });
 
@@ -26,7 +28,6 @@ export default function Page({ params }) {
       fetch(`/api/bns/bnsen/?id=${id}`)
         .then(res => res.json())
         .then(data => {
-          console.log('Fetched data:', data.bns.sections[0].section);
           setSection(data.bns.sections[0].section);
           editor?.commands.setContent(data.bns.sections[0].section_title || '');
           setLoading(false);

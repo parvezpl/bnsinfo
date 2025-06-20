@@ -51,14 +51,14 @@ export default function Navigation({ className }) {
                     <a
                         onClick={() => {
                             setBnsenglish()
-                            router.push('/bns/en')
+                            router.push('/bns/mainpage/en')
                         }}
                         className='hover:cursor-pointer'
                     >Bharatiya Nyaya Sanhita 2023
                     </a>
                     <a onClick={() => {
                         setBnshindi()
-                        router.push('/bns/hi')
+                        router.push('/bns/mainpage/hi')
                     }}
                         className='hover:cursor-pointer'
                     >भारतीय न्याय संहिता,2023 (Hindi)

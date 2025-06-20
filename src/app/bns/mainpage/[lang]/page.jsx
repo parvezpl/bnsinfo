@@ -121,7 +121,7 @@ export default function Page() {
         <div className='flex justify-between items-center mb-2'>
           <h3 className="text-lg font-bold">SECTION : {section.section}</h3>
           <div className='flex justify-between text-sm text-gray-500 mb-2 gap-2'>
-            <span className='hover:cursor-pointer' onClick={() => router.push(`/bns/bnshome/?id=${section.section}`)}>edit</span>
+            <span className='hover:cursor-pointer' onClick={() => router.push(`/bns/bnshome/${section.section}`)}>edit</span>
             {/* <span className='hover:cursor-pointer'>update</span> */}
           </div>
         </div>
@@ -130,7 +130,6 @@ export default function Page() {
         // contentEditable={editable}
         // suppressContentEditableWarning={true}
          className=' flex text-justify font-sans  '>{section.section_title}</p>
-         {console.log(section._id)}
       </div>
     ))
   }
