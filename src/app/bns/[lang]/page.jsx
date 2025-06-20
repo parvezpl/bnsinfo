@@ -71,7 +71,7 @@
 
 import { useEffect, useState } from 'react'
 import { Menu } from 'lucide-react' // optional: for menu icon
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 
 export default function Page() {
   const [data, setData] = useState([])
@@ -80,7 +80,7 @@ export default function Page() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const lang = useParams().lang || 'en' // Default to 'en' if no lang param
   const [editable, setEditable] = useState(false)
-
+  const router= useRouter()
   useEffect(() => {
     async function fetchData() {
       const res = lang === 'en' ? await fetch('/api/bns/bnsen') : await fetch('/api/bns/bnshindi/bnshi') // Adjust the API endpoint as needed
@@ -121,15 +121,16 @@ export default function Page() {
         <div className='flex justify-between items-center mb-2'>
           <h3 className="text-lg font-bold">SECTION : {section.section}</h3>
           <div className='flex justify-between text-sm text-gray-500 mb-2 gap-2'>
-            <span className='hover:cursor-pointer' onClick={() => setEditable(true)}>edit</span>
-            <span className='hover:cursor-pointer'>update</span>
+            <span className='hover:cursor-pointer' onClick={() => router.push(`/bns/bnshome/?id=${section.section}`)}>edit</span>
+            {/* <span className='hover:cursor-pointer'>update</span> */}
           </div>
         </div>
         <p 
         key={index}
-        contentEditable={editable}
-        suppressContentEditableWarning={true}
+        // contentEditable={editable}
+        // suppressContentEditableWarning={true}
          className=' flex text-justify font-sans  '>{section.section_title}</p>
+         {console.log(section._id)}
       </div>
     ))
   }
