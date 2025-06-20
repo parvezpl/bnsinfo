@@ -131,7 +131,10 @@ export default function Page() {
         key={index}
         // contentEditable={editable}
         // suppressContentEditableWarning={true}
-         className=' flex !text-start '>{section.section_title}</p>
+         className=' flex !text-start '>
+          {/* {section.modify_section || section.section_title} */}
+         </p>
+         <div dangerouslySetInnerHTML={{ __html: section.modify_section || section.section_title }} className="prose max-w-none" />
       </div>
     ))
   }

@@ -40,11 +40,11 @@ export default function Page() {
   const saveContent = async () => {
     const html = editor.getHTML();
     console.log('Saving content:', html);
-    // await fetch(`/api/bns/bnsen/?id=${id}`, {
-    //   method: 'PUT',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ content: html, id }),
-    // });
+    await fetch(`/api/bns/bnsen/?id=${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content: html, id }),
+    });
     alert('Saved!');
   };
 
@@ -65,6 +65,7 @@ export default function Page() {
         <option value="24px">24</option>
         <option value="32px">32</option>
       </select>
+      
       <EditorContent editor={editor} />
       <button onClick={saveContent} className="mt-4 bg-blue-600 text-white px-4 py-2 rounded">
         Save

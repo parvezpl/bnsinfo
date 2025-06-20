@@ -26,13 +26,24 @@ export default async function handler(req, res) {
 
     if (req.method === 'PUT') {
         const { content, id } = req.body;
-        await collection.updateOne(
-            { sectionId: id },
-            { $set: { content } },
-            { upsert: true }
+        console.log("Updating section:", id);
+        if (!content || !id) return res.status(400).json({ error: "Content and ID are required" });
+        const newres=await Bnsen.updateOne(
+            { "sections.section": id.replace(".", '') },
+            { $set: { "sections.$.modify_section":content } },
         );
+        console.log("Update result:", newres);
         return res.status(200).json({ success: true });
     }
 
 
 }
+
+
+
+// const newres=await Bnsen.updateMany(
+//              { "sections.modify_section": { $exists: false } },
+//             {
+//     $set: {
+//       "sections.$[].modify_section": "" // add field with empty string
+//     }
