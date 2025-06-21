@@ -41,13 +41,17 @@ function returnSearchText(responce, searchterm, res) {
         return item.sections?.filter(resx => {
             let isMatch = false;
             searchterm.forEach(term => {
-                console.log("searchterm:", term.length, "responce:", resx.section.length, resx.section.replace(".", ""));
+                // console.log("searchterm:", term.length, "responce:", resx.section.length, resx.section.replace(".", ""));
                 if (term.trim() === resx.section.trim().replace(".", "")) {
                     isMatch = true;
                 }
-                if (resx.section_title.trim().toLowerCase().includes(term.trim().toLowerCase())) {
+                if (resx?.section_title?.trim().toLowerCase().includes(term.trim().toLowerCase())) {
                     isMatch = true;
                 }
+                if (resx?.section_content?.trim().toLowerCase().includes(term.trim().toLowerCase())) {
+                    isMatch = true;
+                }
+
             })
             if (isMatch) {
                 return true;

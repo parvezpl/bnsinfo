@@ -134,7 +134,7 @@ export default function Page() {
          className=' flex !text-start '>
           {/* {section.modify_section || section.section_title} */}
          </p>
-         <div dangerouslySetInnerHTML={{ __html: section.modify_section || section.section_title }} className="prose max-w-none" />
+         <div dangerouslySetInnerHTML={{ __html: section.modify_section || section.section_content }} className="prose max-w-none  " />
       </div>
     ))
   }
@@ -160,7 +160,7 @@ export default function Page() {
                 onClick={() => handleChapterClick(chapter.chapter)}
                 className="w-full text-left font-medium p-2 rounded hover:bg-gray-200"
               >
-                {lang === "hi" && 'अध्याय: '}{chapter.chapter}
+                {chapter.chapter}
               </button>
 
               {/* Section Dropdown */}

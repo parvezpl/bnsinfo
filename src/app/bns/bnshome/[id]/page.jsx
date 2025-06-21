@@ -52,7 +52,7 @@ export default function Page() {
 
   return (
     <div className="p-4 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Edit Section {section}</h1>
+      <h1 className="text-2xl font-bold mb-4 text-justify">Edit Section {section}</h1>
       <select
         onChange={(e) => editor.chain().focus().setFontSize(e.target.value).run()}
         className="border rounded px-2 py-1"
@@ -65,8 +65,8 @@ export default function Page() {
         <option value="24px">24</option>
         <option value="32px">32</option>
       </select>
-      
-      <EditorContent editor={editor} />
+
+      <EditorContent editor={editor} className=' text-justify '  />
       <button onClick={saveContent} className="mt-4 bg-blue-600 text-white px-4 py-2 rounded">
         Save
       </button>

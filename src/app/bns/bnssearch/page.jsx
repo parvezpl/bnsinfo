@@ -20,7 +20,7 @@ export default function Page() {
 
     const getHighlightedText = (text, highlight) => {
         if (!highlight) return text;
-        const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
+        const parts = text?.split(new RegExp(`(${highlight})`, 'gi'));
         const data = parts.map((part, i) =>
             part.toLowerCase() === highlight.toLowerCase() ? (
                 <span key={i} className="bg-yellow-300 text-black ">{part}</span>
@@ -121,7 +121,7 @@ export default function Page() {
                                                                 ref={(el) => (sectionRefs.current[index] = el)}
                                                                 className='flex flex-col items-center scroll-mt-54 sm:scroll-mt-40'>
                                                                 <span className='bg-gray-700 text-white px-4 w-fit '> SECTION: - {bns?.section}</span>
-                                                                <p >{getHighlightedText(bns?.section_title, searchparam)}</p>
+                                                                <p >{getHighlightedText(bns?.section_title || bns?.section_content, searchparam)}</p>
                                                             </li>
                                                         )
                                                     })
