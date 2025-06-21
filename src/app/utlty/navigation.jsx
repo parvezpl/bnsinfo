@@ -12,8 +12,6 @@ export default function Navigation({ className }) {
     const [language, setLanguage] = useState('')
     const setSearchbtn = useStore((state => state.setSearchbtn))
     const setLanguages = useStore((state => state.setLanguages))
-    const setBnshindi = useStore((state) => state.setBnshindi);
-    const setBnsenglish = useStore((state) => state.setBnsenglish);
 
     const bnsSeachHandler = (e) => {
         setSearchvalue(e)
@@ -42,7 +40,7 @@ export default function Navigation({ className }) {
                         <h2>नया कानून गाइड</h2>
                     </div>
                     <div className="header-logos">
-                        <Image src="/bnslogo.png" alt="Logo" width={120} height={40} />
+                        <Image src="/bnslogo.png" className='h-auto w-auto ' alt="Logo" width={100} height={40} />
                     </div>
                 </div>
                 <div className="navbar">
@@ -50,14 +48,12 @@ export default function Navigation({ className }) {
                     <a href="/about">About Us</a>
                     <a
                         onClick={() => {
-                            setBnsenglish()
                             router.push('/bns/mainpage/en')
                         }}
                         className='hover:cursor-pointer'
                     >Bharatiya Nyaya Sanhita 2023
                     </a>
                     <a onClick={() => {
-                        setBnshindi()
                         router.push('/bns/mainpage/hi')
                     }}
                         className='hover:cursor-pointer'

@@ -9,7 +9,6 @@ export default async function handler(req, res) {
     if (req.method == "GET") {
 
         const { search, lang } = req.query
-        console.log("Search Query:", search, "Language:", lang);
         const searchterm = search.split(" ")
         try {
             if (lang === "hi") {
@@ -17,6 +16,7 @@ export default async function handler(req, res) {
                     $text: { $search: search }
                 }).lean();
                 
+                console.log("BNS Hindi Search Result Count:", bns, search);
                 returnSearchText(bns, searchterm, res);
 
                 // return res.status(200).json({ ...responce });

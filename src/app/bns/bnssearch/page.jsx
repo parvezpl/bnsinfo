@@ -31,34 +31,34 @@ export default function Page() {
         return <p className='whitespace-break-spaces '>{data}</p>
     };
 
-    useEffect(() => {
-        if (sectionlist?.length === 0) return;
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        const index = sectionRefs.current.findIndex((ref) => ref === entry.target);
-                        setActiveIndex(index);
-                    }
-                });
-            },
-            {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.5,// when 50% visible
-            }
-        );
+    // useEffect(() => {
+    //     if (sectionlist?.length === 0) return;
+    //     const observer = new IntersectionObserver(
+    //         (entries) => {
+    //             entries.forEach((entry) => {
+    //                 if (entry.isIntersecting) {
+    //                     const index = sectionRefs.current.findIndex((ref) => ref === entry.target);
+    //                     setActiveIndex(index);
+    //                 }
+    //             });
+    //         },
+    //         {
+    //             root: null,
+    //             rootMargin: '0px',
+    //             threshold: 0.5,// when 50% visible
+    //         }
+    //     );
 
-        sectionRefs.current.forEach((ref) => {
-            if (ref) observer.observe(ref);
-        });
+    //     sectionRefs.current.forEach((ref) => {
+    //         if (ref) observer.observe(ref);
+    //     });
 
-        return () => {
-            sectionRefs.current.forEach((ref) => {
-                if (ref) observer.unobserve(ref);
-            });
-        };
-    }, [sectionlist]);
+    //     return () => {
+    //         sectionRefs.current.forEach((ref) => {
+    //             if (ref) observer.unobserve(ref);
+    //         });
+    //     };
+    // }, [sectionlist]);
 
 
     return (

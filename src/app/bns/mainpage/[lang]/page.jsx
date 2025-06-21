@@ -128,7 +128,7 @@ export default function Page() {
           </button>
         </div>
 
-        <h1 className="text-3xl font-bold mb-6 ">BNS 2023</h1>
+        <h1 className="text-3xl font-bold mb-6  bg-gray-300 text-center rounded-sm shadow-blue-600 shadow-sm ">BNS 2023</h1>
         {getContent() || <p className="text-gray-500">Please select a chapter or section.</p>}
       </div>
     </div>
