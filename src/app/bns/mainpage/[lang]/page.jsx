@@ -1,72 +1,3 @@
-// // app/legal/page.tsx
-// 'use client';
-
-// import { useEffect, useState } from "react";
-
-
-// export default function LegalPage() {
-
-//     const [chapters, setChapters] = useState([]);
-//       useEffect(() => {
-//         const fetchdata= async () => {
-//           try {
-//             const res = await fetch('/api/bns/bnsen');
-//             if (!res.ok) {
-//               throw new Error('Network response was not ok');
-//             }
-//             const legal = await res.json();
-//             setChapters(legal.bns );
-//           } catch (error) {
-//             console.error("Error fetching legal data:", error);
-//           }
-//         };
-//         fetchdata();
-//       },[])
-
-
-
-//   return (
-//     <div className="flex min-h-screen bg-gray-100">
-//       <nav className="w-72 bg-white shadow-md p-4">
-//         <h2 className="text-xl font-bold mb-4">Chapters</h2>
-//         <ul>
-//           {chapters.map((chapter) => (
-//             <li key={chapter.chapter} className="group relative">
-//               <span className="block p-2 font-semibold cursor-pointer hover:bg-gray-200">
-//                 {chapter.chapter}
-//               </span>
-//               {/* Section dropdown on hover */}
-//               <ul className="absolute left-full top-0 z-10 hidden group-hover:block w-64 bg-white shadow-lg">
-//                 {chapter.sections.slice(0, 5).map((sec, i) => (
-//                   <li key={i} className="p-2 border-b hover:bg-gray-100 text-sm">
-//                     {sec.section} {sec.section_title}
-//                   </li>
-//                 ))}
-//               </ul>
-//             </li>
-//           ))}
-//         </ul>
-//       </nav>
-
-//       <main className="flex-1 p-6 overflow-auto">
-//         <h1 className="text-3xl font-bold mb-4">Legal Sections Viewer</h1>
-//         {chapters.map((chapter) => (
-//           <div key={chapter.chapter} className="mb-6">
-//             <h2 className="text-xl font-semibold mb-2">{chapter.chapter}: {chapter.chapter_title}</h2>
-//             {chapter.sections.map((sec, i) => (
-//               <div key={i} className="mb-3 p-4 bg-white rounded shadow">
-//                 <h3 className="font-semibold text-lg mb-1">{sec.section} {sec.section_title}</h3>
-//                 <p className="text-gray-700 whitespace-pre-line">{sec.content}</p>
-//               </div>
-//             ))}
-//           </div>
-//         ))}
-//       </main>
-//     </div>
-//   );
-// }
-
-
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -78,9 +9,9 @@ export default function Page() {
   const [activeSection, setActiveSection] = useState(null)
   const [mobileOpen, setMobileOpen] = useState(false)
   const lang = useParams().lang || 'en' // Default to 'en' if no lang param
-  const [activeChapter, setActiveChapter] = useState(lang ==="en" ? "CHAPTER I" : '1')
+  const [activeChapter, setActiveChapter] = useState(lang === "en" ? "CHAPTER I" : 'अध्याय 1')
   const [editable, setEditable] = useState(false)
-  const router= useRouter()
+  const router = useRouter()
   useEffect(() => {
     async function fetchData() {
       const res = lang === 'en' ? await fetch('/api/bns/bnsen') : await fetch('/api/bns/bnshindi/bnshi') // Adjust the API endpoint as needed
@@ -113,9 +44,15 @@ export default function Page() {
       return (
         <div className="bg-white p-4 rounded shadow">
           <h2 className="text-xl font-semibold mb-2">{section.section}</h2>
-          <p >{section.section_title}</p>
+          <p >{section.section_title || section.section_content}</p>
         </div>
       )
+    }
+
+    const openForEdit = (id) => {
+      const obj = { ids: id, lang: lang }
+      const encodedObj = encodeURIComponent(JSON.stringify(obj));
+      router.push(`/bns/bnshome/${encodedObj}`)
     }
 
     return chapter.sections.map((section, index) => (
@@ -123,26 +60,27 @@ export default function Page() {
         <div className='flex justify-between items-center mb-2'>
           <h3 className="text-lg font-bold">SECTION : {section.section}</h3>
           <div className='flex justify-between text-sm text-gray-500 mb-2 gap-2'>
-            <span className='hover:cursor-pointer' onClick={() => router.push(`/bns/bnshome/${section.section}`)}>edit</span>
+
+            <span className='hover:cursor-pointer' onClick={() => openForEdit(section.section)}>edit</span>
             {/* <span className='hover:cursor-pointer'>update</span> */}
           </div>
         </div>
-        <p 
-        key={index}
-        // contentEditable={editable}
-        // suppressContentEditableWarning={true}
-         className=' flex !text-start '>
+        <p
+          key={index}
+          // contentEditable={editable}
+          // suppressContentEditableWarning={true}
+          className=' flex !text-start '>
           {/* {section.modify_section || section.section_title} */}
-         </p>
-         <div dangerouslySetInnerHTML={{ __html: section.modify_section || section.section_content }} className="prose max-w-none  " />
+        </p>
+        <div dangerouslySetInnerHTML={{ __html: section.modify_section || section.section_content || section.section_title }} className="prose max-w-none  " />
       </div>
     ))
   }
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen overflow-hidden ">
       {/* Sidebar (Fixed) */}
-      <div className={`fixed md:static top-0 left-0 z-40 h-full w-45 bg-gray-100 p-4 border-r shadow transition-transform duration-300
+      <div className={`fixed md:static top-0 left-0 z-40 h-full w-45 bg-gray-100 pl-4 border-r shadow transition-transform duration-300
         ${mobileOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
 
         {/* Mobile Close Button */}
@@ -153,7 +91,7 @@ export default function Page() {
         </div>
 
         <h2 className="text-lg font-bold mb-4 uppercase">Chapters</h2>
-        <ul className="h-[80vh] overflow-y-auto no-scrollbar">
+        <ul className="h-[80vh]  overflow-y-auto no-scrollbar">
           {data.map((chapter, index) => (
             <li key={index} className="group  mb-2">
               <button
@@ -164,7 +102,7 @@ export default function Page() {
               </button>
 
               {/* Section Dropdown */}
-              <ul className="absolute left-full top-0 ml-2 bg-white border shadow-md hidden  group-hover:block z-50 w-20">
+              <ul className="absolute left-full top-0 h-full  border shadow-md hidden bg-white group-hover:block z-50 w-20">
                 {chapter.sections.map((section, secIndex) => (
                   <li key={secIndex}>
                     <button

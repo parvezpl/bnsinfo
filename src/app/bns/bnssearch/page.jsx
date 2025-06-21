@@ -28,7 +28,7 @@ export default function Page() {
                 <span key={i} className=" font-sans  ">{part}</span>
             )
         );
-        return <div className='whitespace-break-spaces '>{data}</div>
+        return <p className='whitespace-break-spaces '>{data}</p>
     };
 
     useEffect(() => {
@@ -121,7 +121,7 @@ export default function Page() {
                                                                 ref={(el) => (sectionRefs.current[index] = el)}
                                                                 className='flex flex-col items-center scroll-mt-54 sm:scroll-mt-40'>
                                                                 <span className='bg-gray-700 text-white px-4 w-fit '> SECTION: - {bns?.section}</span>
-                                                                <p >{getHighlightedText(bns?.section_title || bns?.section_content, searchparam)}</p>
+                                                                <span >{getHighlightedText(bns?.section_title || bns?.section_content, searchparam)}</span>
                                                             </li>
                                                         )
                                                     })

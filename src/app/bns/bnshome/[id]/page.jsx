@@ -10,6 +10,7 @@ import { FontSize } from "@/lib/tiptap/FontSize";
 export default function Page() {
   const params = useParams();
   const id = params.id;
+  const { ids, lang } = JSON.parse(decodeURIComponent(id));
   const [loading, setLoading] = useState(true);
   const [section, setSection] = useState(null);
 
@@ -26,15 +27,23 @@ export default function Page() {
   });
 
   useEffect(() => {
-    if (id) {
-      fetch(`/api/bns/bnsen/?id=${id}`)
-        .then(res => res.json())
-        .then(data => {
-          setSection(data.bns.sections[0].section);
-          editor?.commands.setContent(data.bns.sections[0].section_title || '');
+    const fetchData = async () => {
+      if (id) {
+        try {
+         await fetch(lang === 'en' ? `/api/bns/bnsen/?id=${ids}` : `/api/bns/bnshindi/bnshi/?id=${ids}`)
+            .then(res => res.json())
+            .then(data => {
+              setSection(data.bns.sections[0].section);
+              editor?.commands.setContent(data.bns.sections[0].section_title || data.bns.sections[0].section_content);
+              setLoading(false);
+            });
+        } catch (error) {
+          console.error('Error fetching data:', error);
           setLoading(false);
-        });
+        }
+      }
     }
+    fetchData();
   }, [id, editor]);
 
   const saveContent = async () => {
@@ -48,7 +57,7 @@ export default function Page() {
     alert('Saved!');
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <p className='text-center'>Loading...</p>;
 
   return (
     <div className="p-4 max-w-3xl mx-auto">
@@ -66,9 +75,15 @@ export default function Page() {
         <option value="32px">32</option>
       </select>
 
-      <EditorContent editor={editor} className=' text-justify '  />
+      <EditorContent editor={editor} className=' text-justify ' />
       <button onClick={saveContent} className="mt-4 bg-blue-600 text-white px-4 py-2 rounded">
         Save
+      </button>
+      <button
+        onClick={() => window.history.back()}
+        className="mt-4 ml-2 bg-gray-600 text-white px-4 py-2 rounded"  
+      >
+        Back
       </button>
     </div>
   );
