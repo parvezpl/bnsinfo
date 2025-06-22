@@ -3,6 +3,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import {FetchBlog} from './fetchblog'
 
 const blogs = {
     "introduction-to-bns-2023": {
@@ -34,15 +35,8 @@ export default function BlogPost({ params }) {
 
     useEffect(() => {
         async function fetchBlog() {
-            try {
-                const res = await fetch(`/api/blog/?search=${slug}`);
-                if (!res.ok) throw new Error("Blog not found");
-                const data = await res.json();
-                console.log("Fetched blog:", data);
-                setPost(data);
-            } catch (err) {
-                setError("❌ Blog not found.");
-            }
+           const data = await FetchBlog(slug)
+           setPost(data)
         }
 
         if (slug) fetchBlog();
