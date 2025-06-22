@@ -25,11 +25,11 @@ export default function Navigation({ className }) {
     }
     // console.log(language)
     return (
-        <div className={`flex flex-row w-full items-center justify-between px-2 z-50 bg-blue-600 ${className}`}>
+        <div className={`flex flex-row  items-center justify-between z-50  ${className}`}>
             <div className='w-full'>
                 <div className="top-bar">
                     <div>
-                        <span><b>Disclaimer:</b> This is a non-governmental site created for educational purposes, aiming to simplify Bharatiya Nyaya Sanhita 2023 for easy understanding.</span>
+                        <span className='text-[1.1vw]'><b>Disclaimer:</b> This is a non-governmental site created for educational purposes, aiming to simplify Bharatiya Nyaya Sanhita 2023 for easy understanding.</span>
                     </div>
                     <div className=' flex justify-end px-2 text-black '>
                         <LanguageSelector setLanguages={(e) => setLanguages(e)} />
@@ -37,20 +37,20 @@ export default function Navigation({ className }) {
                 </div>
                 <div className="header">
                     <div className='flex flex-col items-center text-[32px]'>
-                        <h1>भारतीय न्याय संहिता 2023 </h1>
+                        <h1 >भारतीय न्याय संहिता 2023 </h1>
                         <h2>नया कानून गाइड</h2>
                     </div>
                     <div className="header-logos">
                         <Image src="/bnslogo.png" className='h-auto w-auto ' alt="Logo" width={100} height={40} />
                     </div>
                 </div>
-                <div className="navbar">
-                    <Link href="/">🏠 Home</Link>
-                    <Link href="/about">About Us</Link>
-                    <Link href="/bns/mainpage/en">Bharatiya Nyaya Sanhita 2023</Link>
-                    <Link href="/bns/mainpage/hi">भारतीय न्याय संहिता,2023 (Hindi)</Link>
-                    <Link href="/blog">Blogs</Link>
-                    <Link href="#">Forums</Link>
+                <div className="navbar ">
+                    <Link href="/" className='!text-[1.8vw] sm:!text-[16px]  '>🏠 Home</Link>
+                    <Link href="/about" className='!text-[1.8vw] sm:!text-[16px]  '>About Us</Link>
+                    <Link href="/bns/mainpage/en" className='!text-[1.8vw] sm:!text-[16px] '>Bharatiya Nyaya Sanhita 2023</Link>
+                    <Link href="/bns/mainpage/hi" className='!text-[1.8vw] sm:!text-[16px]  '>भारतीय न्याय संहिता,2023 (Hindi)</Link>
+                    <Link href="/blog" className='!text-[1.8vw] sm:!text-[16px] '>Blogs</Link>
+                    <Link href="#" className='!text-[1.8vw] sm:!text-[16px] '>Forums</Link>
 
                     {/* <div className="search-box">
                         <input id='i' type="text" placeholder="चोरी करने के सजा....." value={searchvalue} onChange={(e) => bnsSeachHandler(e.target.value)} />
@@ -58,10 +58,11 @@ export default function Navigation({ className }) {
                     </div> */}
                     <form
                         onSubmit={(e) => {
-                            e.preventDefault(); // Prevent page reload
-                            searchbutton();     // Call your submit function
+                            e.preventDefault();
+                            searchbutton();
                         }}
-                        className="search-box"
+                        className="border flex  justify-center items-center   rounded bg-gray-800 mx-auto sm:!h-[2vw] sm:!w-[20vw]"
+                        style={{ width: '40vw', maxWidth: '600px', height:'4vw' }} // 90% of screen, up to 600px max
                     >
                         <input
                             id="i"
@@ -69,15 +70,16 @@ export default function Navigation({ className }) {
                             placeholder="चोरी करने के सजा....."
                             value={searchvalue}
                             onChange={(e) => bnsSeachHandler(e.target.value)}
-                            className="px-2 py-1"
+                            className="flex-grow min-w-0 px-2 py-2 text-sm text-white bg-transparent focus:outline-none"
                         />
                         <button
                             type="submit"
-                            className="transition duration-150 bg-blue-400 px-3 py-1"
+                            className="flex justify-center items-center transition duration-150 bg-blue-500 hover:bg-blue-600 text-white px-3 m-1 rounded-r h-[3vw] text-[2vw]"
                         >
                             🔍
                         </button>
                     </form>
+
 
                 </div>
             </div>

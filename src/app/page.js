@@ -2,6 +2,10 @@ import Image from "next/image";
 import BnsHome from "./bns/mainpage/[lang]/text";
 import Navigation from "./utlty/navigation";
 import Mainpage from "./mainpage";
+export const metadata = {
+  title: "BNS INFO",
+  description: "POWERED BY HELIUSDEV",
+};
 export default function Home() {
   return (
     <div className="min-h-screen w-screen bg-white flex flex-col items-center justify-items-center text-black  font-[family-name:var(--font-geist-sans)] ">
@@ -10,7 +14,7 @@ export default function Home() {
         {/* <BnsHome /> */}
         <Mainpage/>
       </main>
-      {/* <footer className=" h-[20px gap-[24px] flex flex-wrap items-center justify-center bor">
+      {  /* <footer className=" h-[20px gap-[24px] flex flex-wrap items-center justify-center bor">
         <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
           href="https://www.heliusdev.in/bns"
