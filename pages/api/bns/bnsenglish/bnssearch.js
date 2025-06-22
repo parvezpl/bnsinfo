@@ -1,5 +1,5 @@
-import { connectDB } from "../../../lib/db";
-import Bnsen from "../../../lib/schema/bnsen";
+import { connectDB } from "../../../../lib/db";
+import Bnsen from "../../../../lib/schema/bnsen";
 
 let data =[]
 export default async function handler(req, res) {

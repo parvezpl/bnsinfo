@@ -1,6 +1,6 @@
 
-import { connectDB } from "../../../lib/db";
-import Bnsen from "../../../lib/schema/bnsen";
+import { connectDB } from "../../../../lib/db";
+import Bnsen from "../../../../lib/schema/bnsen";
 
 
 

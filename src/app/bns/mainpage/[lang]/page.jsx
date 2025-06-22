@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Menu } from 'lucide-react' // optional: for menu icon
 import { useParams, useRouter } from 'next/navigation'
+import {FetchEnglishData,  FetchHindiData } from './fetchbns'
 
 export default function Page() {
   const [data, setData] = useState([])
@@ -12,24 +13,26 @@ export default function Page() {
   const [activeChapter, setActiveChapter] = useState(lang === "en" ? "CHAPTER I" : 'अध्याय 1')
   const [editable, setEditable] = useState(false)
   const router = useRouter()
+
   useEffect(() => {
     async function fetchData() {
-      const res = lang === 'en' ? await fetch('/api/bns/bnsen') : await fetch('/api/bns/bnshindi/bnshi') // Adjust the API endpoint as needed
-      const json = await res.json()
-      setData(json.bns)
+      const data = lang === 'en' ? await FetchEnglishData() : await FetchHindiData()
+      // data
+      // console.log(data)
+      if (!data) return 
+      setData(data)
+
     }
     fetchData()
-  }, [])
+  }, [lang])
 
   const handleChapterClick = (chapterId) => {
-    console.log('Chapter clicked:', chapterId)
     setActiveChapter(chapterId)
     setActiveSection(null)
     setMobileOpen(false) // close sidebar on mobile after click
   }
 
   const handleSectionClick = (chapterId, sectionId) => {
-    console.log('Section clicked:', chapterId, sectionId)
     setActiveChapter(chapterId)
     setActiveSection(sectionId)
     setMobileOpen(false)
