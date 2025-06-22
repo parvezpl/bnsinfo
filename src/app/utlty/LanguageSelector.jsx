@@ -17,7 +17,7 @@ const LanguageSelector = ({setLanguages}) => {
   };
 
   return (
-    <div className="w-fit text-[12px]">
+    <div className="w-fit text-[10px] sm:text-[12px] ">
       <select
         value={language}
         onChange={handleChange}

@@ -5,6 +5,7 @@ import { Menu } from 'lucide-react' // optional: for menu icon
 import { useParams, useRouter } from 'next/navigation'
 import {FetchEnglishData,  FetchHindiData } from './fetchbns'
 import { motion } from "framer-motion";
+import LoadingCard from './loading'
 
 export default function Page() {
   const [data, setData] = useState([])
@@ -144,7 +145,7 @@ export default function Page() {
 
         <h1 className="text-3xl font-bold mb-6   text-center rounded-sm shadow-blue-300 shadow-sm ">BNS 2023</h1>
         
-         { loading ? <p className='text-center text-3xl text-yellow-800'>Page loading......</p>
+         { loading ? <LoadingCard/>
          : getContent() || <p className="text-gray-500">Please select a chapter or section</p>}
       </div>
     </div>
