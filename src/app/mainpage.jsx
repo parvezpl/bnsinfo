@@ -1,6 +1,7 @@
 'use client'
 import React, { useEffect } from 'react'
 import './mainpage.css'
+import Notification from './notification/notification';
 
 export default function Mainpage() {
     useEffect(() => {
@@ -30,7 +31,7 @@ export default function Mainpage() {
                     <div>🧠 छात्र, नागरिक और शिक्षकों के लिए उपयोगी जानकारी</div>
                 </div>
             </div>
-
+            <Notification/>
             <div className="content">
                 <h2>स्वागत है आपके अपने BNS सूचना पोर्टल में</h2>
                 <p>
