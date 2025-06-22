@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { Menu } from 'lucide-react' // optional: for menu icon
 import { useParams, useRouter } from 'next/navigation'
 import {FetchEnglishData,  FetchHindiData } from './fetchbns'
+import { motion } from "framer-motion";
 
 export default function Page() {
   const [data, setData] = useState([])
@@ -12,16 +13,18 @@ export default function Page() {
   const lang = useParams().lang || 'en' // Default to 'en' if no lang param
   const [activeChapter, setActiveChapter] = useState(lang === "en" ? "CHAPTER I" : 'अध्याय 1')
   const [editable, setEditable] = useState(false)
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
     async function fetchData() {
+      setLoading(true)
       const data = lang === 'en' ? await FetchEnglishData() : await FetchHindiData()
       // data
       // console.log(data)
       if (!data) return 
       setData(data)
-
+      setLoading(false)
     }
     fetchData()
   }, [lang])
@@ -60,6 +63,13 @@ export default function Page() {
 
     return chapter.sections.map((section, index) => (
       <div key={index} className="mb-4 bg-white p-4 rounded shadow w-[95vw] sm:w-[80vw]  break-all">
+        <motion.div 
+                initial={{ opacity: 0, y: 20 }} 
+                animate={{ opacity: 1, y: 0 }} 
+                transition={{ duration: 0.6 }}
+                className="max-w-4xl mx-auto"
+              >
+      
         <div className='flex justify-between items-center mb-2'>
           <h3 className="text-lg font-bold">SECTION : {section.section}</h3>
           <div className='flex justify-between text-sm text-gray-500 mb-2 gap-2'>
@@ -76,6 +86,7 @@ export default function Page() {
           {/* {section.modify_section || section.section_title} */}
         </p>
         <div dangerouslySetInnerHTML={{ __html: section.modify_section || section.section_content || section.section_title }} className="prose max-w-none  " />
+      </motion.div>
       </div>
     ))
   }
@@ -131,8 +142,10 @@ export default function Page() {
           </button>
         </div>
 
-        <h1 className="text-3xl font-bold mb-6  bg-gray-300 text-center rounded-sm shadow-blue-600 shadow-sm ">BNS 2023</h1>
-        {getContent() || <p className="text-gray-500">Please select a chapter or section.</p>}
+        <h1 className="text-3xl font-bold mb-6   text-center rounded-sm shadow-blue-300 shadow-sm ">BNS 2023</h1>
+        
+         { loading ? <p className='text-center text-3xl text-yellow-800'>Page loading......</p>
+         : getContent() || <p className="text-gray-500">Please select a chapter or section</p>}
       </div>
     </div>
   )

@@ -22,7 +22,6 @@ export async function FetchHindiData() {
         })[0]
         return data
     })
-    console.log(sortdata)
     // console.log(json.bns)
     return sortdata
 }

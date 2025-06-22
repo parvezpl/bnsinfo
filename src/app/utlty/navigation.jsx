@@ -5,6 +5,7 @@ import '../mainpage.css'
 import LanguageSelector from './LanguageSelector'
 import useStore from '../../../store/useStore'
 import Image from 'next/image';
+import Link from 'next/link'
 
 export default function Navigation({ className }) {
     const router = useRouter()
@@ -35,7 +36,7 @@ export default function Navigation({ className }) {
                     </div>
                 </div>
                 <div className="header">
-                    <div className=''>
+                    <div className='flex flex-col items-center text-[32px]'>
                         <h1>भारतीय न्याय संहिता 2023 </h1>
                         <h2>नया कानून गाइड</h2>
                     </div>
@@ -44,23 +45,12 @@ export default function Navigation({ className }) {
                     </div>
                 </div>
                 <div className="navbar">
-                    <a href="/">🏠 Home</a>
-                    <a href="/about">About Us</a>
-                    <a
-                        onClick={() => {
-                            router.push('/bns/mainpage/en')
-                        }}
-                        className='hover:cursor-pointer'
-                    >Bharatiya Nyaya Sanhita 2023
-                    </a>
-                    <a onClick={() => {
-                        router.push('/bns/mainpage/hi')
-                    }}
-                        className='hover:cursor-pointer'
-                    >भारतीय न्याय संहिता,2023 (Hindi)
-                    </a>
-                    <a href="/blog">Blogs</a>
-                    <a href="#">Forums</a>
+                    <Link href="/">🏠 Home</Link>
+                    <Link href="/about">About Us</Link>
+                    <Link href="/bns/mainpage/en">Bharatiya Nyaya Sanhita 2023</Link>
+                    <Link href="/bns/mainpage/hi">भारतीय न्याय संहिता,2023 (Hindi)</Link>
+                    <Link href="/blog">Blogs</Link>
+                    <Link href="#">Forums</Link>
 
                     {/* <div className="search-box">
                         <input id='i' type="text" placeholder="चोरी करने के सजा....." value={searchvalue} onChange={(e) => bnsSeachHandler(e.target.value)} />
