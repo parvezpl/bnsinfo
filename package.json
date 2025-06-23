@@ -10,6 +10,7 @@
     "postbuild": "next-sitemap"
   },
   "dependencies": {
+    "@qdrant/js-client-rest": "^1.14.1",
     "@tiptap/extension-text-align": "^2.22.0",
     "@tiptap/react": "^2.22.0",
     "@tiptap/starter-kit": "^2.22.0",

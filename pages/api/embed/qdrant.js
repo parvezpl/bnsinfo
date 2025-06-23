@@ -13,7 +13,6 @@ try {
 }
 
 
-
 // await client.recreateCollection("my_collection", {
 //   vectors: {
 //     size: 384, // size of your embedding vector

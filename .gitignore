@@ -46,4 +46,6 @@ pages/api/translate.js
 pages/api/savejson.js
 
 
+pages/api/embed/
+
 
