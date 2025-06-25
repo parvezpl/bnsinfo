@@ -16,7 +16,6 @@ export default async function handler(req, res) {
                     $text: { $search: search }
                 }).lean();
                 
-                console.log("BNS Hindi Search Result Count:", bns, search);
                 returnSearchText(bns, searchterm, res);
 
                 // return res.status(200).json({ ...responce });
