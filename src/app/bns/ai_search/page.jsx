@@ -10,6 +10,7 @@ import LoadingCard from "../mainpage/[lang]/loading";
 export default function GoogleSearchPage() {
     const [query, setQuery] = useState("");
     const [searchResult, setSearchResult] = useState([])
+    const [queryisactiov, setQueryisactiove] = useState(false)
     const [loading, setLoading] = useState(true)
 
 
@@ -18,6 +19,7 @@ export default function GoogleSearchPage() {
         if (!query.trim()) return;
         // You can route or handle search here
         console.log("Searching for:", query);
+        setQueryisactiove(true)
     };
 
     const vacterhandler = async () => {
@@ -62,11 +64,12 @@ export default function GoogleSearchPage() {
                     Search
                 </Button>
             </form>
-            <div>
+            <div className="flex flex-col justify-center items-center w-full">
+                
                 {
-                    loading ? 
-                    <LoadingCard/>
-                    :searchResult.map(item=>{
+                   queryisactiov &&  loading ? <LoadingCard/>
+                    : 
+                    searchResult.map(item=>{
                         return(
                             <ul key={item.id} className="w-[90vw] my-4 border p-2 shadow rounded-sm ">
                                 <li className="flex font-bold justify-between ">Act : {item.payload.section} <span className=" text-gray-400">{item.score}</span></li>

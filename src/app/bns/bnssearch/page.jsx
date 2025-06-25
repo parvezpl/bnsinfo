@@ -43,7 +43,7 @@ export default function Page() {
         <div className=' relative flex flex-col items-center justify-center w-full bg-gray-50 text-black  '>
             <Button 
             onClick={()=>aisearchhandler()}
-              className={'absolute z-50  top-0 right-0 mt-4 mr-4 bg-blue-900'}>AI Seach</Button>
+              className={'sm:absolute z-50  top-0 right-0 mt-4 mr-4 bg-blue-900'}>AI Seach</Button>
 
             {
                 !searchparam ?
