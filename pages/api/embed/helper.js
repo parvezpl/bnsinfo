@@ -18,7 +18,7 @@ export default async function handler(req, res) {
         const qdrantId =mongoIdToQdrantId(id);
         console.log(qdrantId )
         try {
-            const result = client.upsert('sectionsvector', {
+            const result = client.upsert('sections_hindi_vector', {
                 points: [
                     {
                         id: qdrantId,
@@ -38,7 +38,7 @@ export default async function handler(req, res) {
 
     if (req.method === 'PUT') {
         try {
-            const result = await client.createCollection('sectionsvector', {
+            const result = await client.createCollection('sections_hindi_vector', {
                 vectors: {
                     size: 384, // embedding vector size (example)
                     distance: 'Cosine',

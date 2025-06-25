@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import getEmbedding from "../ai/getEmbedding";
 import LoadingCard from "../mainpage/[lang]/loading";
+import getHindiEmbedding from "../ai/HindiEmbedding";
 
 export default function GoogleSearchPage() {
     const [query, setQuery] = useState("");
@@ -24,7 +25,8 @@ export default function GoogleSearchPage() {
 
     const vacterhandler = async () => {
         setLoading(true)
-        const vector = await getEmbedding(query)
+        // const vector = await get(query)
+        const vector = await getHindiEmbedding(query)
         const res = await fetch('/api/ai/vector_search', {
             method: 'POST',
             headers: {

@@ -1,8 +1,11 @@
 import getEmbedding from "./getEmbedding"
+import getHindiEmbedding from "./HindiEmbedding"
 
 
 export async function setVactor(bns) {
-    const vector = await getEmbedding(bns.section_content)
+    // const vector = await getEmbedding(bns.section_content)
+    console.log(bns)
+    const vector = await getHindiEmbedding(bns.section_content)
     console.log(bns._id)
     const res = await fetch('/api/embed/helper', {
         method: 'POST',
@@ -20,7 +23,7 @@ export async function setVactor(bns) {
 }
 
 export async function vactorseter(act) {
-    const bns=await fetch('/api/bns/bnsenglish/sections')
+    const bns=await fetch('/api/bns/bnshindi/sections')
     const data = await bns.json()
     const sections= data.sections
     // console.log(sections)

@@ -4,10 +4,11 @@ import React, { useState } from 'react'
 import getEmbedding from './getEmbedding';
 // import { section_extractor } from './section_extracter';
 import { vactorseter } from './setvactor';
+import getHindiEmbedding from './HindiEmbedding';
 
 export default function Page() {
     const [inputdata, setInputdata] = useState('')
-    const [actnumber, setActnumber] = useState(353)
+    const [actnumber, setActnumber] = useState(276)
     const createhandler = async () => {
         const res = await fetch('/api/embed/helper', {
             method: 'PUT',
@@ -44,7 +45,8 @@ export default function Page() {
 
 
     const vacterhandler = async () => {
-        const vector = await getEmbedding(inputdata)
+        // const vector = await getEmbedding(inputdata)
+        const vector = await getHindiEmbedding(inputdata)
         console.log("vacter", vector)
         const res = await fetch('/api/ai/vector_search', {
             method: 'POST',
