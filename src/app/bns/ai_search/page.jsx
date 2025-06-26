@@ -42,6 +42,7 @@ export default function BnsSearchPage() {
 
     const vectorHandler = async (query) => {
         setLoading(true);
+        setSearchResult([])
         const vector = lang === "hi" ? await getHindiEmbedding(query) : await getEmbedding(query);
 
         const res = await fetch('/api/ai/vector_search', {
