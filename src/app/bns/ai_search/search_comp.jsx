@@ -1,6 +1,5 @@
 'use client'
 import React, { useState } from 'react'
-import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from 'next/navigation';
@@ -23,18 +22,9 @@ export default function Search_comp() {
 
     return (
 
-        <div className='flex justify-center py-2'>
-            <div className='flex flex-col items-center bg-green-50 pb-20 w-full rounded-sm shadow-md '>
-                <motion.h1
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="text-6xl font-bold text-gray-800 mb-8 mt-8"
-                >
-                    BNS INFO
-                </motion.h1>
-
-                <form onSubmit={handleSearch} className="w-full max-w-xl flex items-center space-x-4">
+        <div className='flex justify-center py-1'>
+            <div className='flex flex-col items-center bg-green-50 py-6 w-full rounded-sm shadow-md '>
+                <form onSubmit={handleSearch} className="flex-col w-full max-w-xl flex gap-4 items-center space-x-4">
                     <Input
                         type="text"
                         placeholder="Search Bns Act and Qeury"
