@@ -4,9 +4,9 @@ import getHindiEmbedding from "./HindiEmbedding"
 
 export async function setVactor(bns) {
     // const vector = await getEmbedding(bns.section_content)
-    console.log(bns)
+    // console.log(bns)
     const vector = await getHindiEmbedding(bns.section_content)
-    console.log(bns._id)
+    // console.log(bns._id)
     const res = await fetch('/api/embed/helper', {
         method: 'POST',
         headers: {
@@ -28,9 +28,9 @@ export async function vactorseter(act) {
     const sections= data.sections
     // console.log(sections)
     if(sections){
-       const res= processSectionsSequentially(sections, act);
+       const res= await processSectionsSequentially(sections, act);
        if (res){
-           return "data set succsec"
+           return act+1
        }
     }
     // setVactor(sections[0])
@@ -49,5 +49,6 @@ async function processSectionsSequentially(sections, act) {
     //     // await new Promise(resolve => setTimeout(resolve, 2000));
     // }
     await setVactor(sections[act]); 
-    console.log('All items processed', sections[act]);
+    // console.log('All items processed', sections[act]);
+    return true
 }

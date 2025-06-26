@@ -1,32 +1,40 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import getEmbedding from "../ai/getEmbedding";
 import LoadingCard from "../mainpage/[lang]/loading";
 import getHindiEmbedding from "../ai/HindiEmbedding";
+import useStore from "../../../../store/useStore";
 
-export default function GoogleSearchPage() {
+export default function BnsSearchPage() {
     const [query, setQuery] = useState("");
     const [searchResult, setSearchResult] = useState([])
     const [queryisactiov, setQueryisactiove] = useState(false)
     const [loading, setLoading] = useState(true)
+    const searchparam = useStore((state)=>state.searchparam)
+    const lang = useStore((state)=>state.languages)
 
+    useEffect(()=>{
+        if (!searchparam?.trim()) return;
+        setQuery(searchparam)
+        setQueryisactiove(true)
+        vacterhandler(searchparam)
+    },[])
 
     const handleSearch = (e) => {
         e.preventDefault();
         if (!query.trim()) return;
-        // You can route or handle search here
-        console.log("Searching for:", query);
         setQueryisactiove(true)
     };
 
-    const vacterhandler = async () => {
+    const vacterhandler = async (query) => {
         setLoading(true)
         // const vector = await get(query)
-        const vector = await getHindiEmbedding(query)
+        const vector = lang === "hi" ? await getHindiEmbedding(query) : await getEmbedding(query)
+        // console.log("vector", vector)
         const res = await fetch('/api/ai/vector_search', {
             method: 'POST',
             headers: {
@@ -34,10 +42,10 @@ export default function GoogleSearchPage() {
             },
             body: JSON.stringify({
                 vector: vector,
+                lang:lang
             })
         })
         const data = await res.json()
-        console.log("res", data.searchResult)
         setSearchResult(data.searchResult)
         setLoading(false)
     }
@@ -61,7 +69,7 @@ export default function GoogleSearchPage() {
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                 />
-                <Button onClick={() => vacterhandler()} type="submit" className="rounded-full px-6 py-2 text-lg"
+                <Button onClick={() => vacterhandler(query)} type="submit" className="rounded-full px-6 py-2 text-lg"
                 >
                     Search
                 </Button>

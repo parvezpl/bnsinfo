@@ -17,8 +17,8 @@ export default function Notification() {
     }, [])
     return (
         <div className=' flex flex-col items-center h-40 text-center py-4'>
-            <h1 className='text-center text-md font-bold text-blue-900 shadow'>Tips the day</h1>
-            <div className=' block flex-col justify-center items-center w-full sm:w-[90vw] h-40 bg-green-100 rounded-sm shadow-sm border p-2 overflow-y-auto'>
+            <h1 className='text-center text-md font-bold text-blue-900 shadow'>Tips of the day</h1>
+            <div className=' block flex-col justify-center items-center w-full sm:w-[100vw] h-40 bg-gray-100 rounded-sm shadow-sm border p-2 overflow-y-auto'>
                 {
                     loading ?  
                     <div className='flex flex-col gap-2 animate-pulse'>

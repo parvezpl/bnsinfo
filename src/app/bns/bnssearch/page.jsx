@@ -35,7 +35,6 @@ export default function Page() {
     };
 
     const aisearchhandler=()=>{
-        console.log('cl')
         router.push('/bns/ai_search')
     }
   

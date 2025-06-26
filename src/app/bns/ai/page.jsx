@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import getEmbedding from './getEmbedding';
 // import { section_extractor } from './section_extracter';
 import { vactorseter } from './setvactor';
@@ -8,7 +8,8 @@ import getHindiEmbedding from './HindiEmbedding';
 
 export default function Page() {
     const [inputdata, setInputdata] = useState('')
-    const [actnumber, setActnumber] = useState(276)
+    const [actnumber, setActnumber] = useState(0)
+    const [countactive, setCountActive] = useState(false)
     const createhandler = async () => {
         const res = await fetch('/api/embed/helper', {
             method: 'PUT',
@@ -37,9 +38,9 @@ export default function Page() {
         console.log(data);
     };
     const getcollectionhandler = async () => {
-        const res = await fetch('/api/embed/helper');
+        const res = await fetch('/api/ai/getalldata');
         const data = await res.json();
-        console.log(data);
+        console.log(data.searchResult);
     };
 
 
@@ -61,10 +62,22 @@ export default function Page() {
         console.log("res", data)
     }
 
-    const setvactor = async () => {
+    useEffect(() => {
+        if(countactive){
+            setvactor(actnumber)
+        }
+    }, [actnumber])
 
-        const res = await vactorseter(actnumber)
-        console.log(res)
+    const setvactor = async (num) => {
+        const res = await vactorseter(num)
+        if (res) {
+            setActnumber(prev => prev + 1)
+            console.log(actnumber)
+            setCountActive(true)
+            return
+        }
+        console.log("faild", actnumber)
+        setCountActive(false)
     }
     const getdatabyid = async () => {
         const res = await fetch('/api/ai/getdatbyid', {
@@ -96,7 +109,7 @@ export default function Page() {
             <button
                 className='w-fit py-2 px-1 bg-blue-400 text-black rounded-sm'
                 onClick={() => getcollectionhandler()}
-            >get connection name</button>
+            >get connection data </button>
             <div className='flex flex-col gap-2 items-center bg-gray-300 p-4'>
                 {/* <div className='w-[90vw] h-40 bg-gray-200 overflow-auto border'> </div> */}
                 <div className='flex gap-4'>
@@ -105,7 +118,7 @@ export default function Page() {
                 </div>
                 <button
                     className='w-fit py-2 px-1 bg-yellow-400 text-black rounded-sm'
-                    onClick={() => setvactor()}
+                    onClick={() => setvactor(actnumber)}
                 >set vactor</button>
             </div>
             <button

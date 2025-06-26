@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react'
 import './mainpage.css'
 import Notification from './notification/notification';
+import Search_comp from './bns/ai_search/search_comp';
 
 export default function Mainpage() {
     useEffect(() => {
@@ -31,6 +32,7 @@ export default function Mainpage() {
                     <div>🧠 छात्र, नागरिक और शिक्षकों के लिए उपयोगी जानकारी</div>
                 </div>
             </div>
+            <Search_comp/>
             <Notification/>
             <div className="content">
                 <h2>स्वागत है आपके अपने BNS सूचना पोर्टल में</h2>

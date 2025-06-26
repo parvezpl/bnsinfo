@@ -1,9 +1,12 @@
-import Image from "next/image";
-import Navigation from "./utlty/navigation";
+
 import Mainpage from "./mainpage";
 export const metadata = {
   title: "BNS INFO",
   description: "POWERED BY HELIUSDEV",
+  icons: {
+    icon: '/favicon.ico',
+  },
+
 };
 export default function Home() {
   return (

@@ -10,7 +10,6 @@ import Link from 'next/link'
 export default function Navigation({ className }) {
     const router = useRouter()
     const [searchvalue, setSearchvalue] = useState('')
-    const [language, setLanguage] = useState('')
     const setSearchbtn = useStore((state => state.setSearchbtn))
     const setLanguages = useStore((state => state.setLanguages))
 
@@ -19,11 +18,9 @@ export default function Navigation({ className }) {
     }
     const searchbutton = () => {
         setSearchbtn(searchvalue)
-        // setSearchparam(searchvalue)
         router.push(`/bns/bnssearch`)
 
     }
-    // console.log(language)
     return (
         <div className={`flex flex-row  items-center justify-between z-50  ${className}`}>
             <div className='w-full'>
