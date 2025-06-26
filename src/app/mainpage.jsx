@@ -22,6 +22,9 @@ export default function Mainpage() {
     }, []);
     return (
         <div className=' h-screen-minus-nav flex flex-col justify-between mt-4'>
+            <div className='mb-4'>
+                <Search_comp />
+            </div>
             <h1 className='text-center text-[32px] font-bold'>भारतीय न्याय संहिता 2023 जानकारी पोर्टल</h1>
             <p className='text-center'>सरकारी नहीं — केवल शैक्षिक उद्देश्य के लिए</p>
 
@@ -32,8 +35,7 @@ export default function Mainpage() {
                     <div>🧠 छात्र, नागरिक और शिक्षकों के लिए उपयोगी जानकारी</div>
                 </div>
             </div>
-            <Search_comp/>
-            <Notification/>
+            <Notification />
             <div className="content">
                 <h2>स्वागत है आपके अपने BNS सूचना पोर्टल में</h2>
                 <p>

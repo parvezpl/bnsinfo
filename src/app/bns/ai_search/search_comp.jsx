@@ -24,7 +24,7 @@ export default function Search_comp() {
     return (
 
         <div className='flex justify-center py-2'>
-            <div className='flex flex-col items-center bg-green-50 py-4 w-full rounded-sm shadow-md '>
+            <div className='flex flex-col items-center bg-green-50 pb-20 w-full rounded-sm shadow-md '>
                 <motion.h1
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
