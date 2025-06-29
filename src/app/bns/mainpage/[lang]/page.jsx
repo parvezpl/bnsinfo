@@ -21,8 +21,6 @@ export default function Page() {
     async function fetchData() {
       setLoading(true)
       const data = lang === 'en' ? await FetchEnglishData() : await FetchHindiData()
-      // data
-      // console.log(data)
       if (!data) return 
       setData(data)
       setLoading(false)

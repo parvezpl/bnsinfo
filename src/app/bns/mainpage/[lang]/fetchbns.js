@@ -1,4 +1,3 @@
-import { isHTMLElement } from "framer-motion"
 
 export async function FetchEnglishData() {
     const res = await fetch('/api/bns/bnsenglish/bnsen')
