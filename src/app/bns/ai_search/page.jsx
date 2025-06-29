@@ -63,14 +63,14 @@ export default function BnsSearchPage() {
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-start bg-gray-100 p-4">
-            <motion.h1
+            {/* <motion.h1
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
                 className="text-6xl font-bold text-gray-800 mb-8 mt-8"
             >
                 BNS INFO
-            </motion.h1>
+            </motion.h1> */}
 
             <form onSubmit={handleSearch} className="w-full max-w-xl flex items-center space-x-4 mb-8">
                 <Input
