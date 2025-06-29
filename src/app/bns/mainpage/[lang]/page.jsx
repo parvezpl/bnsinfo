@@ -122,7 +122,7 @@ export default function Page() {
             {/* Sidebar */}
             <div style={{ height: '-webkit-fill-available' }}
                 className={`fixed md:static left-0 z-40 w-40 sm:w-60 border-r  bg-white p-2  shadow transition-transform duration-300
-        ${!mobileOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
+        ${mobileOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
             >
                 <div className="flex md:hidden justify-end ">
                     <button onClick={() => setMobileOpen(false)} className="text-sm text-red-500">
