@@ -5,6 +5,7 @@ import { Menu, PanelLeftClose } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import LoadingCard from '../../../../components/loading';
+import EditContent from './EditContent';
 
 export default function Page() {
     const [data, setData] = useState([]);
@@ -13,7 +14,7 @@ export default function Page() {
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
-
+    const [editActive, setEditActive] = useState(false)
 
     const limit = 4; // Items per page
     const lang = useParams().lang || 'en';
@@ -64,16 +65,20 @@ export default function Page() {
     };
 
     const openForEdit = (id) => {
-        const obj = { ids: id, lang: lang };
-        const encodedObj = encodeURIComponent(JSON.stringify(obj));
-        router.push(`/bns/bnshome/${encodedObj}`);
+        setEditActive(true)
+        // const obj = { ids: id, lang: lang };
+        // const encodedObj = encodeURIComponent(JSON.stringify(obj));
+        // router.push(`/bns/bnshome/${encodedObj}`);
     };
 
     const getContent = () => {
         if (activeSection !== null) {
             const section = data.find(s => s.section === activeSection);
             if (!section) return <p className="text-gray-500">Section not found</p>;
-
+            
+            if(editActive){
+                return <EditContent section={section}/> 
+            }
             return (
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -160,6 +165,7 @@ export default function Page() {
                 </div>
                 <button className='fixed  right-2 bg-black text-white rounded-sm px-2 py-1 hover:bg-gray-800' onClick={() => {
                     setActiveSection(null);
+                    setEditActive(false)
                     if (activeSection) return
                     router.back()
                 }}>back</button>
