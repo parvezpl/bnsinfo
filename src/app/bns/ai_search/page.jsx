@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import getEmbedding from "../ai/getEmbedding";
-import LoadingCard from "../mainpage/[lang]/loading";
+import LoadingCard from "../../../components/loading";
 import getHindiEmbedding from "../ai/HindiEmbedding";
 import useStore from "../../../../store/useStore";
 import TypingText from "@/components/TypingText"; // Import the component
