@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Menu } from 'lucide-react';
+import { Menu, PanelLeftClose } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import LoadingCard from '../../../../components/loading';
@@ -121,16 +121,16 @@ export default function Page() {
         <div className=" flex bg-gray-50">
             {/* Sidebar */}
             <div style={{ height: '-webkit-fill-available' }}
-                className={`fixed md:static left-0 z-40 w-40 sm:w-60 border-r  bg-white p-2  shadow transition-transform duration-300
+                className={`fixed md:static left-0 z-40 w-40 sm:w-60 border-r bg-white p-2  shadow transition-transform duration-300
         ${mobileOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
             >
-                <div className="flex md:hidden justify-end ">
-                    <button onClick={() => setMobileOpen(false)} className="text-sm text-red-500">
-                        Close ✕
+                <div className="flex md:hidden bg-gray-200 mb-1  ">
+                    <button onClick={() => setMobileOpen(false)} className="text-gray-600 flex items-center">
+                        <PanelLeftClose className="h-4 w-4 mr-2" /> Close Act
                     </button>
                 </div>
 
-                <h2 className="text:md sm:text-xl font-bold pb-2 uppercase">Sections</h2>
+                <h2 className="text:md sm:text-xl font-bold pb-2 uppercase place-self-center ">Sections</h2>
                 <ul className="max-h-[65vh] sm:h-full  overflow-y-scroll no-scrollbar ">
                     {data.map((section, index) => (
                         <li key={index}>
@@ -151,14 +151,18 @@ export default function Page() {
             </div>
 
             {/* Content Area */}
-            <div className=" flex-1 ml-0 md:ml-0 p-4 h-full overflow-y-auto bg-gray-50">
+            <div className=" flex-1 ml-0 md:ml-0 p-4 h-full w-screen overflow-y-auto bg-gray-50">
                 {/* Mobile Menu Button */}
                 <div className="md:hidden mb-4">
                     <button onClick={() => setMobileOpen(true)} className="text-gray-600 flex items-center">
-                        <Menu className="h-6 w-6 mr-2" /> Open Menu
+                        <Menu className="h-6 w-6 mr-2" /> Open Act
                     </button>
                 </div>
-                <button className='fixed  right-2 bg-black text-white rounded-sm px-2 py-1 hover:bg-gray-800' onClick={() => router.back()}>back</button>
+                <button className='fixed  right-2 bg-black text-white rounded-sm px-2 py-1 hover:bg-gray-800' onClick={() => {
+                    setActiveSection(null);
+                    if (activeSection) return
+                    router.back()
+                }}>back</button>
                 <h1 className="text-3xl font-bold mb-6 text-center rounded-sm shadow-blue-300 shadow-sm">BNS 2023</h1>
 
                 {loading && page === 1 ? <LoadingCard /> : getContent()}
