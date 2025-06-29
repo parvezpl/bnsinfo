@@ -118,7 +118,7 @@ export default function Page() {
     };
 
     return (
-        <div className=" bg-gray-50">
+        <div className=" flex bg-gray-50">
             {/* Sidebar */}
             <div style={{ height: '-webkit-fill-available' }}
                 className={`fixed md:static left-0 z-40 w-40 sm:w-60 border-r  bg-white p-2  shadow transition-transform duration-300
@@ -131,7 +131,7 @@ export default function Page() {
                 </div>
 
                 <h2 className="text:md sm:text-xl font-bold pb-2 uppercase">Sections</h2>
-                <ul className="max-h-[70vh] sm:h-full  overflow-y-scroll no-scrollbar ">
+                <ul className="max-h-[65vh] sm:h-full  overflow-y-scroll no-scrollbar ">
                     {data.map((section, index) => (
                         <li key={index}>
                             <button
