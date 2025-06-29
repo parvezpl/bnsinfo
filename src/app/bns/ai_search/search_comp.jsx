@@ -23,12 +23,12 @@ export default function Search_comp() {
     return (
 
         <div className='flex justify-center py-1'>
-            <div className='flex flex-col items-center bg-green-50 py-6 w-full rounded-sm shadow-md '>
-                <form onSubmit={handleSearch} className="flex-col w-full max-w-xl flex gap-4 items-center space-x-4">
+            <div className='flex flex-col items-center py-6 w-full '>
+                <form onSubmit={handleSearch} className="flex-col w-full max-w-xl flex gap-4 items-center ">
                     <Input
                         type="text"
                         placeholder="Search Bns Act and Qeury"
-                        className="flex-grow p-4 text-lg rounded-full border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="flex-grow p-4 text-lg rounded-full border bg-gray-100 border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                     />

@@ -62,21 +62,12 @@ export default function BnsSearchPage() {
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-start bg-gray-100 p-4">
-            {/* <motion.h1
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="text-6xl font-bold text-gray-800 mb-8 mt-8"
-            >
-                BNS INFO
-            </motion.h1> */}
-
-            <form onSubmit={handleSearch} className="w-full max-w-xl flex items-center space-x-4 mb-8">
+        <div className=" relative min-h-full flex flex-col items-center justify-start bg-gray-100 p-4" >
+            <form onSubmit={handleSearch} className=" fixed w-full max-w-xl flex items-center space-x-4 mb-8 z-999 ">
                 <Input
                     type="text"
                     placeholder="Search Bns Act and Query"
-                    className="flex-grow p-4 text-lg rounded-full border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex-grow p-4 text-lg rounded-full border bg-gray-50 border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                 />
@@ -85,7 +76,7 @@ export default function BnsSearchPage() {
                 </Button>
             </form>
 
-            <div className="flex flex-col items-center w-[90vw]  space-y-4 overflow-y-auto">
+            <div className="flex flex-col items-center w-[90vw] h-full  space-y-4 overflow-y-auto" >
                 {queryIsActive && loading && <LoadingCard />}
 
                 {searchResult.map((item, index) => (
@@ -106,7 +97,8 @@ export default function BnsSearchPage() {
                     </motion.div>
                 ))}
 
-                <div ref={messageEndRef} />
+                <div />
+                {/* ref={messageEndRef} */}
             </div>
         </div>
     );

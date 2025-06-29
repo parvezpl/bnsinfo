@@ -22,7 +22,7 @@ export default function Mainpage() {
     }, []);
     return (
         <div className=' h-screen-minus-nav flex flex-col justify-between mt-4'>
-            <div className='mb-4'>
+            <div className='mb-4 bg-green-100'>
                 <Search_comp />
             </div>
             <h1 className='text-center text-[32px] font-bold'>भारतीय न्याय संहिता 2023 जानकारी पोर्टल</h1>

@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
+import Search_comp from '../ai_search/search_comp'
 
 export default function Page() {
   return (
@@ -19,6 +20,7 @@ export default function Page() {
             भारतीय न्याय संहिता 2023 (हिन्दी)
           </div>
         </Link>
+        <Search_comp/>
       </div>
     </div>
   )
