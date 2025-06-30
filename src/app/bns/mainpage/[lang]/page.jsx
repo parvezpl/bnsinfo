@@ -29,7 +29,7 @@ export default function Page() {
         try {
             const response = lang === 'en' ? await fetch(`/api/bns/bnsenglish/bnsen?page=${pageNumber}&limit=${limit}`) : await fetch(`/api/bns/bnshindi/bnshi?page=${pageNumber}&limit=${limit}`);
             const result = await response.json();
-
+            console.log(result)
             if (result?.bns?.length) {
                 const newSections = result.bns.flatMap(item => item.sections);
                 if (reset) {
@@ -75,9 +75,9 @@ export default function Page() {
         if (activeSection !== null) {
             const section = data.find(s => s.section === activeSection);
             if (!section) return <p className="text-gray-500">Section not found</p>;
-            
-            if(editActive){
-                return <EditContent section={section}/> 
+
+            if (editActive) {
+                return <EditContent section={section} />
             }
             return (
                 <motion.div
@@ -92,7 +92,11 @@ export default function Page() {
                             Edit ✏️
                         </span>
                     </div>
-                    <div dangerouslySetInnerHTML={{ __html: section.modify_section || section.section_content || section.section_title }} className="prose max-w-none" />
+                    <div dangerouslySetInnerHTML={{
+                        __html: section.modify_section
+                            || section.section_content
+                            || section.section_title
+                    }} className="prose max-w-none" />
                 </motion.div>
             );
         }
@@ -123,32 +127,43 @@ export default function Page() {
     };
 
     return (
-        <div className=" flex bg-gray-50">
+        <div className=" flex relative min-h-full   bg-gray-50 overflow-hidden">
+            <button className='fixed  mt-2 right-2 bg-black text-white rounded-sm px-2 py-1 hover:bg-gray-800' onClick={() => {
+                setActiveSection(null);
+                setEditActive(false)
+                if (activeSection) return
+                router.back()
+            }}>back</button>
             {/* Sidebar */}
-            <div style={{ height: '-webkit-fill-available' }}
-                className={`fixed md:static left-0 z-40 w-40 sm:w-60 border-r bg-white p-2  shadow transition-transform duration-300
-        ${mobileOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
+            <div
+                style={{ height: '100vh', height: '-webkit-fill-available' }}
+                className={`fixed md:static flex flex-col left-0 box-content w-40 sm:w-60 border-r bg-white p-2 shadow transition-all ease-in-out duration-300
+                         ${mobileOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
             >
-                <div className="flex md:hidden bg-gray-200 mb-1  ">
+                <div className="flex md:hidden bg-gray-200 mb-1">
                     <button onClick={() => setMobileOpen(false)} className="text-gray-600 flex items-center">
-                        <PanelLeftClose className="h-4 w-4 mr-2" /> Close Act
+                        <PanelLeftClose className="h-4 w-4 mr-2" /> Close
                     </button>
                 </div>
 
-                <h2 className="text:md sm:text-xl font-bold pb-2 uppercase place-self-center ">Sections</h2>
-                <ul className="max-h-[65vh] sm:h-full  overflow-y-scroll no-scrollbar ">
+                <h2 className="text-md sm:text-xl font-bold pb-2 uppercase place-self-center">Sections</h2>
+
+                <ul className="flex-1 overflow-auto no-scrollbar">
                     {data.map((section, index) => (
                         <li key={index}>
                             <button
                                 onClick={() => handleSectionClick(section.section)}
                                 className="w-full text-left font-medium py-1 sm:p-2 rounded hover:bg-gray-200"
                             >
-                                {lang === "en" ? 'Section' : 'धारा'}: {section.section}
+                                {lang === 'en' ? 'Section' : 'धारा'}: {section.section}
                             </button>
                         </li>
                     ))}
                     {hasMore && !loading && (
-                        <button onClick={handleLoadMore} className="col-span-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+                        <button
+                            onClick={handleLoadMore}
+                            className="col-span-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+                        >
                             Load More
                         </button>
                     )}
@@ -163,13 +178,8 @@ export default function Page() {
                         <Menu className="h-6 w-6 mr-2" /> Open Act
                     </button>
                 </div>
-                <button className='fixed  right-2 bg-black text-white rounded-sm px-2 py-1 hover:bg-gray-800' onClick={() => {
-                    setActiveSection(null);
-                    setEditActive(false)
-                    if (activeSection) return
-                    router.back()
-                }}>back</button>
-                <h1 className="text-3xl font-bold mb-6 text-center rounded-sm shadow-blue-300 shadow-sm">BNS 2023</h1>
+
+                <h1 className="text-3xl font-bold mb-6 text-center ">BNS 2023</h1>
 
                 {loading && page === 1 ? <LoadingCard /> : getContent()}
 

@@ -6,7 +6,7 @@ export default async function handler(req, res) {
     await connectDB();
 
     if (req.method === "GET") {
-        const { id, page = 1, limit = 10 } = req.query;
+        const { id, page = 1, limit = 4 } = req.query;
 
         if (id) {
             try {
@@ -26,6 +26,7 @@ export default async function handler(req, res) {
         try {
             const skip = (parseInt(page) - 1) * parseInt(limit);
             const bns = await Bnsen.find({}, { _id: 1, sections: 1 })
+                .sort({ _id: 1 })
                 .skip(skip)
                 .limit(parseInt(limit))
                 .lean();
@@ -36,15 +37,14 @@ export default async function handler(req, res) {
     }
     if (req.method === 'PUT') {
         const { content, id } = req.body;
+        console.log(content, id)
         if (!content || !id) return res.status(400).json({ error: "Content and ID are required" });
         const newres = await Bnsen.updateOne(
             { "sections.section": id.replace(".", '') },
             { $set: { "sections.$.modify_section": content } },
         );
-        return res.status(200).json({ success: true });
+        return res.status(200).json({ status: newres });
     }
-
-
 }
 
 
