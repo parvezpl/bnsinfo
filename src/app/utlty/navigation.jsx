@@ -6,12 +6,17 @@ import LanguageSelector from './LanguageSelector'
 import useStore from '../../../store/useStore'
 import Image from 'next/image';
 import Link from 'next/link'
+import { signIn, signOut, useSession } from 'next-auth/react';
+import { motion } from 'framer-motion';
+
 
 export default function Navigation({ className }) {
     const router = useRouter()
     const [searchvalue, setSearchvalue] = useState('')
+    const [loginPop, setLoginPop] = useState(false)
     const setSearchbtn = useStore((state => state.setSearchbtn))
     const setLanguages = useStore((state => state.setLanguages))
+    const { data: session, status } = useSession();
 
     const bnsSeachHandler = (e) => {
         setSearchvalue(e)
@@ -19,8 +24,29 @@ export default function Navigation({ className }) {
     const searchbutton = () => {
         setSearchbtn(searchvalue)
         router.push(`/bns/bnssearch`)
-
     }
+
+
+    function LoginPop() {
+        return (
+            <div className='absolute flex flex-col top-10 right-2 bg-blue-200 shodow-md shadow-orange-400 px-4 py-2 rounded-sm z-999 text-nowrap border-2 border-gray-400 gap-1 ' >
+                <motion.button
+                    whileTap={{ scale: 0.9 }}
+                    whileHover={{ scale: 1.1 }}
+                    className='hover:bg-blue-300 rounded-sm px-2'
+                >{session?.user?.name}</motion.button>
+                <motion.button
+                    whileTap={{ scale: 0.9 }}
+                    whileHover={{ scale: 1.1 }}
+                    className='hover:bg-blue-300  rounded-sm px-2'
+                    onClick={() => signOut()}
+                >
+                    logout
+                </motion.button>
+            </div>
+        )
+    }
+
     return (
         <div className={`flex flex-row  items-center justify-between z-50  ${className}`}>
             <div className='w-full'>
@@ -41,10 +67,38 @@ export default function Navigation({ className }) {
                         <div className="header-logos">
                             <Image src="/bnslogo.png" className='sm:h-auto sm:w-auto !h-9 w-18  ' alt="Logo" width={100} height={40} />
                         </div>
-                        <div className="flex justify-center items-center">
-                            <div className='flex justify-center items-center bg-green-500 w-10 h-10 rounded-3xl overflow-hidden shadow-sm border '>
-                                Profile
-                            </div>
+                        <div className=" relative flex justify-center items-center hover:cursor-pointer "
+                            onClick={() => {
+                                setLoginPop(prev => !loginPop)
+                            }}
+                        >
+                            {
+                                session && <>
+                                    <Image
+                                        src={session?.user.image || null}
+                                        alt={session?.user.name || null}
+                                        width={35}
+                                        height={35}
+                                        className="rounded-full"
+                                    />
+                                    <div>
+                                        {
+                                            loginPop &&
+                                            <LoginPop />
+                                        }
+                                    </div>
+                                </>
+                            }
+                            { status ==='unauthenticated' && 
+                                <motion.button
+                                    whileTap={{ scale: 0.9 }}
+                                    whileHover={{ scale: 1.1 }}
+                                    className="px-2 py-1 bg-blue-500 text-white rounded-lg"
+                                    onClick={() => { signIn('google') }}
+                                >
+                                    loging
+                                </motion.button>
+                            }
                         </div>
                     </div>
                 </div>
@@ -58,10 +112,6 @@ export default function Navigation({ className }) {
                     <Link href="/blog" className='!text-[10px] sm:!text-[14px] '>Blogs</Link>
                     <Link href="#" className='!text-[10px] sm:!text-[14px] '>Forums</Link>
 
-                    {/* <div className="search-box">
-                        <input id='i' type="text" placeholder="चोरी करने के सजा....." value={searchvalue} onChange={(e) => bnsSeachHandler(e.target.value)} />
-                        <button id='i' type="submit" onClick={searchbutton} className=' transition duration-150 bg-blue-400' >🔍</button>
-                    </div> */}
                     <form
                         onSubmit={(e) => {
                             e.preventDefault(); // Prevent page reload
@@ -85,6 +135,7 @@ export default function Navigation({ className }) {
                         </button>
                     </form>
                 </div>
+
             </div>
         </div>
     )

@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect } from 'react'
 import './mainpage.css'
-import Notification from './notification/notification';
+import Notification from '../components/notification/notification';
 import Search_comp from './bns/ai_search/search_comp';
 
 export default function Mainpage() {
