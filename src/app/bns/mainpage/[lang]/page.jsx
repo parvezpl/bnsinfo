@@ -6,8 +6,10 @@ import { useParams, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import LoadingCard from '../../../../components/loading';
 import EditContent from './EditContent';
+import { useSession } from 'next-auth/react';
 
 export default function Page() {
+    const { data: session } = useSession();
     const [data, setData] = useState([]);
     const [activeSection, setActiveSection] = useState(null);
     const [mobileOpen, setMobileOpen] = useState(false);
@@ -66,11 +68,7 @@ export default function Page() {
 
     const openForEdit = (id) => {
         setEditActive(true)
-        // const obj = { ids: id, lang: lang };
-        // const encodedObj = encodeURIComponent(JSON.stringify(obj));
-        // router.push(`/bns/bnshome/${encodedObj}`);
     };
-
     const getContent = () => {
         if (activeSection !== null) {
             const section = data.find(s => s.section === activeSection);
@@ -88,9 +86,12 @@ export default function Page() {
                 >
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-xl font-bold">SECTION: {section.section}</h2>
-                        <span className="text-blue-500 cursor-pointer" onClick={() => openForEdit(section.section)}>
+
+                      { session?.user?.role==='admin' &&
+                       <span className="text-blue-500 cursor-pointer" onClick={() => openForEdit(section.section)}>
                             Edit ✏️
                         </span>
+                        }
                     </div>
                     <div dangerouslySetInnerHTML={{
                         __html: section.modify_section

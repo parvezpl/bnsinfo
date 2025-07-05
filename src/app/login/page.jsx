@@ -11,8 +11,8 @@ export default function Page() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const router = useRouter();
-    const { data: session} = useSession();
-    if (session){
+    const { data: session } = useSession();
+    if (session) {
         // console.log(session.user)
     }
 
@@ -44,7 +44,7 @@ export default function Page() {
         <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4 ">
             <div className="w-full max-w-md p-6 bg-white shadow-lg rounded-xl ">
                 <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
-                <LoginButton/>
+                <LoginButton />
                 <div className=' bg- '>hello</div>
                 {/* Email/Password Login */}
                 <form className="space-y-4" onSubmit={handleSubmit}>
