@@ -93,7 +93,7 @@ export default function Navigation({ className }) {
                                 <motion.button
                                     whileTap={{ scale: 0.9 }}
                                     whileHover={{ scale: 1.1 }}
-                                    className="px-2 py-1 bg-blue-500 text-white rounded-lg"
+                                    className="px-2 py-1 bg-green-700 text-white rounded-lg"
                                     onClick={() => { signIn('google') }}
                                 >
                                     loging
