@@ -20,6 +20,7 @@ export default function Mainpage() {
             });
         };
     }, []);
+    
     return (
         <div className=' h-screen-minus-nav flex flex-col justify-between mt-4'>
             <div className='mb-4 bg-green-100'>
@@ -39,7 +40,6 @@ export default function Mainpage() {
             <div className="content">
                 <h2>स्वागत है आपके अपने BNS सूचना पोर्टल में</h2>
                 <p>
-
                     <strong>BNSInfo</strong> एक ज्ञानवर्धक और जागरूकता बढ़ाने वाला पोर्टल है, जो आपको <strong>भारतीय न्याय संहिता
                         2023 (Bharatiya Nyaya Sanhita 2023)</strong> से जुड़ी महत्वपूर्ण जानकारी सरल और स्पष्ट भाषा में उपलब्ध कराता
                     है।

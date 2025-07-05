@@ -11,10 +11,7 @@ export default function Page() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const router = useRouter();
-    const { data: session } = useSession();
-    if (session) {
-        // console.log(session.user)
-    }
+    // const { data: session } = useSession();
 
     useEffect(() => {
         const fetchProviders = async () => {
