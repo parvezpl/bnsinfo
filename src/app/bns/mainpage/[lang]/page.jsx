@@ -69,6 +69,7 @@ export default function Page() {
     const openForEdit = (id) => {
         setEditActive(true)
     };
+    console.log(session?.user)
     const getContent = () => {
         if (activeSection !== null) {
             const section = data.find(s => s.section === activeSection);
