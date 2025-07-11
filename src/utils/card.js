@@ -1,4 +1,4 @@
 export default async function fetchblog(params) {
-  const res = await fetch("http://localhost:3000/api/blog");
+  const res = await fetch(`${process.env.WEBHOST}/api/blog`|| `http://bnsinfo.in/api/blog`);
   return res.json();
 }
