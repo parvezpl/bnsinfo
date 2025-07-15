@@ -44,8 +44,7 @@ export default function BnsSearchPage() {
         setLoading(true);
         setSearchResult([])
         const vector = lang === "hi" ? await getHindiEmbedding(query) : await getEmbedding(query);
-
-        const res = await fetch('/api/ai/vector_search', {
+        const res = await fetch(`/api/ai/vector_search`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -57,6 +56,7 @@ export default function BnsSearchPage() {
         });
 
         const data = await res.json();
+        console.log(data)
         setSearchResult(data.searchResult); // Append new results like chat
         setLoading(false);
     };
@@ -79,9 +79,9 @@ export default function BnsSearchPage() {
             <div className="flex flex-col items-center w-[90vw] h-full  space-y-4 overflow-y-auto" >
                 {queryIsActive && loading && <LoadingCard />}
 
-                {searchResult.map((item, index) => (
+                {searchResult?.map((item, index) => (
                     <motion.div
-                        key={ index}
+                        key={index}
                         initial={{ opacity: 0, x: -50 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.3 }}
@@ -93,7 +93,7 @@ export default function BnsSearchPage() {
                         </div>
                         {/* Typing effect here */}
                         धारा : {item.payload.section}
-                        <TypingText text={item.payload.section_content} />
+                        <TypingText text={item.payload.section_content || item.payload.content} />
                     </motion.div>
                 ))}
 

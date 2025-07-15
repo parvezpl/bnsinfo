@@ -1,5 +1,5 @@
 // app/blog/page.jsx (SERVER COMPONENT)
-import fetchblog from "@/utils/card";
+import fetchblog from "@/utils/blogcard";
 import Link from "next/link";
 
 export default async function BlogPage() {

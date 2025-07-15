@@ -1,12 +1,20 @@
 import { pipeline } from '@xenova/transformers';
 
+let embedderPromise = null;
+async function getEmbedder() {
+    if (!embedderPromise) {
+        embedderPromise = pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2');
+    }
+    return await embedderPromise;
+}
+
 export function cleanText(text) {
     return text
-        .toLowerCase()                      // Convert to lowercase
-        .replace(/[\r\n]+/g, ' ')           // Replace newlines with space
-        .replace(/\s+/g, ' ')               // Replace multiple spaces with single space
-        .replace(/[^\w\s]/gi, '')           // Remove punctuation (optional)
-        .trim();                            // Trim leading/trailing spaces
+        .toLowerCase()
+        .replace(/[\r\n]+/g, ' ')
+        .replace(/\s+/g, ' ')
+        .replace(/[^\w\s]/gi, '')
+        .trim();
 }
 
 export function removeStopwords(text) {
@@ -17,31 +25,28 @@ export function removeStopwords(text) {
         .join(' ');
 }
 
-function splitText(text, chunkSize = 500) {
+function splitByWords(text, chunkSize = 100) {
+    const words = text.split(' ');
     let chunks = [];
-    for (let i = 0; i < text.length; i += chunkSize) {
-        chunks.push(text.substring(i, i + chunkSize));
+    for (let i = 0; i < words.length; i += chunkSize) {
+        chunks.push(words.slice(i, i + chunkSize).join(' '));
     }
     return chunks;
 }
 
 async function getEmbedding(texts) {
-    console.log("text", texts);
+    const embedder = await getEmbedder();
 
-    const text = cleanText(texts);
-    const noStopwords = removeStopwords(text);
+    const cleaned = cleanText(texts);
+    const noStopwords = removeStopwords(cleaned);
+    const chunks = splitByWords(noStopwords);
 
-    const embedder = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2');
+    const outputs = await Promise.all(
+        chunks.map(chunk => embedder(chunk, { pooling: 'mean', normalize: true }))
+    );
 
-    const chunks = splitText(noStopwords);
-    let vectors = [];
+    const vectors = outputs.map(out => Array.from(out.data));
 
-    for (let chunk of chunks) {
-        const output = await embedder(chunk, { pooling: 'mean', normalize: true });
-        vectors.push(Array.from(output.data));
-    }
-
-    // Average the vectors
     const averageVector = vectors[0].map((_, i) =>
         vectors.reduce((sum, vec) => sum + vec[i], 0) / vectors.length
     );
@@ -50,6 +55,3 @@ async function getEmbedding(texts) {
 }
 
 export default getEmbedding;
-
-
-

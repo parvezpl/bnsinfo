@@ -8,6 +8,8 @@ import Underline from '@tiptap/extension-underline';
 import TextStyle from '@tiptap/extension-text-style';
 import Color from '@tiptap/extension-color';
 import { Button } from '@/components/ui/button';
+import getHindiEmbedding from '../../ai/HindiEmbedding';
+
 
 export default function EditContent({ section }) {
   const [savedContent, setSavedContent] = useState('');
@@ -17,7 +19,7 @@ export default function EditContent({ section }) {
 
   const editor = useEditor({
     extensions: [StarterKit, Bold, Underline, TextStyle, Color],
-    content: section?.modify_section || section.section_content || section.section_title , // fallback to empty string
+    content: section?.modify_section || section.section_content || section.section_title, // fallback to empty string
   });
 
   // Update editor content when section changes
@@ -37,7 +39,22 @@ export default function EditContent({ section }) {
       body: JSON.stringify({ content: editor.getHTML(), id: section.section }),
     });
     const response = await res.json();
-    console.log(response);
+
+    console.log(editor.getHTML());
+    // AFTER UPDATE UPDATE VECTOR ALSO 
+    const vector = await getHindiEmbedding(editor.getHTML())
+    console.log(section)
+    const upres = await fetch('/api/embed/updatehindivector', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        section: section.section,
+        vector: vector,
+        payload: { section: section.section, section_content: editor.getHTML() }
+      })
+    });
+    const updateres = await upres.json();
+    console.log(updateres)
     setUpdateStatus('Content Updated Successfully!');
   };
 

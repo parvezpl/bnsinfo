@@ -63,7 +63,7 @@ export default function Page() {
     }
 
     useEffect(() => {
-        if(countactive){
+        if (countactive) {
             setvactor(actnumber)
         }
     }, [actnumber])
@@ -91,6 +91,20 @@ export default function Page() {
         })
         const data = await res.json()
         console.log(data)
+    }
+    const payload = async () => {
+        const res = await fetch('/api/ai/payload_search', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                payloadId: "232"
+            })
+        })
+        const data = await res.json()
+
+        console.log(data.result.payload.section === '232')
     }
     return (
         <div className='flex flex-col justify-center items-center space-y-4'>
@@ -125,6 +139,10 @@ export default function Page() {
                 className='w-fit py-2 px-1 bg-red-400 text-black rounded-sm'
                 onClick={() => getdatabyid()}
             >get data by id </button>
+
+            <button className='w-fit py-2 px-1 bg-blue-300 text-black rounded-sm'
+                onClick={() => payload()}
+            >find data by payload </button>
         </div>
     )
 }

@@ -1,40 +1,41 @@
 import client from "../../../lib/qdrant";
 
 export default async function handler(req, res) {
-    if (req.method == "GET") {
-        // const sections=[]
-        await getAllData().then(data => {
-            // console.log('Fetched Data:', data);
-            const sections = data.map(item => Number(item.payload.section)).sort((a, b) => a - b);
-            return res.status(200).json({ searchResult:sections});
 
-        });
-    }
-
-}
-
-async function getAllData() {
-    let allPoints = [];
-    let offset = undefined;
-
-    while (true) {
-        const response = await client.scroll('sectionsvector', {
-            limit: 100, // You can increase the limit if your server can handle more
-            offset: offset,
+    getAllData("sections_hindi_vector")
+        .then((points) => {
+            console.log("Total points:", points.length);
+            console.log("Sample point:", points[0]);
+            res.status(500).json({data:points[0]})
+        })
+        .catch((err) => {
+            console.error("Error fetching data:", err);
         });
 
-        allPoints = allPoints.concat(response.points);
 
-        // If no more data, break the loop
-        if (response.next_page_offset === null) {
-            break;
+    async function getAllData(collectionName) {
+        let allPoints = [];
+        let offset = undefined;
+        const limit = 1000;
+
+        while (true) {
+            const response = await client.scroll(collectionName, {
+                limit,
+                with_payload: true,
+                with_vector: false,
+                offset,
+            });
+
+            const { points, next_page_offset } = response;
+
+            allPoints.push(...points);
+
+            if (!next_page_offset) break;
+
+            offset = next_page_offset;
         }
 
-        // Prepare for the next batch
-        offset = response.next_page_offset;
+        return allPoints;
     }
-
-    console.log('Total Points Fetched:', allPoints.length);
-    return allPoints;
 }
 
