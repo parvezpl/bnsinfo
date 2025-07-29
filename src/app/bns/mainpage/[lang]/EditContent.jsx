@@ -8,7 +8,7 @@ import Underline from '@tiptap/extension-underline';
 import TextStyle from '@tiptap/extension-text-style';
 import Color from '@tiptap/extension-color';
 import { Button } from '@/components/ui/button';
-import getHindiEmbedding from '../../ai/HindiEmbedding';
+import getHindiEmbedding from '../../../../utils/HindiEmbedding';
 
 
 export default function EditContent({ section }) {

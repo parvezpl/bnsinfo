@@ -4,9 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
-import getEmbedding from "../ai/getEmbedding";
+import getEmbedding from "../../../utils/getEmbedding";
 import LoadingCard from "../../../components/loading";
-import getHindiEmbedding from "../ai/HindiEmbedding";
+import getHindiEmbedding from "../../../utils/HindiEmbedding";
 import useStore from "../../../../store/useStore";
 import TypingText from "@/components/TypingText"; // Import the component
 
@@ -40,24 +40,36 @@ export default function BnsSearchPage() {
         vectorHandler(query);
     };
 
+    // const vectorHandler = async (query) => {
+    //     setLoading(true);
+    //     setSearchResult([])
+    //     const vector = lang === "hi" ? await getHindiEmbedding(query) : await getEmbedding(query);
+    //     const res = await fetch(`/api/ai/vector_search`, {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify({
+    //             vector: vector,
+    //             lang: lang
+    //         })
+    //     });
+
+    //     const data = await res.json();
+    //     console.log(data)
+    //     setSearchResult(data.searchResult); // Append new results like chat
+    //     setLoading(false);
+    // };
+
     const vectorHandler = async (query) => {
         setLoading(true);
         setSearchResult([])
-        const vector = lang === "hi" ? await getHindiEmbedding(query) : await getEmbedding(query);
-        const res = await fetch(`/api/ai/vector_search`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                vector: vector,
-                lang: lang
-            })
-        });
+        console.log(process.env.NEXT_PUBLIC_FASTAPI)
+        const res = await fetch(`${process.env.NEXT_PUBLIC_FASTAPI}/search/?query=${query}`);
 
         const data = await res.json();
-        console.log(data)
-        setSearchResult(data.searchResult); // Append new results like chat
+        // console.log(data)
+        setSearchResult(data.results); // Append new results like chat
         setLoading(false);
     };
 
@@ -92,8 +104,8 @@ export default function BnsSearchPage() {
                             <span className="text-xs text-gray-400">Score: {item.score?.toFixed(2)}</span>
                         </div>
                         {/* Typing effect here */}
-                        धारा : {item.payload.section}
-                        <TypingText text={item.payload.section_content || item.payload.content} />
+                        धारा : {item.section}
+                        <TypingText text={item.content} />
                     </motion.div>
                 ))}
 

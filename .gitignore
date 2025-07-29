@@ -12,6 +12,7 @@
 
 # testing
 /coverage
+src/app/bns/ai/
 
 # next.js
 /.next/

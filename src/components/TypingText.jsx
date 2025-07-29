@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 export default function TypingText({ text }) {
     const [displayedText, setDisplayedText] = useState("");
     const [index, setIndex] = useState(0);
-    console.log(text)
     useEffect(() => {
         if (index < text?.length) {
             const timeout = setTimeout(() => {

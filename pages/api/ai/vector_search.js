@@ -5,6 +5,7 @@ export default async function handler(req, res) {
     if (req.method === "POST") {
         try {
             const { vector, lang } = req.body;
+            console.log("Received vector:", lang);
             if (!vector || !Array.isArray(vector)) {
                 return res.status(400).json({ error: "Invalid or missing vector" });
             }
