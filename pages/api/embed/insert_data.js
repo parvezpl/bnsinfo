@@ -1,24 +1,15 @@
 import client from '../../../lib/qdrant';
+import { getAIVector } from './multilang_vector';
 
 export default async function handler(req, res) {
-    if (req.method === 'GET') {
-        try {
-            const result = await client.getCollections();
-            console.log('List of collections:', result.collections);
-            return res.status(200).json({ collections: result.collections });
-        } catch (err) {
-            console.error('Could not get collections:', err);
-            return res.status(500).json({ error: 'Failed to fetch collections' });
-        }
-    }
-
     if (req.method === 'POST') {
-        const { id, vector, payload } = req.body;
-        // console.log(id)
+        const { id, payload } = req.body;
+        console.log(id)
+        const vector = await getAIVector(payload.text);
         const qdrantId =mongoIdToQdrantId(id);
         console.log(qdrantId )
         try {
-            const result = client.upsert('sections_hindi_vector', {
+            const result = client.upsert('vecter_test', {
                 points: [
                     {
                         id: qdrantId,
@@ -34,24 +25,6 @@ export default async function handler(req, res) {
             return res.status(500).json({ error: 'Failed to insert data' });
         }
     }
-
-
-    if (req.method === 'PUT') {
-        const { collection } = req.body;
-        try {
-            const result = await client.createCollection(collection, {
-                vectors: {
-                    size: 384, // embedding vector size (example)
-                    distance: 'Cosine',
-                },
-            });
-            return res.status(200).json({ message: 'Collection created successfully', result });
-        } catch (err) {
-            console.error('Could not create collection:', err);
-            return res.status(500).json({ error: 'Failed to create collection' });
-        }
-    }
-
     // If method is not GET, POST, or PUT
     return res.status(405).json({ error: 'Method not allowed' });
 }

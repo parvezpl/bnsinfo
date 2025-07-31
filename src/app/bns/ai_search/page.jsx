@@ -64,12 +64,19 @@ export default function BnsSearchPage() {
     const vectorHandler = async (query) => {
         setLoading(true);
         setSearchResult([])
-        console.log(process.env.NEXT_PUBLIC_FASTAPI)
-        const res = await fetch(`${process.env.NEXT_PUBLIC_FASTAPI}/search/?query=${query}`);
-
-        const data = await res.json();
-        // console.log(data)
-        setSearchResult(data.results); // Append new results like chat
+         const res = await fetch('/api/embed/vector_search_data', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                text: query,
+            })
+        })
+        const data = await res.json()
+        // console.log("res", data.searchResult)
+        
+        setSearchResult(data.searchResult); // Append new results like chat
         setLoading(false);
     };
 
@@ -104,8 +111,8 @@ export default function BnsSearchPage() {
                             <span className="text-xs text-gray-400">Score: {item.score?.toFixed(2)}</span>
                         </div>
                         {/* Typing effect here */}
-                        धारा : {item.section}
-                        <TypingText text={item.content} />
+                        धारा : {item.payload?.section}
+                        <TypingText text={item.payload?.content} />
                     </motion.div>
                 ))}
 

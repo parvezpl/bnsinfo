@@ -13,6 +13,7 @@
 # testing
 /coverage
 src/app/bns/ai/
+src/app/bns/ai_text/
 
 # next.js
 /.next/
