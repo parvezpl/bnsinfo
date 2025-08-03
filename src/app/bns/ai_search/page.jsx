@@ -4,9 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
-import getEmbedding from "../../../utils/getEmbedding";
 import LoadingCard from "../../../components/loading";
-import getHindiEmbedding from "../../../utils/HindiEmbedding";
 import useStore from "../../../../store/useStore";
 import TypingText from "@/components/TypingText"; // Import the component
 

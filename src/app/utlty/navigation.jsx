@@ -29,7 +29,7 @@ export default function Navigation({ className }) {
 
     function LoginPop() {
         return (
-            <div className='absolute flex flex-col top-10 right-2 bg-blue-200 shodow-md shadow-orange-400 px-4 py-2 rounded-sm z-999 text-nowrap border-2 border-gray-400 gap-1 ' >
+            <div className='fixed flex flex-col mt-6 right-2 bg-blue-200 shodow-md shadow-orange-400 px-4 py-2 rounded-sm text-nowrap border-2 border-gray-400 gap-1 ' >
                 <motion.button
                     whileTap={{ scale: 0.9 }}
                     whileHover={{ scale: 1.1 }}
