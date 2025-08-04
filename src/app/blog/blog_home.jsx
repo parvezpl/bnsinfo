@@ -38,69 +38,39 @@ export default async function Blog_home() {
                         </div>
                     ))}
                 </div>
-                    {/* Sidebar */}
-                    <aside className="flex-1 flex flex-col gap-6">
-                        {/* Author Box */}
-                        <div className="bg-gray-100 p-4 rounded-lg shadow-sm flex items-start gap-4">
-                            <img src="/a2.jpg" alt="Author" className="w-16 h-16 float-left rounded-full object-cover " />
-                            <div>
-                                <h3 className="text-lg font-semibold">About Blog</h3>
-                                <p className="text-sm mt-1">कानून विश्लेषक और लेखक। BNS Info पर सटीक और सरल जानकारी देने के लिए प्रतिबद्ध।</p>
-                            </div>
+                {/* Sidebar */}
+                <aside className="flex-1 flex flex-col gap-6">
+                    {/* Author Box */}
+                    <div className="bg-gray-100 p-4 rounded-lg shadow-sm flex items-start gap-4">
+                        <img src="/a2.jpg" alt="Author" className="w-16 h-16 float-left rounded-full object-cover " />
+                        <div>
+                            <h3 className="text-lg font-semibold">About Blog</h3>
+                            <p className="text-sm mt-1">कानून विश्लेषक और लेखक। BNS Info पर सटीक और सरल जानकारी देने के लिए प्रतिबद्ध।</p>
                         </div>
+                    </div>
 
-                        {/* Archive */}
-                        <div className="bg-gray-100 p-4 rounded-lg shadow-sm">
-                            <h3 className="text-lg font-semibold mb-2">आर्काइव (महीनों के अनुसार)</h3>
-                            <ul className="space-y-1 text-blue-700">
-                                <li><a href="#">जून 2025</a></li>
-                                <li><a href="#">मई 2025</a></li>
-                                <li><a href="#">अप्रैल 2025</a></li>
-                            </ul>
-                        </div>
+                    {/* Archive */}
+                    <div className="bg-gray-100 p-4 rounded-lg shadow-sm">
+                        <h3 className="text-lg font-semibold mb-2">आर्काइव (महीनों के अनुसार)</h3>
+                        <ul className="space-y-1 text-blue-700">
+                            <li><a href="#">जून 2025</a></li>
+                            <li><a href="#">मई 2025</a></li>
+                            <li><a href="#">अप्रैल 2025</a></li>
+                        </ul>
+                    </div>
 
-                        {/* Categories */}
-                        <div className="bg-gray-100 p-4 rounded-lg shadow-sm">
-                            <h3 className="text-lg font-semibold mb-2">श्रेणियाँ</h3>
-                            <ul className="space-y-1 text-blue-700">
-                                <li><a href="#">BNS Updates</a></li>
-                                <li><a href="#">कानूनी समाचार</a></li>
-                                <li><a href="#">विश्लेषण</a></li>
-                                <li><a href="#">धाराएँ और धाराएँ</a></li>
-                            </ul>
-                        </div>
-                    </aside>
+                    {/* Categories */}
+                    <div className="bg-gray-100 p-4 rounded-lg shadow-sm">
+                        <h3 className="text-lg font-semibold mb-2">श्रेणियाँ</h3>
+                        <ul className="space-y-1 text-blue-700">
+                            <li><a href="#">BNS Updates</a></li>
+                            <li><a href="#">कानूनी समाचार</a></li>
+                            <li><a href="#">विश्लेषण</a></li>
+                            <li><a href="#">धाराएँ और धाराएँ</a></li>
+                        </ul>
+                    </div>
+                </aside>
             </div>
         </div>
     );
 }
-// <div className="mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8">
-//     {/* Main Content */}
-//     <main className="flex-1">
-//         {/* Post Card 1 */}
-//         <div className="flex flex-col md:flex-row mb-6 bg-white rounded-lg shadow-md overflow-hidden">
-//             <img src="/a1.jpg" alt="thumbnail" className="w-full md:w-48 h-48 object-cover" />
-//             <div className="p-4">
-//                 <h2 className="text-xl font-semibold">
-//                     <a href="/b1.html" className="text-blue-600 hover:underline">भारतीय न्याय संहिता 2023: ऐतिहासिक बदलाव</a>
-//                 </h2>
-//                 <div className="text-sm text-gray-600 mt-1">लेखक: अजय कुमार | जून 2025</div>
-//                 <p className="mt-2">नया कानून भारतीय आपराधिक व्यवस्था में ऐतिहासिक बदलाव लेकर आया है। जानिए इसके मुख्य बिंदु...</p>
-//             </div>
-//         </div>
-
-//         {/* Post Card 2 */}
-//         <div className="flex flex-col md:flex-row mb-6 bg-white rounded-lg shadow-md overflow-hidden">
-//             <img src="/bg3.jpg" alt="thumbnail" className="w-full md:w-48 h-48 object-cover" />
-//             <div className="p-4">
-//                 <h2 className="text-xl font-semibold">
-//                     <a href="#" className="text-blue-600 hover:underline">IPC बनाम BNS: क्या बदला है?</a>
-//                 </h2>
-//                 <div className="text-sm text-gray-600 mt-1">लेखक: स्नेहा शर्मा | मई 2025</div>
-//                 <p className="mt-2">IPC के स्थान पर BNS ने जो बदलाव किए हैं वे नागरिकों और कानूनी प्रक्रिया के लिए महत्वपूर्ण हैं...</p>
-//             </div>
-//         </div>
-//     </main>
-
-    
-// </div>

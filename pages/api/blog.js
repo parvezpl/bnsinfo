@@ -22,6 +22,7 @@ export default async function handler(req, res) {
             author: blog.author,
             excerpt: blog.excerpt,
             date: blog.date,
+            authorlogo: blog.authorlogo,
             image: blog.image ? `data:${blog.image.contentType};base64,${blog.image.data.toString('base64')}` : null,
         }));
         return res.status(200).json(data)
@@ -36,6 +37,7 @@ export default async function handler(req, res) {
                 title: fields.title.join(),
                 excerpt: fields.excerpt.join(),
                 author: fields.author.join(),
+                authorlogo: fields.authorlogo.join(),
                 image: {
                     data: fileData,
                     contentType: file.mimetype,

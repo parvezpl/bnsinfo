@@ -1,10 +1,7 @@
 // app/blog/page.jsx (SERVER COMPONENT)
-import fetchblog from "@/utils/blogcard";
-import Link from "next/link";
 import Blog_home from "./blog_home";
 
 export default async function BlogPage() {
-    const blogs = await fetchblog();
 
     return (
         <main className="max-w-full mx-auto ">

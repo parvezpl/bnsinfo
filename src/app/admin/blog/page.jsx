@@ -1,7 +1,9 @@
 'use client';
 import { useState } from 'react';
+import { useSession } from 'next-auth/react';
 
 export default function BlogAdminForm() {
+  const { data: session } = useSession();
   const [form, setForm] = useState({
     title: '',
     excerpt: '',
@@ -36,7 +38,10 @@ export default function BlogAdminForm() {
       formData.append('excerpt', form.excerpt);
       formData.append('author', form.author);
       formData.append('image', form.image);
-
+      const userlogo = session?.user.image
+      if (userlogo) {
+        formData.append('authorlogo', userlogo);
+      }
       const res = await fetch('/api/blog', {
         method: 'POST',
         body: formData,
@@ -52,7 +57,6 @@ export default function BlogAdminForm() {
         const error = await res.json();
         setMsg('❌ Failed: ' + error.message || 'Unknown error');
       }
-
 
     } catch (err) {
       console.error('Error:', err);

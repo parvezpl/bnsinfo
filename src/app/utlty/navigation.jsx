@@ -111,7 +111,10 @@ export default function Navigation({ className }) {
                     <Link href="/bns/mainpage/hi" className='!text-[10px] sm:!text-[14px] !block sm:!hidden '>भा0न्या0सं0 2023</Link>
                     <Link href="/blog" className='!text-[10px] sm:!text-[14px] '>Blogs</Link>
                     <Link href="#" className='!text-[10px] sm:!text-[14px] '>Forums</Link>
-
+                    {
+                        session?.user && session.user.role === 'admin' &&
+                        <Link href="/admin" className='!text-[10px] sm:!text-[14px] '>Admin</Link>
+                    }
                     <form
                         onSubmit={(e) => {
                             e.preventDefault(); // Prevent page reload
