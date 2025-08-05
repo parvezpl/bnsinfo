@@ -38,28 +38,7 @@ export default function BnsSearchPage() {
         vectorHandler(query);
     };
 
-    // const vectorHandler = async (query) => {
-    //     setLoading(true);
-    //     setSearchResult([])
-    //     const vector = lang === "hi" ? await getHindiEmbedding(query) : await getEmbedding(query);
-    //     const res = await fetch(`/api/ai/vector_search`, {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         },
-    //         body: JSON.stringify({
-    //             vector: vector,
-    //             lang: lang
-    //         })
-    //     });
-
-    //     const data = await res.json();
-    //     console.log(data)
-    //     setSearchResult(data.searchResult); // Append new results like chat
-    //     setLoading(false);
-    // };
-
-    const vectorHandler = async (query) => {
+    const vectorHandler = async (querys) => {
         setLoading(true);
         setSearchResult([])
          const res = await fetch('/api/embed/vector_search_data', {
@@ -68,7 +47,7 @@ export default function BnsSearchPage() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                text: query,
+                text: querys,
             })
         })
         const data = await res.json()
@@ -110,7 +89,7 @@ export default function BnsSearchPage() {
                         </div>
                         {/* Typing effect here */}
                         धारा : {item.payload?.section}
-                        <TypingText text={item.payload?.content} />
+                        <TypingText text={item.payload?.section_content} />
                     </motion.div>
                 ))}
 

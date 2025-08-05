@@ -8,9 +8,8 @@ export default async function handler(req, res) {
     await connectDB()
 
     if (req.method == "GET") {
-        console.log("hello")
-        const sections = await Sectionhindi.find()
-        // console.log(sections)
+        const { search } = req.query;
+        const sections = await Sectionhindi.find({ section: { $regex: search, $options: "i" } });
         return res.status(200).json({ sections });
     }
 

@@ -41,11 +41,11 @@ export default async function Blog_home() {
                 {/* Sidebar */}
                 <aside className="flex-1 flex flex-col gap-6">
                     {/* Author Box */}
-                    <div className="bg-gray-100 p-4 rounded-lg shadow-sm flex items-start gap-4">
+                    <div className="bg-gray-100 p-4 rounded-lg shadow-sm items-start space-x-4">
                         <img src="/a2.jpg" alt="Author" className="w-16 h-16 float-left rounded-full object-cover " />
                         <div>
                             <h3 className="text-lg font-semibold">About Blog</h3>
-                            <p className="text-sm mt-1">कानून विश्लेषक और लेखक। BNS Info पर सटीक और सरल जानकारी देने के लिए प्रतिबद्ध।</p>
+                            <p className="text-sm mt-1 text-justify">कानून विश्लेषक और लेखक। BNS Info पर सटीक और सरल जानकारी देने के लिए प्रतिबद्ध।</p>
                         </div>
                     </div>
 

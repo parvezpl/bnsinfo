@@ -11,7 +11,6 @@ export default async function handler(req, res) {
                 return res.status(400).json({ error: "Invalid or missing 'text' in request body" });
             }
             const vector = await getAIVector(text)
-            console.log("Generated Vectoraaa:", vector);
             if (!Array.isArray(vector) || vector.length === 0) {
                 return res.status(400).json({ error: "Generated vector is invalid" });
             }
@@ -21,10 +20,16 @@ export default async function handler(req, res) {
                 limit: 5,
                 with_payload: true,
             });
+            const response = await Promise.all(searchResult.map(async (item) => {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/bns/bnshindi/sections?search=${item.payload.section}`, {
+                    cache: 'no-store'
+                });
+                const resdata = await res.json();
+                item.payload = resdata.sections[0] || {};
+                return item;
+            }));
 
-            console.log("Search Result:", searchResult);
-
-            return res.status(200).json({ searchResult });
+            return res.status(200).json({ searchResult: response });
 
         } catch (error) {
             console.error("Qdrant search error:", error);

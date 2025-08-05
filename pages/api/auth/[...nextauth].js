@@ -34,13 +34,11 @@ export const authOptions = {
 
     async session({ session }) {
       await connectDB();
-
       // Find the user by email to get role and isPaid
       const dbUser = await User.findOne({ email: session.user.email });
       session.user.id = dbUser._id;
       session.user.role = dbUser.role;
       session.user.isPaid = dbUser.isPaid;
-
       return session;
     },
   },

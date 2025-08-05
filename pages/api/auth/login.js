@@ -4,7 +4,6 @@
 export default function handler(req, res) {
     if (req.method === 'POST') {
         const { email, password } = req.body;
-
         // Simple credential check (replace with database logic)
         if (email === 'user@example.com' && password === 'password123') {
             return res.status(200).json({ message: 'Login successful' });

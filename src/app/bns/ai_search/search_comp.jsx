@@ -32,7 +32,7 @@ export default function Search_comp() {
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                     />
-                    <Button onClick={() => ""} type="submit" className="rounded-full px-6 py-2 text-lg"
+                    <Button type="submit" className="rounded-full px-6 py-2 text-lg"
                     >
                         AI Search
                     </Button>
