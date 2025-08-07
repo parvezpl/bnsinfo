@@ -2,8 +2,6 @@
 import { connectDB } from "../../../../lib/db";
 import Sectionhindi from "../../../../lib/schema/bns/hindisections";
 
-
-
 export default async function handler(req, res) {
     await connectDB()
 

@@ -72,7 +72,7 @@ export default function BnsSearchPage() {
                 </Button>
             </form>
 
-            <div className="flex flex-col items-center w-[90vw] h-full  space-y-4 overflow-y-auto" >
+            <div className="flex flex-col items-center w-[90vw] h-full  space-y-4 overflow-y-auto mt-8" >
                 {queryIsActive && loading && <LoadingCard />}
 
                 {searchResult?.map((item, index) => (
@@ -81,7 +81,7 @@ export default function BnsSearchPage() {
                         initial={{ opacity: 0, x: -50 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.3 }}
-                        className="bg-white p-4 rounded-2xl shadow-md self-start "
+                        className="bg-white p-4 rounded-2xl shadow-md self-start"
                     >
                         <div className="flex justify-between items-center mb-2">
                             <span className="text-sm font-semibold text-blue-500">AI Response</span>

@@ -7,7 +7,6 @@ export default async function handler(req, res) {
     await connectDB()
 
     if (req.method == "GET") {
-
         const { search, lang } = req.query
         const searchterm = search.split(" ")
         try {

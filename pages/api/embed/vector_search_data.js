@@ -25,7 +25,7 @@ export default async function handler(req, res) {
                     cache: 'no-store'
                 });
                 const resdata = await res.json();
-                item.payload = resdata.sections[0] || {};
+                item.payload = resdata.sections[0]
                 return item;
             }));
 
