@@ -51,8 +51,14 @@ export default function BnsSearchPage() {
             })
         })
         const data = await res.json()
-        // console.log("res", data.searchResult)
-        
+        const acts= data.searchResult.map(item => {
+            return parseInt(item.payload.section.trim())
+        })
+        const newActs = [...new Set(acts)]
+        data.searchResult = newActs.map(act => {
+            const item = data.searchResult.find(item => parseInt(item.payload.section.trim()) === act);
+            return { ...item, payload: { ...item.payload, section: act } };
+        });
         setSearchResult(data.searchResult); // Append new results like chat
         setLoading(false);
     };

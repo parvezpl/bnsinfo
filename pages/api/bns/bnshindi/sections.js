@@ -7,7 +7,7 @@ export default async function handler(req, res) {
 
     if (req.method == "GET") {
         const { search } = req.query;
-        const sections = await Sectionhindi.find({ section: { $regex: search, $options: "i" } });
+        const sections = await Sectionhindi.findOne({ section: search });
         return res.status(200).json({ sections });
     }
 
