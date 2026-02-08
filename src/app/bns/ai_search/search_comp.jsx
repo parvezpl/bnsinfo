@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from 'next/navigation';
 import useStore from '../../../../store/useStore';
+import './search_comp.css'
 
 export default function Search_comp() {
     const [query, setQuery] = useState("");
@@ -21,23 +22,26 @@ export default function Search_comp() {
     };
 
     return (
-
-        <div className='flex justify-center py-1'>
-            <div className='flex flex-col items-center py-6 w-full '>
-                <form onSubmit={handleSearch} className="flex-col w-full max-w-xl flex gap-4 items-center ">
+        <section className="search-wrap">
+            <div className="search-shell">
+                <div className="search-head">
+                    <div className="search-badge">AI खोज</div>
+                    <h3>BNS खोजें — सेक्शन, धारा या प्रश्न</h3>
+                    <p>सटीक जानकारी के लिए अपना प्रश्न लिखें।</p>
+                </div>
+                <form onSubmit={handleSearch} className="search-form">
                     <Input
                         type="text"
-                        placeholder="Search Bns Act and Qeury"
-                        className="flex-grow p-4 text-lg rounded-full border bg-gray-100 border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Search BNS Act or Query"
+                        className="search-input"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                     />
-                    <Button type="submit" className="rounded-full px-6 py-2 text-lg"
-                    >
+                    <Button type="submit" className="search-btn">
                         AI Search
                     </Button>
                 </form>
             </div>
-        </div>
+        </section>
     )
 }

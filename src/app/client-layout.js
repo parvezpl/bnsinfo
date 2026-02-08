@@ -3,6 +3,7 @@
 import Script from 'next/script';
 import Navigation from "./utlty/navigation";
 import { useEffect, useState } from "react";
+import "./client-layout.css";
 
 export default function ClientLayout({ children }) {
   const [navHeight, setNavHeight] = useState(0);
@@ -28,11 +29,14 @@ export default function ClientLayout({ children }) {
         src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7440927056234503"
         crossOrigin="anonymous"
       />
-      <div id="navbar" className="bg-amber-300 w-screen fixed z-9999 overflow-hidden">
+      <div id="navbar" className="app-navbar">
         <Navigation />
       </div>
 
-      <div className="bg-white text-black h-screen" style={{ paddingTop: `${navHeight}px` }}>
+      <div
+        className="app-shell"
+        style={{ paddingTop: `${navHeight}px`, '--nav-height': `${navHeight}px` }}
+      >
         {children}
       </div>
     </>

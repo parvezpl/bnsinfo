@@ -1,6 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { notificationResponse } from './notificationFetch'
+import './notification.css'
 
 export default function Notification() {
     const [notification, setNotification] = useState(null)
@@ -16,23 +17,27 @@ export default function Notification() {
         fetchdata()
     }, [])
     return (
-        <div className=' flex flex-col items-center h-40 text-center py-4'>
-            <h1 className='text-center text-md font-bold text-blue-900 shadow'>Tips of the day</h1>
-            <div className=' block flex-col justify-center items-center w-full sm:w-[100vw] h-40 bg-gray-100 rounded-sm shadow-sm border p-2 overflow-y-auto'>
-                {
-                    loading ?  
-                    <div className='flex flex-col gap-2 animate-pulse'>
-                    <p className='w-[60vw] h-4 bg-gray-300'></p>
-                    <p className='w-[40vw] h-4 bg-gray-300'></p>
-                    <p className='w-[50vw] h-4 bg-gray-300'></p>
-                    </div>
-                    :
-                        <div className=''>
-                            <p className=' font-bold text-md'>धारा : {notification?.section}</p>
-                            <p className='text-[12px] sm:text-[16px]'>{notification?.section_content}</p>
-                        </div>
-                }
+        <section className="tips">
+            <div className="tips-header">
+                <div className="tips-badge">आज का टिप</div>
+                <h2 className="tips-title">Tips of the day</h2>
+                <p className="tips-subtitle">रोज़ाना एक नई धारा, सरल भाषा में</p>
             </div>
-        </div>
+
+            <div className="tips-card">
+                {loading ? (
+                    <div className="tips-skeleton">
+                        <div className="skeleton-line w-60"></div>
+                        <div className="skeleton-line w-40"></div>
+                        <div className="skeleton-line w-50"></div>
+                    </div>
+                ) : (
+                    <div className="tips-content">
+                        <p className="tips-section">धारा : {notification?.section}</p>
+                        <p className="tips-text">{notification?.section_content}</p>
+                    </div>
+                )}
+            </div>
+        </section>
     )
 }

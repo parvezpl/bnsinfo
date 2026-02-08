@@ -1,0 +1,16 @@
+.app-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+  background: linear-gradient(90deg, #e9f2ff 0%, #e1f5eb 100%);
+  border-bottom: 1px solid #dfe8e3;
+  box-shadow: 0 10px 24px rgba(9, 24, 14, 0.08);
+}
+
+.app-shell {
+  min-height: 100vh;
+  background: #ffffff;
+  color: #0f1f16;
+}

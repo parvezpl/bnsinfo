@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import './mainpage.css';
 import { Menu, PanelLeftClose } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -13,7 +14,7 @@ export default function Mainpage({ result, currentPage, lang }) {
     const { data: session } = useSession();
     const [data, setData] = useState([]);
     const [activeSection, setActiveSection] = useState(null);
-    const [mobileOpen, setMobileOpen] = useState(false);
+    const [mobileOpen, setMobileOpen] = useState(true);
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(currentPage || 1);
     const [hasMore, setHasMore] = useState(true);
@@ -27,8 +28,11 @@ export default function Mainpage({ result, currentPage, lang }) {
         if (result?.bns?.length) {
             const newSections = result.bns.flatMap(item => item.sections);
             setData(newSections);
-            setPage(currentPage); // Set current page from server
+            setPage(currentPage || 1); // Set current page from server
             setHasMore(newSections.length >= limit);
+        } else {
+            setData([]);
+            setHasMore(false);
         }
     }, [lang, result, currentPage]);
 
@@ -41,6 +45,9 @@ export default function Mainpage({ result, currentPage, lang }) {
                     : `/api/bns/bnshindi/bnshi?page=${pageToFetch}&limit=${limit}`;
 
             const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch page ${pageToFetch}`);
+            }
             const newResult = await response.json();
 
             if (newResult?.bns?.length) {
@@ -68,17 +75,20 @@ export default function Mainpage({ result, currentPage, lang }) {
 
     const handleSectionClick = (sectionId) => {
         setActiveSection(sectionId);
+        setEditActive(false);
+        setTagBox(false);
         setMobileOpen(false);
     };
 
-    const openForEdit = (id) => {
+    const openForEdit = () => {
         setEditActive(true);
+        setTagBox(false);
     };
 
     const getContent = () => {
         if (activeSection !== null) {
             const section = data.find(s => s.section === activeSection);
-            if (!section) return <p className="text-gray-500">Section not found</p>;
+            if (!section) return <p className="bns-muted">Section not found</p>;
 
             if (editActive) {
                 return <EditContent section={section} />;
@@ -89,12 +99,12 @@ export default function Mainpage({ result, currentPage, lang }) {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
-                    className="bg-white p-6 rounded-2xl shadow-lg max-w-4xl mx-auto"
+                    className="bns-detail"
                 >
-                    <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-xl font-bold">SECTION: {section.section}</h2>
+                    <div className="bns-detail-head">
+                        <h2 className="bns-detail-title">SECTION: {section.section}</h2>
                         {session?.user?.role === 'admin' && (
-                            <span className="text-blue-500 cursor-pointer" onClick={() => openForEdit(section.section)}>
+                            <span className="bns-edit" onClick={() => openForEdit(section.section)}>
                                 Edit ✏️
                             </span>
                         )}
@@ -103,19 +113,20 @@ export default function Mainpage({ result, currentPage, lang }) {
                         dangerouslySetInnerHTML={{
                             __html: section.modify_section || section.section_content || section.section_title,
                         }}
-                        className="prose max-w-none"
+                        className="bns-prose"
                     />
-                    {
-                        session?.user?.role === 'admin' && (
-                            <div className="mt-4">
-                                <button 
-                                onClick={() => setTagBox(true)}
-                                className="mt-2 bg-blue-500 text-[10px] text-white py-1 px-2 rounded">Tags</button>
-                            </div>
-                        )
-                    }
+                    {session?.user?.role === 'admin' && (
+                        <div className="bns-spacer">
+                            <button
+                                onClick={() => setTagBox(prev => !prev)}
+                                className="bns-tag-btn"
+                            >
+                                {tagBox ? 'Hide Tags' : 'Tags'}
+                            </button>
+                        </div>
+                    )}
                     {tagBox && (
-                        <div className="mt-4">
+                        <div className="bns-spacer">
                             <TagsInputSection section={section.section} />
                         </div>
                     )}
@@ -124,24 +135,24 @@ export default function Mainpage({ result, currentPage, lang }) {
         }
 
         return (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-6xl mx-auto">
+            <div className="bns-grid">
                 {data.map((section, index) => (
                     <motion.div
                         key={index}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.3, delay: index * 0.05 }}
-                        className="bg-white p-4 rounded-xl shadow hover:shadow-md transition cursor-pointer"
+                        className="bns-card"
                         onClick={() => handleSectionClick(section.section)}
                     >
-                        <h3 className="text-lg font-semibold mb-2">
+                        <h3 className="bns-card-title">
                             {lang === 'en' ? 'SECTION' : 'धारा'} : {section.section}
                         </h3>
                         <div
                             dangerouslySetInnerHTML={{
                                 __html: section.modify_section || section.section_content || section.section_title,
                             }}
-                            className="prose max-w-none line-clamp-3 text-gray-600"
+                            className="bns-card-text"
                         />
                     </motion.div>
                 ))}
@@ -149,7 +160,7 @@ export default function Mainpage({ result, currentPage, lang }) {
                 {hasMore && !loading && (
                     <button
                         onClick={handleLoadMore}
-                        className="col-span-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+                        className="bns-load"
                     >
                         Load More
                     </button>
@@ -159,13 +170,16 @@ export default function Mainpage({ result, currentPage, lang }) {
     };
 
     return (
-        <div className="flex relative min-h-full bg-gray-50 overflow-hidden">
+        <div className="bns-main">
             <button
-                className="fixed mt-2 right-2 bg-black text-white rounded-sm px-2 py-1 hover:bg-gray-800"
+                className="bns-back"
                 onClick={() => {
-                    setActiveSection(null);
-                    setEditActive(false);
-                    if (!activeSection) return;
+                    if (activeSection !== null) {
+                        setActiveSection(null);
+                        setEditActive(false);
+                        setTagBox(false);
+                        return;
+                    }
                     router.back();
                 }}
             >
@@ -175,23 +189,22 @@ export default function Mainpage({ result, currentPage, lang }) {
             {/* Sidebar */}
             <div
                 style={{ height: '100vh', height: '-webkit-fill-available' }}
-                className={`fixed md:static flex flex-col left-0 box-content w-40 sm:w-60 border-r bg-white p-2 shadow transition-all ease-in-out duration-300
-        ${mobileOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
+                className={`bns-sidebar ${mobileOpen ? 'bns-sidebar-open' : 'bns-sidebar-closed'}`}
             >
-                <div className="flex md:hidden bg-gray-200 mb-1">
-                    <button onClick={() => setMobileOpen(false)} className="text-gray-600 flex items-center">
+                <div className="bns-mobile-only bns-sidebar-close">
+                    <button onClick={() => setMobileOpen(false)} className="bns-close">
                         <PanelLeftClose className="h-4 w-4 mr-2" /> Close
                     </button>
                 </div>
 
-                <h2 className="text-md sm:text-xl font-bold pb-2 uppercase place-self-center">Sections</h2>
+                <h2 className="bns-sidebar-title">Sections</h2>
 
-                <ul className="flex-1 overflow-auto no-scrollbar">
+                <ul className="bns-sidebar-list">
                     {data.map((section, index) => (
                         <li key={index}>
                             <button
                                 onClick={() => handleSectionClick(section.section)}
-                                className="w-full text-left font-medium py-1 sm:p-2 rounded hover:bg-gray-200"
+                                className="bns-section-btn"
                             >
                                 {lang === 'en' ? 'Section' : 'धारा'}: {section.section}
                             </button>
@@ -200,7 +213,7 @@ export default function Mainpage({ result, currentPage, lang }) {
                     {hasMore && !loading && (
                         <button
                             onClick={handleLoadMore}
-                            className="col-span-full bg-blue-500 text-white py-2 px-4 mt-4 rounded hover:bg-blue-600"
+                            className="bns-load bns-load-sidebar"
                         >
                             Load More
                         </button>
@@ -209,20 +222,20 @@ export default function Mainpage({ result, currentPage, lang }) {
             </div>
 
             {/* Content Area */}
-            <div className="flex-1 ml-0 md:ml-0 p-4 h-full w-screen overflow-y-auto bg-gray-50">
+            <div className="bns-content">
                 {/* Mobile Menu Button */}
-                <div className="md:hidden mb-4">
-                    <button onClick={() => setMobileOpen(true)} className="text-gray-600 flex items-center">
+                <div className="bns-mobile-only bns-menu-wrap">
+                    <button onClick={() => setMobileOpen(true)} className="bns-menu">
                         <Menu className="h-6 w-6 mr-2" /> Open Sections
                     </button>
                 </div>
 
-                <h1 className="text-3xl font-bold mb-6 text-center">BNS 2023</h1>
+                <h1 className="bns-page-title">BNS 2023</h1>
 
                 {loading && page === 1 ? <LoadingCard /> : getContent()}
 
                 {loading && page > 1 && (
-                    <div className="text-center mt-4 text-blue-500 font-medium">Loading more...</div>
+                    <div className="bns-loading">Loading more...</div>
                 )}
             </div>
         </div>

@@ -1,28 +1,65 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
 import LoadingCard from "../../../components/loading";
 import useStore from "../../../../store/useStore";
 import TypingText from "@/components/TypingText"; // Import the component
+import styles from "./page.module.css";
 
 export default function BnsSearchPage() {
     const [query, setQuery] = useState("");
     const [searchResult, setSearchResult] = useState([]);
     const [queryIsActive, setQueryIsActive] = useState(false);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
+    const [queryHistory, setQueryHistory] = useState([]);
+    const [mounted, setMounted] = useState(false);
     const searchParam = useStore((state) => state.searchparam);
     const lang = useStore((state) => state.languages);
     const messageEndRef = useRef(null);
+
+    const vectorHandler = useCallback(async (querys) => {
+        setLoading(true);
+        setSearchResult([]);
+        console.log("Initiating vector search for query:", querys);
+        const res = await fetch("/api/embed/vector_search_data", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                text: querys,
+            }),
+        });
+        const data = await res.json();
+        const results = Array.isArray(data?.searchResult) ? data.searchResult : [];
+        if (!results.length) {
+            setSearchResult([]);
+            setLoading(false);
+            return;
+        }
+        const acts = results.map((item) => {
+            return parseInt(item.payload.section.trim(), 10);
+        });
+        const newActs = [...new Set(acts)];
+        data.searchResult = newActs.map((act) => {
+            const item = results.find(
+                (item) => parseInt(item.payload.section.trim(), 10) === act
+            );
+            return { ...item, payload: { ...item.payload, section: act } };
+        });
+        setSearchResult(data.searchResult); // Append new results like chat
+        setLoading(false);
+    }, []);
 
     useEffect(() => {
         if (!searchParam?.trim()) return;
         setQuery(searchParam);
         setQueryIsActive(true);
+        setQueryHistory((prev) => [...prev, searchParam.trim()]);
         vectorHandler(searchParam);
-    }, []);
+    }, [searchParam, vectorHandler]);
 
     useEffect(() => {
         // Auto-scroll to bottom when new result is added
@@ -31,55 +68,37 @@ export default function BnsSearchPage() {
         }
     }, [searchResult]);
 
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+
     const handleSearch = (e) => {
-        e.preventDefault();
+        if (e?.preventDefault) {
+            e.preventDefault();
+        }
         if (!query.trim()) return;
         setQueryIsActive(true);
+        setQueryHistory((prev) => [...prev, query.trim()]);
         vectorHandler(query);
     };
 
-    const vectorHandler = async (querys) => {
-        setLoading(true);
-        setSearchResult([])
-         const res = await fetch('/api/embed/vector_search_data', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                text: querys,
-            })
-        })
-        const data = await res.json()
-        const acts= data.searchResult.map(item => {
-            return parseInt(item.payload.section.trim())
-        })
-        const newActs = [...new Set(acts)]
-        data.searchResult = newActs.map(act => {
-            const item = data.searchResult.find(item => parseInt(item.payload.section.trim()) === act);
-            return { ...item, payload: { ...item.payload, section: act } };
-        });
-        setSearchResult(data.searchResult); // Append new results like chat
-        setLoading(false);
-    };
-
     return (
-        <div className=" relative min-h-full flex flex-col items-center justify-start bg-gray-100 p-4" >
-            <form onSubmit={handleSearch} className=" fixed w-full max-w-xl flex items-center space-x-4 mb-8 z-999 ">
-                <Input
-                    type="text"
-                    placeholder="Search Bns Act and Query"
-                    className="flex-grow p-4 text-lg rounded-full border bg-gray-50 border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                />
-                <Button type="submit" className="rounded-full px-6 py-2 text-lg">
-                    AI Search
-                </Button>
-            </form>
-
-            <div className="flex flex-col items-center w-[90vw] h-full  space-y-4 overflow-y-auto mt-8" >
+        <div className={styles.container}>
+            <div className={styles.results}>
                 {queryIsActive && loading && <LoadingCard />}
+
+                {queryHistory.map((q, index) => (
+                    <motion.div
+                        key={`q-${index}`}
+                        initial={{ opacity: 0, x: 50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.25 }}
+                        className={styles.userBubble}
+                    >
+                        {q}
+                    </motion.div>
+                ))}
 
                 {searchResult?.map((item, index) => (
                     <motion.div
@@ -87,21 +106,48 @@ export default function BnsSearchPage() {
                         initial={{ opacity: 0, x: -50 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.3 }}
-                        className="bg-white p-4 rounded-2xl shadow-md self-start"
+                        className={styles.aiBubble}
                     >
-                        <div className="flex justify-between items-center mb-2">
-                            <span className="text-sm font-semibold text-blue-500">AI Response</span>
-                            <span className="text-xs text-gray-400">Score: {item.score?.toFixed(2)}</span>
+                        <div className={styles.aiHeader}>
+                            <span className={styles.aiLabel}>AI Response</span>
+                            <span className={styles.score}>Score: {item.score?.toFixed(2)}</span>
                         </div>
                         {/* Typing effect here */}
-                        धारा : {item.payload?.section}
+                        <div className={styles.section}>धारा : {item.payload?.section}</div>
                         <TypingText text={item.payload?.section_content} />
                     </motion.div>
                 ))}
 
-                <div />
-                {/* ref={messageEndRef} */}
+                <div ref={messageEndRef} />
             </div>
+
+            {mounted &&
+                createPortal(
+                    <form
+                        onSubmit={handleSearch}
+                        className={styles.footer}
+                    >
+                        <div className={styles.footerInner}>
+                            <div className={styles.inputShell}>
+                                <input
+                                    type="text"
+                                    placeholder="Search Bns Act and Query"
+                                    className={styles.input}
+                                    value={query}
+                                    onChange={(e) => setQuery(e.target.value)}
+                                />
+                                <button
+                                    type="submit"
+                                    className={styles.submit}
+                                    onClick={handleSearch}
+                                >
+                                   AI Search
+                                </button>
+                            </div>
+                        </div>
+                    </form>,
+                    document.body
+                )}
         </div>
     );
 }
