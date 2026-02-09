@@ -5,12 +5,12 @@ import './mainpage.css';
 import { Menu, PanelLeftClose } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import LoadingCard from '../../../../components/loading';
+import LoadingCard from '../../../components/loading';
 import EditContent from './EditContent';
 import { useSession } from 'next-auth/react';
 import TagsInputSection from './TagsInputSection';
 
-export default function Mainpage({ result, currentPage, lang }) {
+export default function Mainpage({ result, currentPage }) {
     const { data: session } = useSession();
     const [data, setData] = useState([]);
     const [activeSection, setActiveSection] = useState(null);
@@ -28,21 +28,18 @@ export default function Mainpage({ result, currentPage, lang }) {
         if (result?.bns?.length) {
             const newSections = result.bns.flatMap(item => item.sections);
             setData(newSections);
-            setPage(currentPage || 1); // Set current page from server
+            setPage(currentPage || 1);
             setHasMore(newSections.length >= limit);
         } else {
             setData([]);
             setHasMore(false);
         }
-    }, [lang, result, currentPage]);
+    }, [result, currentPage]);
 
     const fetchData = async (pageToFetch) => {
         setLoading(true);
         try {
-            const url =
-                lang === 'en'
-                    ? `/api/bns/bnsenglish/bnsen?page=${pageToFetch}&limit=${limit}`
-                    : `/api/bns/bnshindi/bnshi?page=${pageToFetch}&limit=${limit}`;
+            const url = `/api/bns/bnshindi/bnshi?page=${pageToFetch}&limit=${limit}`;
 
             const response = await fetch(url);
             if (!response.ok) {
@@ -88,7 +85,7 @@ export default function Mainpage({ result, currentPage, lang }) {
     const getContent = () => {
         if (activeSection !== null) {
             const section = data.find(s => s.section === activeSection);
-            if (!section) return <p className="bns-muted">Section not found</p>;
+            if (!section) return <p className="bns-muted">धारा नहीं मिली</p>;
 
             if (editActive) {
                 return <EditContent section={section} />;
@@ -102,10 +99,10 @@ export default function Mainpage({ result, currentPage, lang }) {
                     className="bns-detail"
                 >
                     <div className="bns-detail-head">
-                        <h2 className="bns-detail-title">SECTION: {section.section}</h2>
+                        <h2 className="bns-detail-title">धारा: {section.section}</h2>
                         {session?.user?.role === 'admin' && (
                             <span className="bns-edit" onClick={() => openForEdit(section.section)}>
-                                Edit ✏️
+                                संपादित करें ✏️
                             </span>
                         )}
                     </div>
@@ -121,7 +118,7 @@ export default function Mainpage({ result, currentPage, lang }) {
                                 onClick={() => setTagBox(prev => !prev)}
                                 className="bns-tag-btn"
                             >
-                                {tagBox ? 'Hide Tags' : 'Tags'}
+                                {tagBox ? 'टैग छिपाएं' : 'टैग'}
                             </button>
                         </div>
                     )}
@@ -146,7 +143,7 @@ export default function Mainpage({ result, currentPage, lang }) {
                         onClick={() => handleSectionClick(section.section)}
                     >
                         <h3 className="bns-card-title">
-                            {lang === 'en' ? 'SECTION' : 'धारा'} : {section.section}
+                            धारा: {section.section}
                         </h3>
                         <div
                             dangerouslySetInnerHTML={{
@@ -162,7 +159,7 @@ export default function Mainpage({ result, currentPage, lang }) {
                         onClick={handleLoadMore}
                         className="bns-load"
                     >
-                        Load More
+                        और देखें
                     </button>
                 )}
             </div>
@@ -183,21 +180,20 @@ export default function Mainpage({ result, currentPage, lang }) {
                     router.back();
                 }}
             >
-                Back
+                वापस जाएं
             </button>
 
-            {/* Sidebar */}
             <div
                 style={{ height: '100vh', height: '-webkit-fill-available' }}
                 className={`bns-sidebar ${mobileOpen ? 'bns-sidebar-open' : 'bns-sidebar-closed'}`}
             >
                 <div className="bns-mobile-only bns-sidebar-close">
                     <button onClick={() => setMobileOpen(false)} className="bns-close">
-                        <PanelLeftClose className="h-4 w-4 mr-2" /> Close
+                        <PanelLeftClose className="h-4 w-4 mr-2" /> बंद करें
                     </button>
                 </div>
 
-                <h2 className="bns-sidebar-title">Sections</h2>
+                <h2 className="bns-sidebar-title">धाराएं</h2>
 
                 <ul className="bns-sidebar-list">
                     {data.map((section, index) => (
@@ -206,7 +202,7 @@ export default function Mainpage({ result, currentPage, lang }) {
                                 onClick={() => handleSectionClick(section.section)}
                                 className="bns-section-btn"
                             >
-                                {lang === 'en' ? 'Section' : 'धारा'}: {section.section}
+                                धारा: {section.section}
                             </button>
                         </li>
                     ))}
@@ -215,27 +211,25 @@ export default function Mainpage({ result, currentPage, lang }) {
                             onClick={handleLoadMore}
                             className="bns-load bns-load-sidebar"
                         >
-                            Load More
+                            और देखें
                         </button>
                     )}
                 </ul>
             </div>
 
-            {/* Content Area */}
             <div className="bns-content">
-                {/* Mobile Menu Button */}
                 <div className="bns-mobile-only bns-menu-wrap">
                     <button onClick={() => setMobileOpen(true)} className="bns-menu">
-                        <Menu className="h-6 w-6 mr-2" /> Open Sections
+                        <Menu className="h-6 w-6 mr-2" /> धाराएं खोलें
                     </button>
                 </div>
 
-                <h1 className="bns-page-title">BNS 2023</h1>
+                <h1 className="bns-page-title">भारतीय न्याय संहिता 2023</h1>
 
                 {loading && page === 1 ? <LoadingCard /> : getContent()}
 
                 {loading && page > 1 && (
-                    <div className="bns-loading">Loading more...</div>
+                    <div className="bns-loading">लोड हो रहा है...</div>
                 )}
             </div>
         </div>

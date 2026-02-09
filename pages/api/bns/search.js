@@ -7,7 +7,13 @@ export default async function handler(req, res) {
     await connectDB()
 
     if (req.method == "GET") {
+        res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
         const { search, lang } = req.query
+        if (!search || typeof search !== 'string') {
+            return res.status(400).json({ error: 'search query is required' });
+        }
         const searchterm = search.split(" ")
         try {
             if (lang === "hi") {

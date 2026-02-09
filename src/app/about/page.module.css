@@ -1,0 +1,154 @@
+﻿.page {
+    min-height: 100vh;
+    background: linear-gradient(180deg, #fdf7ef 0%, #f3e8d7 100%);
+    position: relative;
+    overflow: hidden;
+    padding: 64px 16px 96px;
+    color: #1f2a37;
+    font-family: "Playfair Display", "Georgia", serif;
+}
+
+.glow {
+    position: absolute;
+    inset: -20% 0 auto;
+    height: 320px;
+    background: radial-gradient(circle at 30% 20%, rgba(235, 195, 115, 0.6), transparent 55%),
+                radial-gradient(circle at 70% 10%, rgba(78, 140, 214, 0.35), transparent 50%);
+    pointer-events: none;
+}
+
+.container {
+    position: relative;
+    max-width: 980px;
+    margin: 0 auto;
+    z-index: 1;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.kicker {
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    font-size: 12px;
+    color: #7a5c2e;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.title {
+    font-size: clamp(34px, 5vw, 54px);
+    margin: 0 0 12px;
+    color: #1b2b3a;
+}
+
+.subtitle {
+    font-size: 18px;
+    color: #435365;
+    max-width: 640px;
+    margin: 0 auto 18px;
+    line-height: 1.6;
+}
+
+.metaRow {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.metaChip {
+    font-size: 12px;
+    border: 1px solid #d8b77a;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.card {
+    background: #ffffff;
+    border: 1px solid #eadbc3;
+    box-shadow: 0 24px 60px rgba(31, 42, 55, 0.12);
+    border-radius: 24px;
+}
+
+.cardContent {
+    padding: 28px;
+}
+
+.paragraph {
+    font-size: 18px;
+    line-height: 1.8;
+    margin-bottom: 24px;
+    font-family: "Source Serif Pro", "Georgia", serif;
+}
+
+.split {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 22px;
+}
+
+.panel {
+    background: #fcf6ed;
+    border: 1px solid #eadbc3;
+    padding: 18px;
+}
+
+.panelTitle {
+    margin: 0 0 8px;
+    font-size: 18px;
+    color: #1b2b3a;
+}
+
+.panelText {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #3f4e5f;
+}
+
+.callout {
+    background: #102c44;
+    color: #fff;
+    padding: 18px 20px;
+    border-radius: 16px;
+    margin-bottom: 20px;
+}
+
+.calloutTitle {
+    margin: 0 0 6px;
+    font-size: 18px;
+}
+
+.calloutText {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.closing {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1b2b3a;
+    margin: 0;
+}
+
+@media (max-width: 900px) {
+    .split {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .cardContent {
+        padding: 20px;
+    }
+
+    .subtitle {
+        font-size: 16px;
+    }
+}

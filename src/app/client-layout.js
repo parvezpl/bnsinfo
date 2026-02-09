@@ -38,6 +38,11 @@ export default function ClientLayout({ children }) {
         style={{ paddingTop: `${navHeight}px`, '--nav-height': `${navHeight}px` }}
       >
         {children}
+        <footer className="app-footer">
+          <p>
+            <strong>Disclaimer:</strong> This is a non-governmental site created for educational purposes, aiming to simplify Bharatiya Nyaya Sanhita 2023 for easy understanding.
+          </p>
+        </footer>
       </div>
     </>
   );

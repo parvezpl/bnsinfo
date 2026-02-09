@@ -8,8 +8,7 @@ import Underline from '@tiptap/extension-underline';
 import TextStyle from '@tiptap/extension-text-style';
 import Color from '@tiptap/extension-color';
 import { Button } from '@/components/ui/button';
-import getHindiEmbedding from '../../../../utils/HindiEmbedding';
-
+import getHindiEmbedding from '../../../utils/HindiEmbedding';
 
 export default function EditContent({ section }) {
   const [savedContent, setSavedContent] = useState('');
@@ -19,10 +18,9 @@ export default function EditContent({ section }) {
 
   const editor = useEditor({
     extensions: [StarterKit, Bold, Underline, TextStyle, Color],
-    content: section?.modify_section || section.section_content || section.section_title, // fallback to empty string
+    content: section?.modify_section || section.section_content || section.section_title,
   });
 
-  // Update editor content when section changes
   useEffect(() => {
     if (editor && section?.section_title) {
       editor.commands.setContent(section?.modify_section || section.section_content || section.section_title);
@@ -33,18 +31,15 @@ export default function EditContent({ section }) {
 
   const savehandler = async () => {
     setSavedContent(editor.getHTML());
-    const res = await fetch('/api/bns/bnsenglish/bnsen', {
+    const res = await fetch('/api/bns/bnshindi/bnshi', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ content: editor.getHTML(), id: section.section }),
     });
-    const response = await res.json();
+    await res.json();
 
-    console.log(editor.getHTML());
-    // AFTER UPDATE UPDATE VECTOR ALSO 
-    const vector = await getHindiEmbedding(editor.getHTML())
-    console.log(section)
-    const upres = await fetch('/api/embed/updatehindivector', {
+    const vector = await getHindiEmbedding(editor.getHTML());
+    await fetch('/api/embed/updatehindivector', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -53,14 +48,12 @@ export default function EditContent({ section }) {
         payload: { section: section.section, section_content: editor.getHTML() }
       })
     });
-    const updateres = await upres.json();
-    console.log(updateres)
     setUpdateStatus('Content Updated Successfully!');
   };
 
   return (
     <div className="max-w-4xl mx-auto p-4">
-      <h1 className=' text-center font-bold'>SECTION : {section.section}</h1>
+      <h1 className=' text-center font-bold'>धारा : {section.section}</h1>
       <div className="border p-4 rounded-xl shadow min-h-fit">
         <EditorContent editor={editor} className="min-h-fit p-2 border rounded" />
       </div>

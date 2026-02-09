@@ -1,11 +1,11 @@
-import React from 'react'
+﻿import React from "react";
+import styles from "./admin.module.css";
 
 export default function Page() {
-    
-
-    return (
-        <div className="min-h-screen bg-white text-gray-800 m-auto p-4">
-            <h1 className='text-2xl font-bold m-auto'>this is admin page</h1>
-        </div>
-    )
+  return (
+    <div className={styles.adminPage}>
+      <h1 className={styles.adminTitle}>Admin Dashboard</h1>
+      <p className={styles.adminText}>Welcome to the admin panel.</p>
+    </div>
+  );
 }

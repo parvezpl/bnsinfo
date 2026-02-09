@@ -14,3 +14,18 @@
   background: #ffffff;
   color: #0f1f16;
 }
+
+.app-footer {
+  margin-top: 48px;
+  padding: 16px 20px 28px;
+  border-top: 1px solid #e5e7eb;
+  background: #fafafa;
+  color: #1f2937;
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.app-footer strong {
+  color: #0f1f16;
+}

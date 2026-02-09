@@ -1,0 +1,13 @@
+﻿.page {
+  min-height: calc(100vh - 48px);
+  background: #f4efe6;
+  padding: 24px;
+  font-family: "Georgia", "Times New Roman", serif;
+}
+
+.title {
+  text-align: center;
+  margin: 0 0 20px;
+  font-size: 26px;
+  color: #1d2720;
+}

@@ -1,0 +1,161 @@
+﻿.page {
+  max-width: 900px;
+  margin: 0 auto;
+  background: #fffdf8;
+  border: 1px solid #e3d6c3;
+  padding: 24px;
+  font-family: "Georgia", "Times New Roman", serif;
+}
+
+.title {
+  margin: 0 0 16px;
+  font-size: 26px;
+}
+
+.form {
+  display: grid;
+  gap: 14px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.label {
+  font-size: 13px;
+  color: #4b5a4f;
+}
+
+.input,
+.textarea {
+  border: 1px solid #d6c6b1;
+  background: #fff;
+  padding: 10px 12px;
+  font-size: 14px;
+}
+
+.textarea {
+  resize: vertical;
+}
+
+.button {
+  justify-self: start;
+  background: #2d3a2e;
+  color: #fff;
+  border: 1px solid #1f2a21;
+  padding: 10px 16px;
+  cursor: pointer;
+}
+
+.button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.message {
+  margin-top: 12px;
+  font-weight: 600;
+  color: #1f2a21;
+}
+
+.list {
+  margin-top: 24px;
+  border-top: 1px solid #e3d6c3;
+  padding-top: 16px;
+}
+
+.listTitle {
+  margin: 0 0 10px;
+  font-size: 18px;
+}
+
+.searchRow {
+  margin-bottom: 12px;
+}
+
+.search {
+  width: 100%;
+  border: 1px solid #d6c6b1;
+  background: #fff;
+  padding: 8px 10px;
+  font-size: 14px;
+}
+
+.muted {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.listItems {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.listItem {
+  border: 1px solid #e3d6c3;
+  background: #fff7ea;
+  padding: 12px;
+}
+
+.itemHead {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.itemBody {
+  color: #39463c;
+  font-size: 14px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.itemExample {
+  margin-top: 8px;
+  padding: 8px 10px;
+  background: #fff2db;
+  border: 1px solid #e6d1a6;
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.editGrid {
+  display: grid;
+  gap: 10px;
+}
+
+.inlineInput,
+.inlineTextarea {
+  border: 1px solid #d6c6b1;
+  background: #fff;
+  padding: 8px 10px;
+  font-size: 14px;
+}
+
+.inlineTextarea {
+  resize: vertical;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.actionPrimary {
+  background: #2d3a2e;
+  color: #fff;
+  border: 1px solid #1f2a21;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.actionGhost {
+  background: transparent;
+  border: 1px solid #d6c6b1;
+  padding: 8px 12px;
+  cursor: pointer;
+}

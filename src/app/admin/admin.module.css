@@ -1,0 +1,31 @@
+﻿.adminShell {
+  min-height: 100vh;
+  display: flex;
+  background: #f4efe6;
+  color: #1d2720;
+  font-family: "Georgia", "Times New Roman", serif;
+}
+
+.adminContent {
+  flex: 1;
+  padding: 28px;
+}
+
+.adminPage {
+  max-width: 900px;
+  margin: 0 auto;
+  background: #fffdf8;
+  border: 1px solid #e3d6c3;
+  padding: 24px;
+}
+
+.adminTitle {
+  font-size: 28px;
+  margin: 0 0 8px;
+}
+
+.adminText {
+  margin: 0;
+  color: #4b5a4f;
+  font-size: 16px;
+}

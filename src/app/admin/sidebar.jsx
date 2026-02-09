@@ -1,15 +1,19 @@
-import Link from 'next/link'
-import React from 'react'
+﻿import Link from "next/link";
+import React from "react";
+import styles from "./sidebar.module.css";
 
 export default function Sidebar() {
   return (
-    <div className='bg-gray-200 w-64 h-full '>
-      <h2 className='text-xl font-bold bg-gray-400 place-items-center content-center '><p className=' content-center self-center '>Admin Sidebar</p></h2>
-      <ul className='mt-4 space-y-4 pl-4'>
-        <li><Link href="/admin/blog">Write blogs</Link></li>
-        <li><Link href="/admin/users">Manage Users</Link></li>
-        <li><Link href="/admin/settings">Settings</Link></li>
-      </ul>
-    </div>
-  )
+    <aside className={styles.sidebar}>
+      <div className={styles.brand}>
+        <h2 className={styles.title}>Admin Sidebar</h2>
+        <p className={styles.subtitle}>BNSINFO नियंत्रण</p>
+      </div>
+      <nav className={styles.nav}>
+        <Link href="/admin/blog" className={styles.link}>Write blogs</Link>
+        <Link href="/admin/users" className={styles.link}>Manage Users</Link>
+        <Link href="/admin/bns" className={styles.link}>Add BNS</Link>
+      </nav>
+    </aside>
+  );
 }

@@ -1,0 +1,144 @@
+﻿.tableCard {
+  background: #fffdf8;
+  border: 1px solid #e3d6c3;
+  overflow: hidden;
+  box-shadow: 0 10px 24px rgba(31, 39, 32, 0.08);
+}
+
+.tableHeader {
+  padding: 12px;
+  border-bottom: 1px solid #e3d6c3;
+  background: #f7f1e6;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.search {
+  width: 100%;
+  border: 1px solid #d6c6b1;
+  padding: 10px 12px;
+  font-size: 14px;
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.thead {
+  background: #f2e8d8;
+  color: #374151;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
+.thead th {
+  text-align: left;
+  padding: 12px 14px;
+}
+
+.table td {
+  padding: 12px 14px;
+  border-top: 1px solid #e9dcc8;
+}
+
+.table tr:hover {
+  background: #faf4ea;
+}
+
+.cellStrong {
+  font-weight: 600;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  border: 1px solid;
+}
+
+.badgePaid {
+  color: #1f5131;
+  background: #e4f3e8;
+  border-color: #b7dec2;
+}
+
+.badgeFree {
+  color: #6a4a10;
+  background: #fff1d6;
+  border-color: #f0d29b;
+}
+
+.muted {
+  color: #6b7280;
+}
+
+.empty {
+  text-align: center;
+  padding: 18px;
+  color: #6b7280;
+}
+
+.error {
+  color: #8b2a2a;
+  font-size: 12px;
+}
+
+.inlineInput {
+  width: 100%;
+  border: 1px solid #d6c6b1;
+  padding: 6px 8px;
+  font-size: 13px;
+}
+
+.inlineSelect {
+  border: 1px solid #d6c6b1;
+  padding: 6px 8px;
+  font-size: 13px;
+  background: #fff;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.actionPrimary {
+  background: #2d3a2e;
+  color: #fff;
+  border: 1px solid #1f2a21;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.actionGhost {
+  background: transparent;
+  border: 1px solid #d6c6b1;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.badgeActive {
+  color: #1f5131;
+  background: #e4f3e8;
+  border-color: #b7dec2;
+}
+
+.badgeBlocked {
+  color: #7a2424;
+  background: #f7d9d9;
+  border-color: #e2b0b0;
+}

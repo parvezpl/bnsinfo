@@ -1,8 +1,7 @@
-'use client'
+﻿'use client'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import './navigation.css'
-import LanguageSelector from './LanguageSelector'
 import useStore from '../../../store/useStore'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -14,9 +13,8 @@ export default function Navigation({ className }) {
   const [searchvalue, setSearchvalue] = useState('')
   const [loginPop, setLoginPop] = useState(false)
   const setSearchbtn = useStore((state => state.setSearchbtn))
-  const setLanguages = useStore((state => state.setLanguages))
   const { data: session, status } = useSession()
-
+  console.log("Session data:", session)
   const bnsSeachHandler = (e) => setSearchvalue(e)
   const searchbutton = () => {
     if (!searchvalue.trim()) return
@@ -40,7 +38,7 @@ export default function Navigation({ className }) {
           className="nav-user-item"
           onClick={() => signOut()}
         >
-          Logout
+          लॉगआउट
         </motion.button>
       </div>
     )
@@ -50,14 +48,6 @@ export default function Navigation({ className }) {
     <div className={`nav-wrap ${className || ''}`}>
       <div className="nav-inner">
         <div className="nav-top">
-          <div className="nav-disclaimer">
-            <span>
-              <b>Disclaimer:</b> This is a non-governmental site created for educational purposes, aiming to simplify Bharatiya Nyaya Sanhita 2023 for easy understanding.
-            </span>
-          </div>
-          <div className="nav-lang">
-            <LanguageSelector setLanguages={(e) => setLanguages(e)} />
-          </div>
         </div>
 
         <div className="nav-main">
@@ -90,7 +80,7 @@ export default function Navigation({ className }) {
                   className="nav-login-btn"
                   onClick={() => { signIn('google') }}
                 >
-                  Login
+                  लॉगिन
                 </motion.button>
               )}
             </div>
@@ -98,33 +88,35 @@ export default function Navigation({ className }) {
         </div>
 
         <div className="nav-links">
-          <Link href="/" className="nav-link">🏠 Home</Link>
-          <Link href="/about" className="nav-link">About Us</Link>
-          <Link href="/bns/mainpage/en" className="nav-link nav-hide-sm">Bharatiya Nyaya Sanhita 2023</Link>
-          <Link href="/bns/mainpage/en" className="nav-link nav-show-sm">BNS 2023</Link>
-          <Link href="/bns/mainpage/hi" className="nav-link nav-hide-sm">भारतीय न्याय संहिता,2023 (Hindi)</Link>
-          <Link href="/bns/mainpage/hi" className="nav-link nav-show-sm">भा0न्या0सं0 2023</Link>
-          <Link href="/blog" className="nav-link">Blogs</Link>
-          <Link href="/forums" className="nav-link">Forums</Link>
-          {session?.user && session.user.role === 'admin' && (
-            <Link href="/admin" className="nav-link">Admin</Link>
-          )}
-          <form
-            onSubmit={(e) => {
-              e.preventDefault()
-              searchbutton()
-            }}
-            className="nav-search"
-          >
-            <input
-              id="i"
-              type="text"
-              placeholder="धारा या अपराध खोजें..."
-              value={searchvalue}
-              onChange={(e) => bnsSeachHandler(e.target.value)}
-            />
-            <button type="submit">🔍</button>
-          </form>
+          <div className="nav-links-left">
+            <Link href="/" className="nav-link">Home</Link>
+            <Link href="/about" className="nav-link">About</Link>
+            <Link href="/bns/mainpage" className="nav-link nav-hide-sm">भारतीय न्याय संहिता 2023</Link>
+            <Link href="/bns/mainpage" className="nav-link nav-show-sm">वी0एन0एस0 2023</Link>
+            <Link href="/blog" className="nav-link">Blog</Link>
+            <Link href="/forums" className="nav-link">Forums</Link>
+            {session?.user && session.user.role === 'admin' && (
+              <Link href="/admin" className="nav-link">Admin</Link>
+            )}
+          </div>
+          <div className="nav-links-right">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault()
+                searchbutton()
+              }}
+              className="nav-search"
+            >
+              <input
+                id="i"
+                type="text"
+                placeholder="धारा या अपराध खोजें..."
+                value={searchvalue}
+                onChange={(e) => bnsSeachHandler(e.target.value)}
+              />
+              <button type="submit">🔍</button>
+            </form>
+          </div>
         </div>
       </div>
     </div>

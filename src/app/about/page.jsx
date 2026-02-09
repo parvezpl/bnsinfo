@@ -1,39 +1,62 @@
-'use client';
+﻿'use client';
 import React from "react";
-import { Card, CardContent } from "../../components/ui/card"; // Adjust the import path as necessary
+import { Card, CardContent } from "../../components/ui/card";
 import { motion } from "framer-motion";
+import styles from "./page.module.css";
 
 export default function Page() {
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className={styles.page}>
+      <div className={styles.glow} />
       <motion.div 
-        initial={{ opacity: 0, y: 20 }} 
+        initial={{ opacity: 0, y: 24 }} 
         animate={{ opacity: 1, y: 0 }} 
         transition={{ duration: 0.6 }}
-        className="max-w-4xl mx-auto"
+        className={styles.container}
       >
-        <h1 className="text-4xl font-extrabold text-center text-blue-700 mb-8">About BNSINFO</h1>
+        <header className={styles.header}>
+          <p className={styles.kicker}>BNSINFO</p>
+          <h1 className={styles.title}>BNSINFO के बारे में</h1>
+          <p className={styles.subtitle}>
+            भारतीय न्याय संहिता 2023 (BNS) की साफ़, विश्वसनीय और खोज योग्य जानकारी के लिए एक आधुनिक मंच।
+          </p>
+          <div className={styles.metaRow}>
+            <span className={styles.metaChip}>BNS केंद्रित</span>
+            <span className={styles.metaChip}>तेज़ खोज</span>
+            <span className={styles.metaChip}>सरल व्याख्या</span>
+          </div>
+        </header>
         
-        <Card className="shadow-lg rounded-2xl p-6 bg-white">
-          <CardContent>
-            <p className="text-lg mb-4">
-              <strong>BNSINFO</strong> is your intelligent legal assistant dedicated to providing comprehensive details of the <strong>Bhartiya Nyan Sahita 2023</strong> (भारतीय ज्ञान संहिता 2023).
+        <Card className={styles.card}>
+          <CardContent className={styles.cardContent}>
+            <p className={styles.paragraph}>
+              <strong>BNSINFO</strong> एक कानूनी ज्ञान मंच है जो <strong>भारतीय न्याय संहिता 2023</strong> पर केंद्रित है। हमारा लक्ष्य BNS की धाराओं, प्रावधानों और संबंधित संदर्भों को सरल भाषा में प्रस्तुत करना है ताकि वकील, छात्र, शोधकर्ता और सामान्य पाठक आसानी से समझ सकें।
             </p>
 
-            <p className="text-lg mb-4">
-              Using cutting-edge <strong>AI-powered search technology</strong>, BNSINFO allows users to dynamically search and explore legal sections, acts, and provisions with accuracy and speed. Whether you are a lawyer, student, researcher, or just curious about Indian law, BNSINFO simplifies legal research and makes the law more accessible.
-            </p>
+            <div className={styles.split}>
+              <div className={styles.panel}>
+                <h3 className={styles.panelTitle}>हम क्या देते हैं</h3>
+                <p className={styles.panelText}>
+                  BNS की धाराओं की स्पष्ट जानकारी, संदर्भ सामग्री, और तेज़ खोज ताकि ज़रूरी जानकारी तुरंत मिल सके।
+                </p>
+              </div>
+              <div className={styles.panel}>
+                <h3 className={styles.panelTitle}>हमारा दृष्टिकोण</h3>
+                <p className={styles.panelText}>
+                  जटिल कानूनी भाषा को सरल और उपयोगी बनाना, ताकि हर उपयोगकर्ता आत्मविश्वास के साथ जानकारी प्राप्त कर सके।
+                </p>
+              </div>
+            </div>
 
-            <p className="text-lg mb-4">
-              Our platform leverages modern technologies like <strong>Next.js</strong>, <strong>MongoDB</strong>, and <strong>Machine Learning models</strong> to process complex legal texts, enabling smart suggestions, predictive search, and detailed explanations for each section of the BNS 2023.
-            </p>
+            <div className={styles.callout}>
+              <h3 className={styles.calloutTitle}>हमारा मिशन</h3>
+              <p className={styles.calloutText}>
+                भारतीय न्याय संहिता से जुड़ी जानकारी को साफ़, सुलभ और भरोसेमंद बनाना — यही BNSINFO का उद्देश्य है।
+              </p>
+            </div>
 
-            <p className="text-lg mb-4">
-              Our goal is to bridge the gap between complex legal information and everyday users by making legal knowledge simple, searchable, and understandable.
-            </p>
-
-            <p className="text-lg text-center text-blue-700 font-semibold">
-              Welcome to the future of legal search — Welcome to BNSINFO.
+            <p className={styles.closing}>
+              BNSINFO — आपकी BNS जानकारी का भरोसेमंद स्रोत।
             </p>
           </CardContent>
         </Card>

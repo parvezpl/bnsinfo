@@ -1,65 +1,194 @@
-"use client";
-import { useState } from "react";
+﻿"use client";
+import { useEffect, useState } from "react";
+import styles from "./userstable.module.css";
 
 export function UsersTable({ users }) {
     const [query, setQuery] = useState("");
+    const [localUsers, setLocalUsers] = useState(users || []);
+    const [editingId, setEditingId] = useState(null);
+    const [draft, setDraft] = useState({});
+    const [savingId, setSavingId] = useState(null);
+    const [error, setError] = useState("");
 
-    const filteredUsers = users.filter(
+    useEffect(() => {
+        setLocalUsers(users || []);
+    }, [users]);
+
+    const filteredUsers = localUsers.filter(
         (user) =>
             user.name?.toLowerCase().includes(query.toLowerCase()) ||
             user.email?.toLowerCase().includes(query.toLowerCase()) ||
             user.role?.toLowerCase().includes(query.toLowerCase())
     );
 
+    const startEdit = (user) => {
+        setEditingId(user._id);
+        setDraft({
+            name: user.name || "",
+            role: user.role || "user",
+            status: user.status || "active",
+            isPaid: !!user.isPaid,
+        });
+        setError("");
+    };
+
+    const cancelEdit = () => {
+        setEditingId(null);
+        setDraft({});
+        setError("");
+    };
+
+    const updateDraft = (key, value) => {
+        setDraft((prev) => ({ ...prev, [key]: value }));
+    };
+
+    const saveUser = async (userId) => {
+        try {
+            setSavingId(userId);
+            setError("");
+            const res = await fetch(`/api/users/users?id=${userId}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(draft),
+            });
+            if (!res.ok) {
+                const data = await res.json().catch(() => ({}));
+                throw new Error(data.error || "Update failed");
+            }
+            const updated = await res.json();
+            setLocalUsers((prev) =>
+                prev.map((u) => (u._id === updated._id ? updated : u))
+            );
+            setEditingId(null);
+        } catch (err) {
+            setError(err.message || "Update failed");
+        } finally {
+            setSavingId(null);
+        }
+    };
+
     return (
-        <div className="bg-white shadow-md rounded-xl overflow-hidden">
-            <div className="p-4">
+        <div className={styles.tableCard}>
+            <div className={styles.tableHeader}>
                 <input
                     type="text"
                     placeholder="Search by name or email"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    className={styles.search}
                 />
+                {error && <div className={styles.error}>{error}</div>}
             </div>
-            <div className="overflow-x-auto">
-                <table className="w-full table-auto border-collapse text-sm">
-                    <thead className="bg-gray-100 text-gray-700 uppercase text-xs">
+            <div className={styles.tableWrap}>
+                <table className={styles.table}>
+                    <thead className={styles.thead}>
                         <tr>
-                            <th className="text-left px-4 py-3">Name</th>
-                            <th className="text-left px-4 py-3">Email</th>
-                            <th className="text-left px-4 py-3">Role</th>
-                            <th className="text-left px-4 py-3">Status</th>
-                            <th className="text-left px-4 py-3">Joined</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Plan</th>
+                            <th>Joined</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredUsers.map((user, i) => (
-                            <tr
-                                key={user._id || i}
-                                className="border-t hover:bg-gray-50 transition"
-                            >
-                                <td className="px-4 py-3 font-medium">{user.name}</td>
-                                <td className="px-4 py-3">{user.email}</td>
-                                <td className="px-4 py-3 capitalize">{user.role}</td>
-                                <td className="px-4 py-3">
-                                    <span
-                                        className={`px-2 py-1 text-xs rounded-full font-semibold ${user.status === "active"
-                                                ? "bg-green-100 text-green-800"
-                                                : "bg-red-100 text-red-800"
-                                            }`}
-                                    >
-                                        {user.isPaid ? "Paid" : "Free"}
-                                    </span>
-                                </td>
-                                <td className="px-4 py-3 text-sm text-gray-600">
-                                    {new Date(user.createdAt).toLocaleDateString()}
-                                </td>
-                            </tr>
-                        ))}
+                        {filteredUsers.map((user, i) => {
+                            const isEditing = editingId === user._id;
+                            return (
+                                <tr key={user._id || i}>
+                                    <td className={styles.cellStrong}>
+                                        {isEditing ? (
+                                            <input
+                                                className={styles.inlineInput}
+                                                value={draft.name}
+                                                onChange={(e) => updateDraft("name", e.target.value)}
+                                            />
+                                        ) : (
+                                            user.name
+                                        )}
+                                    </td>
+                                    <td>{user.email}</td>
+                                    <td className={styles.capitalize}>
+                                        {isEditing ? (
+                                            <select
+                                                className={styles.inlineSelect}
+                                                value={draft.role}
+                                                onChange={(e) => updateDraft("role", e.target.value)}
+                                            >
+                                                <option value="user">user</option>
+                                                <option value="author">author</option>
+                                                <option value="admin">admin</option>
+                                            </select>
+                                        ) : (
+                                            user.role
+                                        )}
+                                    </td>
+                                    <td>
+                                        {isEditing ? (
+                                            <select
+                                                className={styles.inlineSelect}
+                                                value={draft.status}
+                                                onChange={(e) => updateDraft("status", e.target.value)}
+                                            >
+                                                <option value="active">active</option>
+                                                <option value="blocked">blocked</option>
+                                            </select>
+                                        ) : (
+                                            <span
+                                                className={`${styles.badge} ${user.status === "blocked" ? styles.badgeBlocked : styles.badgeActive}`}
+                                            >
+                                                {user.status || "active"}
+                                            </span>
+                                        )}
+                                    </td>
+                                    <td>
+                                        {isEditing ? (
+                                            <select
+                                                className={styles.inlineSelect}
+                                                value={draft.isPaid ? "paid" : "free"}
+                                                onChange={(e) => updateDraft("isPaid", e.target.value === "paid")}
+                                            >
+                                                <option value="free">free</option>
+                                                <option value="paid">paid</option>
+                                            </select>
+                                        ) : (
+                                            <span
+                                                className={`${styles.badge} ${user.isPaid ? styles.badgePaid : styles.badgeFree}`}
+                                            >
+                                                {user.isPaid ? "Paid" : "Free"}
+                                            </span>
+                                        )}
+                                    </td>
+                                    <td className={styles.muted}>
+                                        {new Date(user.createdAt).toLocaleDateString()}
+                                    </td>
+                                    <td>
+                                        {isEditing ? (
+                                            <div className={styles.actions}>
+                                                <button
+                                                    className={styles.actionPrimary}
+                                                    onClick={() => saveUser(user._id)}
+                                                    disabled={savingId === user._id}
+                                                >
+                                                    {savingId === user._id ? "Saving..." : "Save"}
+                                                </button>
+                                                <button className={styles.actionGhost} onClick={cancelEdit}>
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <button className={styles.actionGhost} onClick={() => startEdit(user)}>
+                                                Edit
+                                            </button>
+                                        )}
+                                    </td>
+                                </tr>
+                            );
+                        })}
                         {filteredUsers.length === 0 && (
                             <tr>
-                                <td colSpan={5} className="text-center py-6 text-gray-500">
+                                <td colSpan={7} className={styles.empty}>
                                     No users found.
                                 </td>
                             </tr>
