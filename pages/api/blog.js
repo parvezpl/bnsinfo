@@ -13,18 +13,37 @@ export const config = {
 
 export default async function handler(req, res) {
     await connectDB()
+
+    const serializeBlog = (blog, includeContent = false) => ({
+        _id: blog._id,
+        title: blog.title,
+        author: blog.author,
+        excerpt: blog.excerpt,
+        date: blog.date,
+        authorlogo: blog.authorlogo,
+        image: blog.image ? `data:${blog.image.contentType};base64,${blog.image.data.toString('base64')}` : null,
+        ...(includeContent ? { content: blog.content || "" } : {}),
+    });
+
     if (req.method == "GET") {
         const { search } = req.query
+
+        if (search) {
+            let blog = null;
+            if (/^[a-f\d]{24}$/i.test(search)) {
+                blog = await Blog.findById(search);
+            }
+            if (!blog) {
+                blog = await Blog.findOne({ title: search });
+            }
+            if (!blog) {
+                return res.status(404).json({ error: "Blog not found" });
+            }
+            return res.status(200).json(serializeBlog(blog, true));
+        }
+
         const blogs = await Blog.find({});
-        let data = blogs.map((blog) => ({
-            _id: blog._id,
-            title: blog.title,
-            author: blog.author,
-            excerpt: blog.excerpt,
-            date: blog.date,
-            authorlogo: blog.authorlogo,
-            image: blog.image ? `data:${blog.image.contentType};base64,${blog.image.data.toString('base64')}` : null,
-        }));
+        const data = blogs.map((blog) => serializeBlog(blog));
         return res.status(200).json(data)
     }
     if (req.method == "POST") {

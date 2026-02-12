@@ -1,56 +1,59 @@
-// app/blog/[slug]/page.jsx
+import { notFound } from "next/navigation";
+import { absoluteUrl } from "@/lib/seo";
 
-"use client";
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
-import {FetchBlog} from './fetchblog'
+async function getBlogPost(slug) {
+    const res = await fetch(absoluteUrl(`/api/blog?search=${encodeURIComponent(slug)}`), {
+        next: { revalidate: 300 },
+    });
 
-const blogs = {
-    "introduction-to-bns-2023": {
-        title: "Introduction to Bhartiya Nyay Sanhita 2023",
-        content: `
-      The Bhartiya Nyay Sanhita 2023 (BNS) replaces the Indian Penal Code (IPC).
-      This marks a major shift in how legal justice is delivered in India...
-    `,
-        date: "2025-06-17",
-    },
-    "ai-in-legal-search": {
-        title: "How AI is Revolutionizing Legal Search",
-        content: `
-      With the rise of AI, platforms like BNSINFO make legal research easier than ever...
-    `,
-        date: "2025-06-15",
-    },
-};
+    if (!res.ok) return null;
+    return res.json();
+}
 
-// export  function generateStaticParams() {
-//     return Object.keys(blogs).map((slug) => ({ slug }));
-// }
+export async function generateMetadata({ params }) {
+    const { slug } = await params;
+    const post = await getBlogPost(slug);
 
-export default function BlogPost({ params }) {
+    if (!post) {
+        return {
+            title: "Post Not Found",
+            robots: { index: false, follow: false },
+        };
+    }
 
-    const { slug } = useParams();
-    const [post, setPost] = useState({});
-    const [error, setError] = useState("");
+    const description = post.excerpt || "Legal analysis and updates on BNS Info.";
 
-    useEffect(() => {
-        async function fetchBlog() {
-           const data = await FetchBlog(slug)
-           setPost(data)
-        }
+    return {
+        title: post.title,
+        description,
+        alternates: {
+            canonical: `/blog/${slug}`,
+        },
+        openGraph: {
+            title: post.title,
+            description,
+            type: "article",
+            url: `/blog/${slug}`,
+        },
+        twitter: {
+            card: "summary_large_image",
+            title: post.title,
+            description,
+        },
+    };
+}
 
-        if (slug) fetchBlog();
-    }, [slug]);
+export default async function BlogPost({ params }) {
+    const { slug } = await params;
+    const post = await getBlogPost(slug);
 
-    if (error) return <div className="p-6 text-red-600">{error}</div>;
-    if (!post) return <div className="p-6">Post not found</div>;
+    if (!post) notFound();
 
     return (
         <main className="max-w-3xl mx-auto py-12 px-4">
             <h1 className="text-3xl font-bold text-blue-700 mb-2">{post.title}</h1>
             <p className="text-sm text-gray-500 mb-6">{post.date}</p>
-             <div dangerouslySetInnerHTML={{ __html: post.content }} className="prose max-w-none" />
-            {/* <article className="prose max-w-none">{post.content}</article> */}
+            <div dangerouslySetInnerHTML={{ __html: post.content || post.excerpt || "" }} className="prose max-w-none" />
         </main>
     );
 }

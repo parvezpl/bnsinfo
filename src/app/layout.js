@@ -4,6 +4,7 @@ import "./globals.css";
 import SessionProviderWrapper from './SessionProviderWrapper';
 import Navigation from "./utlty/navigation";
 import ClientLayout from '../app/client-layout';
+import { getSiteUrl } from "@/lib/seo";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,9 +16,42 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl = getSiteUrl();
+
 export const metadata = {
-  title: "BNS INFO",
-  description: "POWERED BY HELIUSDEV",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "BNS Info",
+    template: "%s | BNS Info",
+  },
+  description: "Bharatiya Nyaya Sanhita (BNS) guides, legal explainers, and community updates.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    url: "/",
+    title: "BNS Info",
+    description: "Bharatiya Nyaya Sanhita (BNS) guides, legal explainers, and community updates.",
+    siteName: "BNS Info",
+    locale: "en_IN",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "BNS Info",
+    description: "Bharatiya Nyaya Sanhita (BNS) guides, legal explainers, and community updates.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   icons: {
     icon: "/favicon.ico",
   },
