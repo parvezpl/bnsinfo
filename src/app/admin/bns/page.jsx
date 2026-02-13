@@ -213,7 +213,10 @@ export default function AdminBnsPage() {
                   <>
                     <div className={styles.itemHead}>{item.section}</div>
                     <div className={styles.itemBody}>{item.section_content}</div>
+                    {item.example_content ? 
                     <div className={styles.itemExample}>{item.example_content}</div>
+                    : null
+                    }
                     <div className={styles.actions}>
                       <button className={styles.actionGhost} onClick={() => startEdit(item)}>Edit</button>
                     </div>

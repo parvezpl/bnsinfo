@@ -1,5 +1,44 @@
 ﻿import { connectDB } from "../../../lib/db";
+import BnsHindiExamplesUpdate from "../../../lib/schema/bns/bns_hindi_examples_update";
 import BnsHindiExample from "../../../lib/schema/bns/hindi_examples";
+
+async function recordHindiExampleUpdate(section) {
+  if (!section || typeof section !== "string") return;
+
+  const updateItem = { section, updated_at: new Date() };
+  const existing = await BnsHindiExamplesUpdate.findOne({});
+
+  if (!existing) {
+    await BnsHindiExamplesUpdate.create({
+      last_update_at: new Date(),
+      isMobile_app_updated: false,
+      update_section: [updateItem],
+    });
+    return;
+  }
+
+  if (existing.isMobile_app_updated) {
+    await BnsHindiExamplesUpdate.updateOne(
+      { _id: existing._id },
+      {
+        $set: {
+          last_update_at: new Date(),
+          isMobile_app_updated: false,
+          update_section: [updateItem],
+        },
+      }
+    );
+    return;
+  }
+
+  await BnsHindiExamplesUpdate.updateOne(
+    { _id: existing._id },
+    {
+      $set: { last_update_at: new Date() },
+      $push: { update_section: updateItem },
+    }
+  );
+}
 
 export default async function handler(req, res) {
   await connectDB();
@@ -17,7 +56,7 @@ export default async function handler(req, res) {
     try {
       const { section, section_content, example_content } = req.body || {};
 
-      if (!section || !section_content || !example_content) {
+      if (!section || !section_content ) {
         return res.status(400).json({ error: "section, section_content, example_content are required" });
       }
 
@@ -26,6 +65,9 @@ export default async function handler(req, res) {
         section_content,
         example_content,
       });
+
+      await recordHindiExampleUpdate(section);
+
 
       return res.status(201).json({ message: "Created", data });
     } catch (error) {
@@ -47,6 +89,8 @@ export default async function handler(req, res) {
 
       const updated = await BnsHindiExample.findByIdAndUpdate(id, update, { new: true });
       if (!updated) return res.status(404).json({ error: "Not found" });
+      await recordHindiExampleUpdate(updated.section);
+      
       return res.status(200).json({ message: "Updated", data: updated });
     } catch (error) {
       return res.status(500).json({ error: "Failed to update section" });
