@@ -53,17 +53,18 @@ export default async function handler(req, res) {
   }
 
   if (req.method === "POST") {
+    console.log("hello post")
     try {
       const { section, section_content, example_content } = req.body || {};
-
+      console.log(section, section_content, example_content)
       if (!section || !section_content ) {
-        return res.status(400).json({ error: "section, section_content, example_content are required" });
+        return res.status(400).json({ error: "section and section_content are required" });
       }
 
       const data = await BnsHindiExample.create({
         section,
         section_content,
-        example_content,
+        example_content: example_content ?? "",
       });
 
       await recordHindiExampleUpdate(section);
