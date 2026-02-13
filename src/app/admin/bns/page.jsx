@@ -14,6 +14,8 @@ export default function AdminBnsPage() {
   const [draft, setDraft] = useState({});
   const [loading, setLoading] = useState(false);
   const [savingId, setSavingId] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
+  const [showRowId, setShowRowId] = useState(null);
   const [msg, setMsg] = useState("");
 
   const loadItems = async () => {
@@ -100,6 +102,41 @@ export default function AdminBnsPage() {
       setMsg(err.message || "Failed to update.");
     } finally {
       setSavingId(null);
+    }
+  };
+
+  const toggleShowRow = (id) => {
+    setShowRowId((prev) => (prev === id ? null : id));
+  };
+
+  const deleteRow = async (id) => {
+    const ok = window.confirm("Delete this section?");
+    if (!ok) return;
+
+    try {
+      setDeletingId(id);
+      setMsg("");
+      const res = await fetch(`/api/bns/add?id=${id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "Failed to delete");
+      }
+
+      setItems((prev) => prev.filter((it) => it._id !== id));
+      if (editingId === id) {
+        setEditingId(null);
+        setDraft({});
+      }
+      if (showRowId === id) {
+        setShowRowId(null);
+      }
+      setMsg("Row deleted successfully.");
+    } catch (err) {
+      setMsg(err.message || "Failed to delete.");
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -219,7 +256,20 @@ export default function AdminBnsPage() {
                     }
                     <div className={styles.actions}>
                       <button className={styles.actionGhost} onClick={() => startEdit(item)}>Edit</button>
+                      <button className={styles.actionGhost} onClick={() => toggleShowRow(item._id)}>
+                        {showRowId === item._id ? "Hide Row Data" : "Show Row Data"}
+                      </button>
+                      <button
+                        className={styles.actionDanger}
+                        onClick={() => deleteRow(item._id)}
+                        disabled={deletingId === item._id}
+                      >
+                        {deletingId === item._id ? "Deleting..." : "Delete"}
+                      </button>
                     </div>
+                    {showRowId === item._id ? (
+                      <pre className={styles.rowData}>{JSON.stringify(item, null, 2)}</pre>
+                    ) : null}
                   </>
                 )}
               </li>

@@ -42,6 +42,7 @@ async function recordHindiExampleUpdate(section) {
 
 export default async function handler(req, res) {
   await connectDB();
+  const route = req.query?.route || req.body?.route || req.body?.action;
 
   if (req.method === "GET") {
     try {
@@ -53,11 +54,19 @@ export default async function handler(req, res) {
   }
 
   if (req.method === "POST") {
-    console.log("hello post")
     try {
+      if (route === "recordHindiExampleUpdate") {
+        const { section } = req.body || {};
+        if (!section || typeof section !== "string") {
+          return res.status(400).json({ error: "section is required" });
+        }
+
+        await recordHindiExampleUpdate(section);
+        return res.status(200).json({ message: "Update recorded", section });
+      }
+
       const { section, section_content, example_content } = req.body || {};
-      console.log(section, section_content, example_content)
-      if (!section || !section_content ) {
+      if (!section || !section_content) {
         return res.status(400).json({ error: "section and section_content are required" });
       }
 
@@ -91,13 +100,35 @@ export default async function handler(req, res) {
       const updated = await BnsHindiExample.findByIdAndUpdate(id, update, { new: true });
       if (!updated) return res.status(404).json({ error: "Not found" });
       await recordHindiExampleUpdate(updated.section);
-      
+
       return res.status(200).json({ message: "Updated", data: updated });
     } catch (error) {
       return res.status(500).json({ error: "Failed to update section" });
     }
   }
 
-  res.setHeader("Allow", ["GET", "POST", "PUT", "PATCH"]);
+  if (req.method === "DELETE") {
+    try {
+      const { id } = req.query;
+      if (!id) {
+        return res.status(400).json({ error: "id is required" });
+      }
+
+      const deleted = await BnsHindiExample.findByIdAndDelete(id);
+      if (!deleted) {
+        return res.status(404).json({ error: "Not found" });
+      }
+
+      // record update for mobile sync
+      await recordHindiExampleUpdate(deleted.section);
+
+      return res.status(200).json({ message: "Deleted", data: deleted });
+    } catch (error) {
+      return res.status(500).json({ error: "Failed to delete section" });
+    }
+  }
+
+
+  res.setHeader("Allow", ["GET", "POST", "PUT", "PATCH", "DELETE"]);
   return res.status(405).end(`Method ${req.method} Not Allowed`);
 }
