@@ -1,8 +1,10 @@
 ﻿'use client';
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import styles from "./page.module.css";
+import { signIn, signOut, useSession } from 'next-auth/react'
 
 export default function AdminBnsPage() {
+  const { data: session, status } = useSession()
   const [form, setForm] = useState({
     section: "",
     section_content: "",
@@ -17,6 +19,15 @@ export default function AdminBnsPage() {
   const [deletingId, setDeletingId] = useState(null);
   const [showRowId, setShowRowId] = useState(null);
   const [msg, setMsg] = useState("");
+  const [existMsg, setExistMsg] = useState("");
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    if (status === "authenticated") {
+      setUser(session.user);
+    } else {
+      setUser(null);
+    }
+  }, [session, status]);
 
   const loadItems = async () => {
     try {
@@ -32,7 +43,26 @@ export default function AdminBnsPage() {
     loadItems();
   }, []);
 
+  const checkIsSectionExists = async (section) => {
+    const exists = items.some((it) => {
+      return it.section === section;
+    });
+    if (exists) {
+      return true;
+    }
+  };
   const handleChange = (e) => {
+    if (e.target.name === "section") {
+      const value = e.target.value;
+      checkIsSectionExists(value).then((exists) => {
+        if (exists) {
+          setExistMsg("Section already exists.");
+        } else {
+          setExistMsg("");
+        }
+      });
+    }
+
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
@@ -46,7 +76,7 @@ export default function AdminBnsPage() {
       const res = await fetch("/api/bns/add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, user: user ? { name: user.name, email: user.email, id: user.id } : null }),
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
@@ -87,7 +117,7 @@ export default function AdminBnsPage() {
       const res = await fetch(`/api/bns/add?id=${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(draft),
+        body: JSON.stringify({ ...draft, user: user ? { name: user.name, email: user.email, id: user.id } : null }),
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
@@ -156,6 +186,7 @@ export default function AdminBnsPage() {
             required
           />
         </label>
+        {existMsg && <p className={styles.Existmessage}>{existMsg}</p>}
 
         <label className={styles.field}>
           <span className={styles.label}>Section Content</span>
@@ -213,68 +244,68 @@ export default function AdminBnsPage() {
               );
             })
             .map((item) => {
-            const isEditing = editingId === item._id;
-            return (
-              <li key={item._id} className={styles.listItem}>
-                {isEditing ? (
-                  <div className={styles.editGrid}>
-                    <input
-                      className={styles.inlineInput}
-                      value={draft.section}
-                      onChange={(e) => updateDraft("section", e.target.value)}
-                    />
-                    <textarea
-                      className={styles.inlineTextarea}
-                      rows={4}
-                      value={draft.section_content}
-                      onChange={(e) => updateDraft("section_content", e.target.value)}
-                    />
-                    <textarea
-                      className={styles.inlineTextarea}
-                      rows={3}
-                      value={draft.example_content}
-                      onChange={(e) => updateDraft("example_content", e.target.value)}
-                    />
-                    <div className={styles.actions}>
-                      <button
-                        className={styles.actionPrimary}
-                        onClick={() => saveEdit(item._id)}
-                        disabled={savingId === item._id}
-                      >
-                        {savingId === item._id ? "Saving..." : "Update"}
-                      </button>
-                      <button className={styles.actionGhost} onClick={cancelEdit}>Cancel</button>
+              const isEditing = editingId === item._id;
+              return (
+                <li key={item._id} className={styles.listItem}>
+                  {isEditing ? (
+                    <div className={styles.editGrid}>
+                      <input
+                        className={styles.inlineInput}
+                        value={draft.section}
+                        onChange={(e) => updateDraft("section", e.target.value)}
+                      />
+                      <textarea
+                        className={styles.inlineTextarea}
+                        rows={4}
+                        value={draft.section_content}
+                        onChange={(e) => updateDraft("section_content", e.target.value)}
+                      />
+                      <textarea
+                        className={styles.inlineTextarea}
+                        rows={3}
+                        value={draft.example_content}
+                        onChange={(e) => updateDraft("example_content", e.target.value)}
+                      />
+                      <div className={styles.actions}>
+                        <button
+                          className={styles.actionPrimary}
+                          onClick={() => saveEdit(item._id)}
+                          disabled={savingId === item._id}
+                        >
+                          {savingId === item._id ? "Saving..." : "Update"}
+                        </button>
+                        <button className={styles.actionGhost} onClick={cancelEdit}>Cancel</button>
+                      </div>
                     </div>
-                  </div>
-                ) : (
-                  <>
-                    <div className={styles.itemHead}>{item.section}</div>
-                    <div className={styles.itemBody}>{item.section_content}</div>
-                    {item.example_content ? 
-                    <div className={styles.itemExample}>{item.example_content}</div>
-                    : null
-                    }
-                    <div className={styles.actions}>
-                      <button className={styles.actionGhost} onClick={() => startEdit(item)}>Edit</button>
-                      <button className={styles.actionGhost} onClick={() => toggleShowRow(item._id)}>
-                        {showRowId === item._id ? "Hide Row Data" : "Show Row Data"}
-                      </button>
-                      <button
-                        className={styles.actionDanger}
-                        onClick={() => deleteRow(item._id)}
-                        disabled={deletingId === item._id}
-                      >
-                        {deletingId === item._id ? "Deleting..." : "Delete"}
-                      </button>
-                    </div>
-                    {showRowId === item._id ? (
-                      <pre className={styles.rowData}>{JSON.stringify(item, null, 2)}</pre>
-                    ) : null}
-                  </>
-                )}
-              </li>
-            );
-          })}
+                  ) : (
+                    <>
+                      <div className={styles.itemHead}>{item.section}</div>
+                      <div className={styles.itemBody}>{item.section_content}</div>
+                      {item.example_content ?
+                        <div className={styles.itemExample}>{item.example_content}</div>
+                        : null
+                      }
+                      <div className={styles.actions}>
+                        <button className={styles.actionGhost} onClick={() => startEdit(item)}>Edit</button>
+                        <button className={styles.actionGhost} onClick={() => toggleShowRow(item._id)}>
+                          {showRowId === item._id ? "Hide Row Data" : "Show Row Data"}
+                        </button>
+                        <button
+                          className={styles.actionDanger}
+                          onClick={() => deleteRow(item._id)}
+                          disabled={deletingId === item._id}
+                        >
+                          {deletingId === item._id ? "Deleting..." : "Delete"}
+                        </button>
+                      </div>
+                      {showRowId === item._id ? (
+                        <pre className={styles.rowData}>{JSON.stringify(item, null, 2)}</pre>
+                      ) : null}
+                    </>
+                  )}
+                </li>
+              );
+            })}
         </ul>
       </div>
     </main>

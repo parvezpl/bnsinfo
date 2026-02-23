@@ -53,10 +53,16 @@
   cursor: not-allowed;
 }
 
+.Existmessage {
+  margin-top: 12px;
+  font-weight: 600;
+  color: #e62a2a;
+}
+
 .message {
   margin-top: 12px;
   font-weight: 600;
-  color: #1f2a21;
+  color: #11972a;
 }
 
 .list {

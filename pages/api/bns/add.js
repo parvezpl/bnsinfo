@@ -12,22 +12,7 @@ async function recordHindiExampleUpdate(section) {
     await BnsHindiExamplesUpdate.create({
       last_update_at: new Date(),
       isMobile_app_updated: false,
-      update_section: [updateItem],
     });
-    return;
-  }
-
-  if (existing.isMobile_app_updated) {
-    await BnsHindiExamplesUpdate.updateOne(
-      { _id: existing._id },
-      {
-        $set: {
-          last_update_at: new Date(),
-          isMobile_app_updated: false,
-          update_section: [updateItem],
-        },
-      }
-    );
     return;
   }
 
@@ -35,7 +20,6 @@ async function recordHindiExampleUpdate(section) {
     { _id: existing._id },
     {
       $set: { last_update_at: new Date() },
-      $push: { update_section: updateItem },
     }
   );
 }
@@ -74,6 +58,7 @@ export default async function handler(req, res) {
         section,
         section_content,
         example_content: example_content ?? "",
+        user: req.body.user || null,
       });
 
       await recordHindiExampleUpdate(section);
@@ -96,6 +81,8 @@ export default async function handler(req, res) {
       if (typeof section === "string") update.section = section;
       if (typeof section_content === "string") update.section_content = section_content;
       if (typeof example_content === "string") update.example_content = example_content;
+      if (typeof req.body.user === "object") update.user = req.body.user;
+
 
       const updated = await BnsHindiExample.findByIdAndUpdate(id, update, { new: true });
       if (!updated) return res.status(404).json({ error: "Not found" });

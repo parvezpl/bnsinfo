@@ -1,6 +1,6 @@
 ﻿'use client'
 import { useRouter } from 'next/navigation'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './navigation.css'
 import useStore from '../../../store/useStore'
 import Image from 'next/image'
@@ -14,13 +14,24 @@ export default function Navigation({ className }) {
   const [loginPop, setLoginPop] = useState(false)
   const setSearchbtn = useStore((state => state.setSearchbtn))
   const { data: session, status } = useSession()
-  console.log("Session data:", session)
+  const [user, setUser] = useState(null)
+  useEffect(() => {
+    if (status === 'authenticated') {
+      setUser(session.user)
+    } else {
+      setUser(null)
+    }
+  }, [status, session])
+
   const bnsSeachHandler = (e) => setSearchvalue(e)
+
+
   const searchbutton = () => {
     if (!searchvalue.trim()) return
     setSearchbtn(searchvalue)
     router.push(`/bns/bnssearch`)
   }
+
 
   function LoginPop() {
     return (
@@ -30,7 +41,7 @@ export default function Navigation({ className }) {
           whileHover={{ scale: 1.02 }}
           className="nav-user-item"
         >
-          {session?.user?.name}
+          {user?.name}
         </motion.button>
         <motion.button
           whileTap={{ scale: 0.96 }}
@@ -61,11 +72,11 @@ export default function Navigation({ className }) {
               <Image src="/bnslogo.png" alt="Logo" width={100} height={40} />
             </div>
             <div className="nav-user" onClick={() => setLoginPop(prev => !loginPop)}>
-              {session && (
+              {user && (
                 <>
                   <Image
-                    src={session?.user.image || null}
-                    alt={session?.user.name || null}
+                    src={user.image || null}
+                    alt={user.name || null}
                     width={36}
                     height={36}
                     className="nav-avatar"
@@ -95,7 +106,7 @@ export default function Navigation({ className }) {
             <Link href="/bns/mainpage" className="nav-link nav-show-sm">वी0एन0एस0 2023</Link>
             <Link href="/blog" className="nav-link">Blog</Link>
             <Link href="/forums" className="nav-link">Forums</Link>
-            {session?.user && session.user.role === 'admin' && (
+            {user && user.role === 'admin' && (
               <Link href="/admin" className="nav-link">Admin</Link>
             )}
           </div>

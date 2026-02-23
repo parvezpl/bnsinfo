@@ -1,26 +1,34 @@
 'use client';
 
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 
 export default function CreatePostForm() {
+
+  const { data: session, status } = useSession();
+
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("general");
   const [tag, setTag] = useState("धारा");
-  const [author, setAuthor] = useState("");
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
-  const [status, setStatus] = useState("");
+  const [smg, setSmg] = useState("");
+
+  // ✅ derived author (no state needed)
+  const author = session?.user?.name || "";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!title.trim() || !author.trim()) {
-      setStatus("कृपया शीर्षक और नाम भरें।");
+      setSmg("कृपया शीर्षक और नाम भरें।");
       return;
     }
 
-    setLoading(true);
-    setStatus("");
     try {
+      setLoading(true);
+      setSmg("");
+
       const res = await fetch("/api/forums/posts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -30,22 +38,26 @@ export default function CreatePostForm() {
           tag,
           category,
           content,
+          user: session?.user || null,
         }),
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err?.error || "Failed to create post");
+        throw new Error(data?.error || "Failed to create post");
       }
 
-      setStatus("पोस्ट सफलतापूर्वक बना दी गई है।");
+      setSmg("पोस्ट सफलतापूर्वक बना दी गई है।");
+
+      // reset form
       setTitle("");
-      setAuthor("");
       setTag("धारा");
       setCategory("general");
       setContent("");
+
     } catch (err) {
-      setStatus(err.message || "कुछ गलत हो गया।");
+      setSmg(err.message || "कुछ गलत हो गया।");
     } finally {
       setLoading(false);
     }
@@ -54,6 +66,14 @@ export default function CreatePostForm() {
   return (
     <section className="forums-form">
       <form className="forums-form-card" onSubmit={handleSubmit}>
+
+        <label className="forums-label">
+          आपका नाम
+          <p style={{ paddingLeft: "30px" }}>
+            {author || "(आप लॉगिन नहीं हैं)"}
+          </p>
+        </label>
+
         <label className="forums-label">
           शीर्षक
           <input
@@ -61,16 +81,6 @@ export default function CreatePostForm() {
             placeholder="जैसे: धारा 144 का वास्तविक प्रभाव?"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-          />
-        </label>
-
-        <label className="forums-label">
-          आपका नाम
-          <input
-            type="text"
-            placeholder="जैसे: Rohit"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
           />
         </label>
 
@@ -88,7 +98,6 @@ export default function CreatePostForm() {
           टैग
           <input
             type="text"
-            placeholder="जैसे: धारा"
             value={tag}
             onChange={(e) => setTag(e.target.value)}
           />
@@ -104,7 +113,7 @@ export default function CreatePostForm() {
           />
         </label>
 
-        {status && <div className="forums-status">{status}</div>}
+        {smg && <div className="forums-status">{smg}</div>}
 
         <div className="forums-form-actions">
           <button
@@ -112,19 +121,20 @@ export default function CreatePostForm() {
             className="forums-btn-ghost"
             onClick={() => {
               setTitle("");
-              setAuthor("");
               setTag("धारा");
               setCategory("general");
               setContent("");
-              setStatus("");
+              setSmg("");
             }}
           >
             रद्द करें
           </button>
+
           <button type="submit" className="forums-btn-primary" disabled={loading}>
             {loading ? "पोस्ट हो रही है..." : "पोस्ट करें"}
           </button>
         </div>
+
       </form>
     </section>
   );

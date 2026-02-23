@@ -2,13 +2,17 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 export default function ReplyForm({ postId }) {
+  const { data: session } = useSession();
+  
   const router = useRouter();
-  const [author, setAuthor] = useState("");
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState("");
+
+  const author = session?.user?.name || "";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,7 +32,6 @@ export default function ReplyForm({ postId }) {
         const err = await res.json();
         throw new Error(err?.error || "Failed to add reply");
       }
-      setAuthor("");
       setContent("");
       setStatus("जवाब जोड़ दिया गया है।");
       router.refresh();
@@ -41,15 +44,6 @@ export default function ReplyForm({ postId }) {
 
   return (
     <form className="forums-form-card" onSubmit={handleSubmit}>
-      <label className="forums-label">
-        आपका नाम
-        <input
-          type="text"
-          placeholder="जैसे: Anita"
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
-        />
-      </label>
       <label className="forums-label">
         जवाब
         <textarea
