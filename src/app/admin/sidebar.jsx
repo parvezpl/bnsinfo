@@ -13,6 +13,7 @@ export default function Sidebar() {
         <Link href="/admin/blog" className={styles.link}>Write blogs</Link>
         <Link href="/admin/users" className={styles.link}>Manage Users</Link>
         <Link href="/admin/bns" className={styles.link}>Add BNS</Link>
+        <Link href="/admin/qdrant" className={styles.link}>Qdrant Sync</Link>
       </nav>
     </aside>
   );

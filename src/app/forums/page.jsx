@@ -5,7 +5,10 @@ export const metadata = {
   description: "Community discussions and questions on Bharatiya Nyaya Sanhita 2023.",
 };
 
-export default async function ForumsPage() {
+export default async function ForumsPage({ searchParams }) {
+  const params = await searchParams;
+  const user = (params?.user || "").toString();
+  if (!user) return null;
   const [catRes, postRes] = await Promise.all([
     fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/forums/categories`, { cache: "no-store" }),
     fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/forums/posts`, { cache: "no-store" }),
@@ -27,7 +30,8 @@ export default async function ForumsPage() {
           </p>
           <div className="forums-actions">
             <a className="forums-btn-primary" href="/forums/new">नया विषय</a>
-            <a className="forums-btn-ghost" href="/forums/mine">मेरी पोस्ट</a>
+            <a className="forums-btn-ghost" href={`/forums/mine?user=${encodeURIComponent(user)}`}
+            >मेरी पोस्ट</a>
           </div>
         </div>
       </section>

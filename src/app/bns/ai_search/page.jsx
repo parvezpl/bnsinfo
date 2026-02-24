@@ -13,43 +13,54 @@ export default function BnsSearchPage() {
     const [searchResult, setSearchResult] = useState([]);
     const [queryIsActive, setQueryIsActive] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
     const [queryHistory, setQueryHistory] = useState([]);
     const [mounted, setMounted] = useState(false);
     const searchParam = useStore((state) => state.searchparam);
-    const lang = useStore((state) => state.languages);
     const messageEndRef = useRef(null);
 
     const vectorHandler = useCallback(async (querys) => {
         setLoading(true);
         setSearchResult([]);
-        console.log("Initiating vector search for query:", querys);
-        const res = await fetch("/api/embed/vector_search_data", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                text: querys,
-            }),
-        });
-        const data = await res.json();
-        const results = Array.isArray(data?.searchResult) ? data.searchResult : [];
-        if (!results.length) {
-            setSearchResult([]);
+        setError("");
+
+        try {
+            const res = await fetch("/api/semantic/hindi-search", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    text: querys,
+                    limit: 1,
+                }),
+            });
+            const data = await res.json();
+            if (!res.ok || data?.ok === false) {
+                throw new Error(data?.error || "Semantic search request failed.");
+            }
+
+            const results = Array.isArray(data?.searchResult) ? data.searchResult : [];
+            if (!results.length) {
+                setSearchResult([]);
+                return;
+            }
+
+            const seenSections = new Set();
+            const dedupedResults = results.filter((item) => {
+                const key = String(item?.payload?.section ?? item?.id ?? "").trim();
+                if (!key) return true;
+                if (seenSections.has(key)) return false;
+                seenSections.add(key);
+                return true;
+            });
+            setSearchResult(dedupedResults.slice(0, 1));
+        } catch (err) {
+            setError(err?.message || "Search failed.");
             setLoading(false);
             return;
         }
-        const acts = results.map((item) => {
-            return parseInt(item.payload.section.trim(), 10);
-        });
-        const newActs = [...new Set(acts)];
-        data.searchResult = newActs.map((act) => {
-            const item = results.find(
-                (item) => parseInt(item.payload.section.trim(), 10) === act
-            );
-            return { ...item, payload: { ...item.payload, section: act } };
-        });
-        setSearchResult(data.searchResult); // Append new results like chat
+
         setLoading(false);
     }, []);
 
@@ -87,6 +98,18 @@ export default function BnsSearchPage() {
         <div className={styles.container}>
             <div className={styles.results}>
                 {queryIsActive && loading && <LoadingCard />}
+                {queryIsActive && !!error && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className={styles.aiBubble}
+                    >
+                        <div className={styles.aiHeader}>
+                            <span className={styles.aiLabel}>AI Response</span>
+                        </div>
+                        <div>{error}</div>
+                    </motion.div>
+                )}
 
                 {queryHistory.map((q, index) => (
                     <motion.div

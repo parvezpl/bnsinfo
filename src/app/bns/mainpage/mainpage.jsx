@@ -10,23 +10,28 @@ import EditContent from './EditContent';
 import { useSession } from 'next-auth/react';
 import TagsInputSection from './TagsInputSection';
 
-export default function Mainpage({ result, currentPage }) {
+const extractSections = (payload) => {
+    if (!payload?.bns?.length) return [];
+    return payload.bns.flatMap((item) => item.sections || []);
+};
+
+export default function Mainpage({ result, currentPage, initialSection }) {
+    const limit = 4;
     const { data: session } = useSession();
-    const [data, setData] = useState([]);
-    const [activeSection, setActiveSection] = useState(null);
+    const [data, setData] = useState(() => extractSections(result));
+    const [activeSection, setActiveSection] = useState(() => initialSection ?? null);
     const [mobileOpen, setMobileOpen] = useState(true);
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(currentPage || 1);
-    const [hasMore, setHasMore] = useState(true);
+    const [hasMore, setHasMore] = useState(() => extractSections(result).length >= limit);
     const [editActive, setEditActive] = useState(false);
     const [tagBox, setTagBox] = useState(false);
 
     const router = useRouter();
-    const limit = 4;
 
     useEffect(() => {
-        if (result?.bns?.length) {
-            const newSections = result.bns.flatMap(item => item.sections);
+        const newSections = extractSections(result);
+        if (newSections.length) {
             setData(newSections);
             setPage(currentPage || 1);
             setHasMore(newSections.length >= limit);
@@ -34,7 +39,8 @@ export default function Mainpage({ result, currentPage }) {
             setData([]);
             setHasMore(false);
         }
-    }, [result, currentPage]);
+        setActiveSection(initialSection ?? null);
+    }, [result, currentPage, initialSection, limit]);
 
     const fetchData = async (pageToFetch) => {
         setLoading(true);
@@ -70,11 +76,18 @@ export default function Mainpage({ result, currentPage }) {
         fetchData(nextPage);
     };
 
+    const buildSectionHref = (sectionId) =>
+        `?page=${encodeURIComponent(String(page || 1))}&section=${encodeURIComponent(String(sectionId))}`;
+
+    const clearSectionHref = () => `?page=${encodeURIComponent(String(page || 1))}`;
+
     const handleSectionClick = (sectionId) => {
         setActiveSection(sectionId);
         setEditActive(false);
         setTagBox(false);
         setMobileOpen(false);
+        router.push(buildSectionHref(sectionId), { scroll: false });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const openForEdit = () => {
@@ -84,7 +97,7 @@ export default function Mainpage({ result, currentPage }) {
 
     const getContent = () => {
         if (activeSection !== null) {
-            const section = data.find(s => s.section === activeSection);
+            const section = data.find(s => String(s.section) === String(activeSection));
             if (!section) return <p className="bns-muted">धारा नहीं मिली</p>;
 
             if (editActive) {
@@ -134,16 +147,23 @@ export default function Mainpage({ result, currentPage }) {
         return (
             <div className="bns-grid">
                 {data.map((section, index) => (
-                    <motion.div
+                    <motion.article
                         key={index}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.3, delay: index * 0.05 }}
                         className="bns-card"
-                        onClick={() => handleSectionClick(section.section)}
                     >
                         <h3 className="bns-card-title">
-                            धारा: {section.section}
+                            <a
+                                href={buildSectionHref(section.section)}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    handleSectionClick(section.section);
+                                }}
+                            >
+                                धारा: {section.section}
+                            </a>
                         </h3>
                         <div
                             dangerouslySetInnerHTML={{
@@ -151,7 +171,7 @@ export default function Mainpage({ result, currentPage }) {
                             }}
                             className="bns-card-text"
                         />
-                    </motion.div>
+                    </motion.article>
                 ))}
 
                 {hasMore && !loading && (
@@ -175,6 +195,8 @@ export default function Mainpage({ result, currentPage }) {
                         setActiveSection(null);
                         setEditActive(false);
                         setTagBox(false);
+                        setMobileOpen(true);
+                        router.push(clearSectionHref(), { scroll: false });
                         return;
                     }
                     router.back();
@@ -198,12 +220,16 @@ export default function Mainpage({ result, currentPage }) {
                 <ul className="bns-sidebar-list">
                     {data.map((section, index) => (
                         <li key={index}>
-                            <button
-                                onClick={() => handleSectionClick(section.section)}
+                            <a
+                                href={buildSectionHref(section.section)}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    handleSectionClick(section.section);
+                                }}
                                 className="bns-section-btn"
                             >
                                 धारा: {section.section}
-                            </button>
+                            </a>
                         </li>
                     ))}
                     {hasMore && !loading && (

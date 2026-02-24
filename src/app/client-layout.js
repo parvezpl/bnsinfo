@@ -6,20 +6,31 @@ import { useEffect, useState } from "react";
 import "./client-layout.css";
 
 export default function ClientLayout({ children }) {
-  const [navHeight, setNavHeight] = useState(0);
+  const [navHeight, setNavHeight] = useState(140);
 
   useEffect(() => {
     const navbar = document.getElementById('navbar');
-    if (navbar) {
-      setNavHeight(navbar.offsetHeight);
-    }
+    if (!navbar) return;
+
+    const updateHeight = () => {
+      const next = navbar.offsetHeight || 140;
+      setNavHeight(next);
+    };
+
+    updateHeight();
+
+    const observer = new ResizeObserver(() => updateHeight());
+    observer.observe(navbar);
 
     const handleResize = () => {
-      if (navbar) setNavHeight(navbar.offsetHeight);
+      updateHeight();
     };
 
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   return (

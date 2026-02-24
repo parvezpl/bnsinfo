@@ -105,7 +105,7 @@ export default function Navigation({ className }) {
             <Link href="/bns/mainpage" className="nav-link nav-hide-sm">भारतीय न्याय संहिता 2023</Link>
             <Link href="/bns/mainpage" className="nav-link nav-show-sm">वी0एन0एस0 2023</Link>
             <Link href="/blog" className="nav-link">Blog</Link>
-            <Link href="/forums" className="nav-link">Forums</Link>
+            <Link href={`/forums?user=${encodeURIComponent(user?.name || '')}`} className="nav-link">Forums</Link>
             {user && user.role === 'admin' && (
               <Link href="/admin" className="nav-link">Admin</Link>
             )}

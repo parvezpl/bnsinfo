@@ -4,7 +4,7 @@ import styles from "./blog_home.module.css";
 export default async function Blog_home() {
     const getdata = async () => {
         const tempblogs = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/blog`, {
-            cache: "no-store",
+            next: { revalidate: 60 },
         });
         if (!tempblogs.ok) throw new Error("Failed to fetch blogs");
         return tempblogs.json();
@@ -173,7 +173,7 @@ export default async function Blog_home() {
                             <img src="/a2.jpg" alt="Author" className={styles.authorImage} />
                             <div>
                                 <h3 className={styles.panelTitle}>About Blog</h3>
-                                <p className={styles.panelText}>कानून विश्लेषक और लेखक। BNS Info पर सटीक और सरल जानकानकारी देने के लिए प्रतिबद्ध।</p>
+                                <p className={styles.panelText}>कानून विश्लेषक और लेखक। BNS Info पर सटीक और सरल जानकारी देने के लिए प्रतिबद्ध।</p>
                             </div>
                         </div>
                     </section>
@@ -236,3 +236,5 @@ export default async function Blog_home() {
         </div>
     );
 }
+
+

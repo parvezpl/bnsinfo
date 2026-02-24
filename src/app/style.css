@@ -115,6 +115,10 @@
   overflow: hidden;
 }
 
+.hero-right {
+  margin-top: 36px;
+}
+
 .hero-card::after {
   content: "";
   position: absolute;
@@ -384,6 +388,9 @@
 @media (max-width: 980px) {
   .hero-inner {
     grid-template-columns: 1fr;
+  }
+  .hero-right {
+    margin-top: 0;
   }
   .card-grid,
   .feature-grid,

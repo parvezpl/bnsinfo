@@ -6,9 +6,11 @@ export const metadata = {
 };
 
 export default async function MyPostsPage({ searchParams }) {
-  const author = (searchParams?.author || "").toString();
+  const params = await searchParams;
+  const user = (params?.user || "").toString();
+  console.log("Fetching posts for user:", user);
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/forums/posts${author ? `?author=${encodeURIComponent(author)}` : ""}`,
+    `${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/forums/posts${user ? `?author=${encodeURIComponent(user)}` : ""}`,
     { cache: "no-store" }
   );
   const data = await res.json();
@@ -28,7 +30,7 @@ export default async function MyPostsPage({ searchParams }) {
         <form className="forums-form-card" method="GET">
           <label className="forums-label">
             आपका नाम
-            <input type="text" name="author" placeholder="जैसे: Rohit" defaultValue={author} />
+            <input type="text" name="user" placeholder="जैसे: Rohit" defaultValue={user} />
           </label>
           <div className="forums-form-actions">
             <button type="submit" className="forums-btn-primary">फिल्टर करें</button>

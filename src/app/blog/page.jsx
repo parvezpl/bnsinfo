@@ -1,7 +1,7 @@
-// app/blog/page.jsx (SERVER COMPONENT)
+﻿// app/blog/page.jsx (SERVER COMPONENT)
 import Blog_home from "./blog_home";
 
-export default async function BlogPage() {
+export default function BlogPage() {
 
     return (
         <main className="max-w-full mx-auto ">
@@ -14,7 +14,7 @@ export default async function BlogPage() {
                             <h2 className="text-2xl font-semibold text-gray-800 mb-2">{post.title}</h2>
                             <p className="text-gray-600 mb-2">{post.summary}</p>
                             <Link href={`/blog/${post.slug}`} className="text-blue-600 font-medium">
-                                Read More →
+                                Read More â†’
                             </Link>
                     </div>
                 ))}
@@ -22,4 +22,6 @@ export default async function BlogPage() {
         </main>
     );
 }
+
+
 
