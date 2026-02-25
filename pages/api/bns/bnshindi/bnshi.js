@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     await connectDB()
     if (req.method === "GET") {
 
-        const { id, page = 1, limit = 10 } = req.query;
+        const { id, page = 1, limit = 10, all } = req.query;
 
         if (id) {
             // Fetch specific section
@@ -24,11 +24,18 @@ export default async function handler(req, res) {
         }
 
         try {
-            const skip = (parseInt(page) - 1) * parseInt(limit);
-            const bns = await Bnshi.find({}, { _id: 1, sections: 1 })
-                .skip(skip)
-                .limit(parseInt(limit))
-                .lean();
+            const fetchAll = String(all || "").trim() === "1";
+            let bns;
+
+            if (fetchAll) {
+                bns = await Bnshi.find({}, { _id: 1, sections: 1 }).lean();
+            } else {
+                const skip = (parseInt(page) - 1) * parseInt(limit);
+                bns = await Bnshi.find({}, { _id: 1, sections: 1 })
+                    .skip(skip)
+                    .limit(parseInt(limit))
+                    .lean();
+            }
             return res.status(200).json({ bns });
         } catch (error) {
             return res.status(500).json({ error: "Server Error" });

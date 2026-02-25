@@ -4,7 +4,7 @@ import styles from "./blog_home.module.css";
 export default async function Blog_home() {
     const getdata = async () => {
         const tempblogs = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/blog`, {
-            next: { revalidate: 60 },
+            cache: "no-store",
         });
         if (!tempblogs.ok) throw new Error("Failed to fetch blogs");
         return tempblogs.json();
@@ -89,6 +89,11 @@ export default async function Blog_home() {
                             </h2>
                             <div className={styles.meta}>लेखक: {featured.author} | {featured.date}</div>
                             <p className={styles.excerpt}>{featured.excerpt}</p>
+                            <div className={styles.reactionRow}>
+                                <span className={styles.reactionStat}>👍 {featured.likeCount || 0}</span>
+                                <span className={styles.reactionStat}>👎 {featured.dislikeCount || 0}</span>
+                                <span className={styles.reactionStat}>💬 {featured.commentCount || 0}</span>
+                            </div>
                             <div className={styles.featuredActions}>
                                 <a href={`/blog/${featured._id}`} className={styles.primaryButton}>
                                     Read full article
@@ -131,6 +136,11 @@ export default async function Blog_home() {
                                     </h2>
                                     <div className={styles.meta}>लेखक: {blog.author} | {blog.date}</div>
                                     <p className={styles.excerpt}>{blog.excerpt}</p>
+                                    <div className={styles.reactionRow}>
+                                        <span className={styles.reactionStat}>👍 {blog.likeCount || 0}</span>
+                                        <span className={styles.reactionStat}>👎 {blog.dislikeCount || 0}</span>
+                                        <span className={styles.reactionStat}>💬 {blog.commentCount || 0}</span>
+                                    </div>
                                     <div className={styles.cardFooter}>
                                         <span className={styles.badge}>Legal</span>
                                         <span className={styles.readTime}>4-6 min read</span>

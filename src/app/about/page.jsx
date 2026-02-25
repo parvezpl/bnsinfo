@@ -15,8 +15,8 @@ export default function Page() {
         className={styles.container}
       >
         <header className={styles.header}>
-          <p className={styles.kicker}>BNSINFO</p>
-          <h1 className={styles.title}>BNSINFO के बारे में</h1>
+          <p className={styles.kicker}>BNS INFO</p>
+          <h1 className={styles.title}>BNS INFO के बारे में</h1>
           <p className={styles.subtitle}>
             भारतीय न्याय संहिता 2023 (BNS) की साफ़, विश्वसनीय और खोज योग्य जानकारी के लिए एक आधुनिक मंच।
           </p>
@@ -51,12 +51,12 @@ export default function Page() {
             <div className={styles.callout}>
               <h3 className={styles.calloutTitle}>हमारा मिशन</h3>
               <p className={styles.calloutText}>
-                भारतीय न्याय संहिता से जुड़ी जानकारी को साफ़, सुलभ और भरोसेमंद बनाना — यही BNSINFO का उद्देश्य है।
+                भारतीय न्याय संहिता से जुड़ी जानकारी को साफ़, सुलभ और भरोसेमंद बनाना — यही BNS INFO का उद्देश्य है।
               </p>
             </div>
 
             <p className={styles.closing}>
-              BNSINFO — आपकी BNS जानकारी का भरोसेमंद स्रोत।
+              BNS INFO — आपकी BNS जानकारी का भरोसेमंद स्रोत।
             </p>
           </CardContent>
         </Card>

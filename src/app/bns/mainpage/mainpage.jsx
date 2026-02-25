@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import './mainpage.css';
 import { Menu, PanelLeftClose } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -15,77 +15,82 @@ const extractSections = (payload) => {
     return payload.bns.flatMap((item) => item.sections || []);
 };
 
+const getDefaultSectionId = (sections, preferred) => {
+    if (!sections.length) return null;
+    if (preferred !== null && preferred !== undefined && preferred !== '') {
+        const found = sections.find((s) => String(s.section) === String(preferred));
+        if (found) return found.section;
+    }
+    return sections[0].section;
+};
+
+const getSectionBody = (section) =>
+    section?.modify_section || section?.section_content || section?.section_title || '';
+
+const hasHtmlMarkup = (value) => /<\/?[a-z][\s\S]*>/i.test(String(value || ''));
+
 export default function Mainpage({ result, currentPage, initialSection }) {
-    const limit = 4;
     const { data: session } = useSession();
     const [data, setData] = useState(() => extractSections(result));
-    const [activeSection, setActiveSection] = useState(() => initialSection ?? null);
+    const [activeSection, setActiveSection] = useState(() =>
+        getDefaultSectionId(extractSections(result), initialSection)
+    );
     const [mobileOpen, setMobileOpen] = useState(true);
-    const [loading, setLoading] = useState(false);
+    const [loading] = useState(false);
     const [page, setPage] = useState(currentPage || 1);
-    const [hasMore, setHasMore] = useState(() => extractSections(result).length >= limit);
     const [editActive, setEditActive] = useState(false);
     const [tagBox, setTagBox] = useState(false);
+    const [sectionFilter, setSectionFilter] = useState('');
 
     const router = useRouter();
+
+    useEffect(() => {
+        const prevHtmlOverflow = document.documentElement.style.overflow;
+        const prevBodyOverflow = document.body.style.overflow;
+        document.documentElement.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.documentElement.style.overflow = prevHtmlOverflow;
+            document.body.style.overflow = prevBodyOverflow;
+        };
+    }, []);
 
     useEffect(() => {
         const newSections = extractSections(result);
         if (newSections.length) {
             setData(newSections);
             setPage(currentPage || 1);
-            setHasMore(newSections.length >= limit);
+            setActiveSection((prev) => getDefaultSectionId(newSections, initialSection ?? prev));
         } else {
             setData([]);
-            setHasMore(false);
+            setActiveSection(null);
         }
-        setActiveSection(initialSection ?? null);
-    }, [result, currentPage, initialSection, limit]);
-
-    const fetchData = async (pageToFetch) => {
-        setLoading(true);
-        try {
-            const url = `/api/bns/bnshindi/bnshi?page=${pageToFetch}&limit=${limit}`;
-
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`Failed to fetch page ${pageToFetch}`);
-            }
-            const newResult = await response.json();
-
-            if (newResult?.bns?.length) {
-                const newSections = newResult.bns.flatMap(item => item.sections);
-                setData(prev => [...prev, ...newSections]);
-
-                if (newSections.length < limit) {
-                    setHasMore(false);
-                }
-            } else {
-                setHasMore(false);
-            }
-        } catch (err) {
-            console.error('Error loading more:', err);
-            setHasMore(false);
-        }
-        setLoading(false);
-    };
-
-    const handleLoadMore = () => {
-        const nextPage = page + 1;
-        setPage(nextPage);
-        fetchData(nextPage);
-    };
+    }, [result, currentPage, initialSection]);
 
     const buildSectionHref = (sectionId) =>
         `?page=${encodeURIComponent(String(page || 1))}&section=${encodeURIComponent(String(sectionId))}`;
 
-    const clearSectionHref = () => `?page=${encodeURIComponent(String(page || 1))}`;
+    const filteredSections = useMemo(() => {
+        const query = sectionFilter.trim().toLowerCase();
+        if (!query) return data;
+        return data.filter((section) => {
+            const haystack = [
+                section?.section,
+                section?.section_title,
+                section?.section_content,
+                section?.modify_section,
+            ]
+                .filter(Boolean)
+                .join(' ')
+                .toLowerCase();
+            return haystack.includes(query);
+        });
+    }, [data, sectionFilter]);
 
     const handleSectionClick = (sectionId) => {
         setActiveSection(sectionId);
         setEditActive(false);
         setTagBox(false);
-        setMobileOpen(false);
         router.push(buildSectionHref(sectionId), { scroll: false });
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
@@ -96,93 +101,55 @@ export default function Mainpage({ result, currentPage, initialSection }) {
     };
 
     const getContent = () => {
-        if (activeSection !== null) {
-            const section = data.find(s => String(s.section) === String(activeSection));
-            if (!section) return <p className="bns-muted">धारा नहीं मिली</p>;
+        const section = data.find(s => String(s.section) === String(activeSection));
+        if (!section) return <p className="bns-muted">धारा नहीं मिली</p>;
 
-            if (editActive) {
-                return <EditContent section={section} />;
-            }
-
-            return (
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="bns-detail"
-                >
-                    <div className="bns-detail-head">
-                        <h2 className="bns-detail-title">धारा: {section.section}</h2>
-                        {session?.user?.role === 'admin' && (
-                            <span className="bns-edit" onClick={() => openForEdit(section.section)}>
-                                संपादित करें ✏️
-                            </span>
-                        )}
-                    </div>
-                    <div
-                        dangerouslySetInnerHTML={{
-                            __html: section.modify_section || section.section_content || section.section_title,
-                        }}
-                        className="bns-prose"
-                    />
-                    {session?.user?.role === 'admin' && (
-                        <div className="bns-spacer">
-                            <button
-                                onClick={() => setTagBox(prev => !prev)}
-                                className="bns-tag-btn"
-                            >
-                                {tagBox ? 'टैग छिपाएं' : 'टैग'}
-                            </button>
-                        </div>
-                    )}
-                    {tagBox && (
-                        <div className="bns-spacer">
-                            <TagsInputSection section={section.section} />
-                        </div>
-                    )}
-                </motion.div>
-            );
+        if (editActive) {
+            return <EditContent section={section} />;
         }
 
-        return (
-            <div className="bns-grid">
-                {data.map((section, index) => (
-                    <motion.article
-                        key={index}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.3, delay: index * 0.05 }}
-                        className="bns-card"
-                    >
-                        <h3 className="bns-card-title">
-                            <a
-                                href={buildSectionHref(section.section)}
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    handleSectionClick(section.section);
-                                }}
-                            >
-                                धारा: {section.section}
-                            </a>
-                        </h3>
-                        <div
-                            dangerouslySetInnerHTML={{
-                                __html: section.modify_section || section.section_content || section.section_title,
-                            }}
-                            className="bns-card-text"
-                        />
-                    </motion.article>
-                ))}
+        const sectionBody = getSectionBody(section);
+        const renderAsHtml = hasHtmlMarkup(sectionBody);
 
-                {hasMore && !loading && (
-                    <button
-                        onClick={handleLoadMore}
-                        className="bns-load"
-                    >
-                        और देखें
-                    </button>
+        return (
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="bns-detail"
+            >
+                <div className="bns-detail-head">
+                    <h2 className="bns-detail-title">धारा: {section.section}</h2>
+                    {session?.user?.role === 'admin' && (
+                        <span className="bns-edit" onClick={() => openForEdit(section.section)}>
+                            संपादित करें ✏️
+                        </span>
+                    )}
+                </div>
+                {renderAsHtml ? (
+                    <div
+                        dangerouslySetInnerHTML={{ __html: sectionBody }}
+                        className="bns-prose"
+                    />
+                ) : (
+                    <div className="bns-prose bns-prose-text">{sectionBody}</div>
                 )}
-            </div>
+                {session?.user?.role === 'admin' && (
+                    <div className="bns-spacer">
+                        <button
+                            onClick={() => setTagBox(prev => !prev)}
+                            className="bns-tag-btn"
+                        >
+                            {tagBox ? 'टैग छिपाएं' : 'टैग'}
+                        </button>
+                    </div>
+                )}
+                {tagBox && (
+                    <div className="bns-spacer">
+                        <TagsInputSection section={section.section} />
+                    </div>
+                )}
+            </motion.div>
         );
     };
 
@@ -191,14 +158,6 @@ export default function Mainpage({ result, currentPage, initialSection }) {
             <button
                 className="bns-back"
                 onClick={() => {
-                    if (activeSection !== null) {
-                        setActiveSection(null);
-                        setEditActive(false);
-                        setTagBox(false);
-                        setMobileOpen(true);
-                        router.push(clearSectionHref(), { scroll: false });
-                        return;
-                    }
                     router.back();
                 }}
             >
@@ -216,9 +175,16 @@ export default function Mainpage({ result, currentPage, initialSection }) {
                 </div>
 
                 <h2 className="bns-sidebar-title">धाराएं</h2>
+                <input
+                    type="text"
+                    className="bns-sidebar-filter"
+                    placeholder="धारा खोजें..."
+                    value={sectionFilter}
+                    onChange={(e) => setSectionFilter(e.target.value)}
+                />
 
                 <ul className="bns-sidebar-list">
-                    {data.map((section, index) => (
+                    {filteredSections.map((section, index) => (
                         <li key={index}>
                             <a
                                 href={buildSectionHref(section.section)}
@@ -226,19 +192,14 @@ export default function Mainpage({ result, currentPage, initialSection }) {
                                     e.preventDefault();
                                     handleSectionClick(section.section);
                                 }}
-                                className="bns-section-btn"
+                                className={`bns-section-btn ${String(activeSection) === String(section.section) ? 'is-active' : ''}`}
                             >
                                 धारा: {section.section}
                             </a>
                         </li>
                     ))}
-                    {hasMore && !loading && (
-                        <button
-                            onClick={handleLoadMore}
-                            className="bns-load bns-load-sidebar"
-                        >
-                            और देखें
-                        </button>
+                    {!filteredSections.length && (
+                        <li className="bns-muted">कोई धारा नहीं मिली</li>
                     )}
                 </ul>
             </div>

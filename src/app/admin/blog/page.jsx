@@ -8,6 +8,7 @@ export default function BlogAdminForm() {
   const [form, setForm] = useState({
     title: '',
     excerpt: '',
+    content: '',
     author: '',
     image: null,
   });
@@ -37,12 +38,14 @@ export default function BlogAdminForm() {
       const formData = new FormData();
       formData.append('title', form.title);
       formData.append('excerpt', form.excerpt);
+      formData.append('content', form.content);
       formData.append('author', form.author);
       formData.append('image', form.image);
       const userlogo = session?.user.image;
       if (userlogo) {
         formData.append('authorlogo', userlogo);
       }
+      console.log('Submitting form data:', formData)
       const res = await fetch('/api/blog', {
         method: 'POST',
         body: formData,
@@ -52,7 +55,7 @@ export default function BlogAdminForm() {
       console.log('Form data submitted:', getback);
       if (res.ok) {
         setMsg('Blog uploaded successfully!');
-        setForm({ title: '', excerpt: '', author: '', image: null });
+        setForm({ title: '', excerpt: '', content: '', author: '', image: null });
         setImagePreview(null);
       } else {
         const error = await res.json();
@@ -88,6 +91,16 @@ export default function BlogAdminForm() {
             name="excerpt"
             placeholder="Excerpt"
             value={form.excerpt}
+            onChange={handleChange}
+            className={styles.input}
+          />
+        </label>
+        <label className={styles.field}>
+          <span className={styles.label}>Content</span>
+          <textarea
+            name="content"
+            placeholder="Content"
+            value={form.content}
             onChange={handleChange}
             className={styles.input}
           />

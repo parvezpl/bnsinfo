@@ -58,9 +58,6 @@ export default function Navigation({ className }) {
   return (
     <div className={`nav-wrap ${className || ''}`}>
       <div className="nav-inner">
-        <div className="nav-top">
-        </div>
-
         <div className="nav-main">
           <div className="nav-brand">
             <div className="nav-title">भारतीय न्याय संहिता 2023</div>

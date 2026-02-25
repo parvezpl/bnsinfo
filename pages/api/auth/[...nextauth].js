@@ -36,9 +36,15 @@ export const authOptions = {
       await connectDB();
       // Find the user by email to get role and isPaid
       const dbUser = await User.findOne({ email: session.user.email });
-      session.user.id = dbUser._id;
-      session.user.role = dbUser.role;
-      session.user.isPaid = dbUser.isPaid;
+      if (dbUser) {
+        session.user.id = dbUser._id;
+        session.user.role = dbUser.role;
+        session.user.isPaid = dbUser.isPaid;
+      } else {
+        session.user.id = null;
+        session.user.role = "user";
+        session.user.isPaid = false;
+      }
       return session;
     },
   },

@@ -1,5 +1,10 @@
 import "../style.css";
 import ReplyForm from "./reply-form";
+import ReplyInteractions from "./reply-interactions";
+import PostInteractions from "../post-interactions";
+import AdminDeleteButton from "../admin-delete-button";
+import HashText from "../hash-text";
+import Link from "next/link";
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
@@ -40,6 +45,10 @@ export default async function ThreadPage({ params }) {
 
   return (
     <main className="forums-page">
+      <div className="forums-top-nav">
+        <Link href="/forums" className="forums-back-btn forums-back-btn-top">← Back to Forums</Link>
+      </div>
+
       <section className="forums-hero">
         <div className="forums-hero-inner">
           <div className="forums-badge">{post.tag}</div>
@@ -59,7 +68,26 @@ export default async function ThreadPage({ params }) {
               <span>by {post.author}</span>
               <span>• {post.replies} replies</span>
             </div>
-            <p style={{ marginTop: 10 }}>{post.content || "कोई विवरण उपलब्ध नहीं है।"}</p>
+            <div className="forums-post-stats">
+              <PostInteractions
+                postId={postId}
+                initialLikes={post.likes ?? 0}
+                initialDislikes={post.dislikes ?? 0}
+              />
+              <span>💬 {post.comments ?? 0}</span>
+              <span>↩ {post.replies ?? 0}</span>
+            </div>
+            <p style={{ marginTop: 10 }}>
+              <HashText
+                text={post.content || "कोई विवरण उपलब्ध नहीं है।"}
+                className="hash-text"
+              />
+            </p>
+            <AdminDeleteButton
+              endpoint={`/api/forums/posts/${postId}`}
+              label="Delete Thread"
+              confirmText="Delete this thread and all replies?"
+            />
           </article>
         </div>
       </section>
@@ -74,11 +102,19 @@ export default async function ThreadPage({ params }) {
           )}
           {replies.map((r) => (
             <article className="forums-post" key={r.id}>
-              <div className="forums-post-title">{r.content}</div>
+              <div className="forums-post-title">
+                <HashText text={r.content} className="hash-text" />
+              </div>
               <div className="forums-post-meta">
                 <span>by {r.author}</span>
                 <span>• {new Date(r.time).toLocaleString()}</span>
               </div>
+              <AdminDeleteButton
+                endpoint={`/api/forums/replies/${r.id}`}
+                label="Delete Reply"
+                confirmText="Delete this reply?"
+              />
+              <ReplyInteractions replyId={r.id} />
             </article>
           ))}
         </div>

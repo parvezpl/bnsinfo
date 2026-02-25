@@ -1,7 +1,9 @@
 .bns-main {
   display: grid;
   grid-template-columns: 240px 1fr;
-  min-height: 100vh;
+  height: calc(100vh - var(--nav-height, 0px));
+  align-items: start;
+  overflow: hidden;
   background:
     radial-gradient(1200px 500px at 10% -10%, #e8f6ee 0%, transparent 60%),
     radial-gradient(900px 500px at 90% -20%, #e7f0ff 0%, transparent 55%),
@@ -22,10 +24,14 @@
 }
 
 .bns-sidebar {
+  position: sticky;
+  top: 0;
+  height: calc(100vh - var(--nav-height, 0px));
   background: linear-gradient(180deg, #ffffff 0%, #f5faf7 100%);
   border-right: 1px solid #dcebe2;
   padding: 20px 16px;
   overflow-y: auto;
+  overscroll-behavior: contain;
   box-shadow: 8px 0 20px rgba(7, 20, 12, 0.06);
 }
 
@@ -61,8 +67,25 @@
   border-color: #cfe5d8;
 }
 
+.bns-section-btn.is-active {
+  background: #148152;
+  border-color: #0b4b32;
+  color: #ffffff;
+}
+
+.bns-sidebar-filter {
+  width: 100%;
+  border: 1px solid #dcebe2;
+  border-radius: 10px;
+  background: #f7fbf9;
+  color: #0b4b32;
+  padding: 8px 10px;
+  margin: 0 0 12px;
+}
+
 .bns-content {
   padding: 24px;
+  overflow: hidden;
 }
 
 .bns-page-title {
@@ -141,6 +164,10 @@
 .bns-prose {
   line-height: 1.7;
   color: #4a5b50;
+}
+
+.bns-prose-text {
+  white-space: pre-wrap;
 }
 
 .bns-spacer {
@@ -359,6 +386,7 @@
 @media (max-width: 900px) {
   .bns-main {
     grid-template-columns: 1fr;
+    height: calc(100vh - var(--nav-height, 0px));
   }
 
   .bns-sidebar {

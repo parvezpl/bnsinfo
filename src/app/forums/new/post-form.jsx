@@ -35,7 +35,7 @@ export default function CreatePostForm() {
         body: JSON.stringify({
           title,
           author,
-          tag,
+          tag: String(tag || "").trim().replace(/^#+/, ""),
           category,
           content,
           user: session?.user || null,
@@ -66,7 +66,6 @@ export default function CreatePostForm() {
   return (
     <section className="forums-form">
       <form className="forums-form-card" onSubmit={handleSubmit}>
-
         <label className="forums-label">
           आपका नाम
           <p style={{ paddingLeft: "30px" }}>
@@ -98,6 +97,7 @@ export default function CreatePostForm() {
           टैग
           <input
             type="text"
+            placeholder="#धारा"
             value={tag}
             onChange={(e) => setTag(e.target.value)}
           />

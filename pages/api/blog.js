@@ -19,6 +19,10 @@ export default async function handler(req, res) {
         title: blog.title,
         author: blog.author,
         excerpt: blog.excerpt,
+        content: blog.content,
+        likeCount: Array.isArray(blog?.reactions?.likes) ? blog.reactions.likes.length : 0,
+        dislikeCount: Array.isArray(blog?.reactions?.dislikes) ? blog.reactions.dislikes.length : 0,
+        commentCount: Array.isArray(blog?.comments) ? blog.comments.length : 0,
         date: blog.date,
         authorlogo: blog.authorlogo,
         image: blog.image ? `data:${blog.image.contentType};base64,${blog.image.data.toString('base64')}` : null,
@@ -55,6 +59,7 @@ export default async function handler(req, res) {
             const newBlog = await Blog.create({
                 title: fields.title.join(),
                 excerpt: fields.excerpt.join(),
+                content: fields.content.join(),
                 author: fields.author.join(),
                 authorlogo: fields.authorlogo.join(),
                 image: {
