@@ -42,6 +42,8 @@ export default function ReplyInteractions({ replyId }) {
   const [error, setError] = useState("");
   const [commentText, setCommentText] = useState("");
   const [hashState, setHashState] = useState({ open: false, start: 0, end: 0, query: "" });
+  const [editingCommentId, setEditingCommentId] = useState("");
+  const [editingCommentText, setEditingCommentText] = useState("");
   const [data, setData] = useState({
     likes: 0,
     dislikes: 0,
@@ -102,6 +104,7 @@ export default function ReplyInteractions({ replyId }) {
   }
 
   const suggestions = hashState.open ? getHashSuggestions(hashState.query) : [];
+  const editSuggestions = editingCommentId ? getHashSuggestions(parseHashQuery(editingCommentText, editingCommentText.length)?.query || "") : [];
 
   useEffect(() => {
     if (!replyId) return;
@@ -138,6 +141,10 @@ export default function ReplyInteractions({ replyId }) {
         comments: payload.comments || [],
       });
       if (action === "comment") setCommentText("");
+      if (action === "editComment") {
+        setEditingCommentId("");
+        setEditingCommentText("");
+      }
     } catch (err) {
       setError(err?.message || "Action failed.");
     } finally {
@@ -207,7 +214,7 @@ export default function ReplyInteractions({ replyId }) {
               <span>{c.userName}</span>
               <div className="reply-comment-tools">
                 <span>{formatDate(c.createdAt)}</span>
-                {isAdmin && (
+                {(isAdmin || c.canEdit) && (
                   <button
                     type="button"
                     className="forums-admin-delete"
@@ -216,11 +223,75 @@ export default function ReplyInteractions({ replyId }) {
                     Delete
                   </button>
                 )}
+                {c.canEdit && (
+                  <button
+                    type="button"
+                    className="forums-btn-ghost"
+                    onClick={() => {
+                      setEditingCommentId(c.id);
+                      setEditingCommentText(c.text || "");
+                    }}
+                  >
+                    Edit
+                  </button>
+                )}
               </div>
             </div>
-            <div className="reply-comment-text">
-              <HashText text={c.text} className="hash-text" />
-            </div>
+            {editingCommentId === c.id ? (
+              <div className="reply-comment-edit">
+                <textarea
+                  rows="2"
+                  value={editingCommentText}
+                  onChange={(e) => setEditingCommentText(e.target.value)}
+                />
+                {editSuggestions.length > 0 && (
+                  <div className="hash-suggest">
+                    {editSuggestions.map((s) => (
+                      <button
+                        key={s}
+                        type="button"
+                        className="hash-suggest-btn"
+                        onClick={() => {
+                          const parsed = parseHashQuery(editingCommentText, editingCommentText.length);
+                          if (!parsed) return;
+                          const insert = String(s || "").replace(/^#+/, "");
+                          const before = editingCommentText.slice(0, parsed.start);
+                          const after = editingCommentText.slice(parsed.end);
+                          const needsSpace = after && !after.startsWith(" ");
+                          setEditingCommentText(`${before}${insert}${needsSpace ? " " : ""}${after}`);
+                        }}
+                      >
+                        #{s}
+                      </button>
+                    ))}
+                  </div>
+                )}
+                <div className="reply-comment-edit-actions">
+                  <button
+                    type="button"
+                    className="forums-btn-primary"
+                    onClick={() => postAction("editComment", editingCommentText, c.id)}
+                    disabled={sending || !editingCommentText.trim()}
+                  >
+                    Save
+                  </button>
+                  <button
+                    type="button"
+                    className="forums-btn-ghost"
+                    onClick={() => {
+                      setEditingCommentId("");
+                      setEditingCommentText("");
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="reply-comment-text">
+                <HashText text={c.text} className="hash-text" />
+              </div>
+            )}
           </article>
         ))}
       </div>

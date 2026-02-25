@@ -60,7 +60,16 @@ export async function GET(req) {
   const query = conditions.length ? { $and: conditions } : {};
   let posts = await ForumPost.find(query).sort({ createdAt: -1 }).limit(20).lean();
   if (!posts.length && !mine && !author && !category && !tag && !q) {
-    await ForumPost.insertMany(DEFAULT_POSTS);
+    const defaultTitles = DEFAULT_POSTS.map((p) => p.title);
+    const existingDefaults = await ForumPost.find(
+      { title: { $in: defaultTitles } },
+      { title: 1 }
+    ).lean();
+    const existingTitleSet = new Set(existingDefaults.map((p) => String(p.title)));
+    const missingDefaults = DEFAULT_POSTS.filter((p) => !existingTitleSet.has(String(p.title)));
+    if (missingDefaults.length) {
+      await ForumPost.insertMany(missingDefaults);
+    }
     posts = await ForumPost.find(query).sort({ createdAt: -1 }).limit(20).lean();
   }
 

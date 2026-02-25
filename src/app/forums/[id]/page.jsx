@@ -1,9 +1,10 @@
 import "../style.css";
 import ReplyForm from "./reply-form";
 import ReplyInteractions from "./reply-interactions";
+import PostOwnerEditor from "./post-owner-editor";
+import ReplyOwnerEditor from "./reply-owner-editor";
 import PostInteractions from "../post-interactions";
 import AdminDeleteButton from "../admin-delete-button";
-import HashText from "../hash-text";
 import Link from "next/link";
 
 export async function generateMetadata({ params }) {
@@ -63,7 +64,7 @@ export default async function ThreadPage({ params }) {
         </div>
         <div className="forums-posts">
           <article className="forums-post">
-            <div className="forums-post-title">{post.title}</div>
+            <PostOwnerEditor postId={postId} initialPost={post} />
             <div className="forums-post-meta">
               <span>by {post.author}</span>
               <span>• {post.replies} replies</span>
@@ -77,12 +78,6 @@ export default async function ThreadPage({ params }) {
               <span>💬 {post.comments ?? 0}</span>
               <span>↩ {post.replies ?? 0}</span>
             </div>
-            <p style={{ marginTop: 10 }}>
-              <HashText
-                text={post.content || "कोई विवरण उपलब्ध नहीं है।"}
-                className="hash-text"
-              />
-            </p>
             <AdminDeleteButton
               endpoint={`/api/forums/posts/${postId}`}
               label="Delete Thread"
@@ -102,9 +97,7 @@ export default async function ThreadPage({ params }) {
           )}
           {replies.map((r) => (
             <article className="forums-post" key={r.id}>
-              <div className="forums-post-title">
-                <HashText text={r.content} className="hash-text" />
-              </div>
+              <ReplyOwnerEditor reply={r} />
               <div className="forums-post-meta">
                 <span>by {r.author}</span>
                 <span>• {new Date(r.time).toLocaleString()}</span>

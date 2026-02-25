@@ -18,7 +18,7 @@ async function isAdminUser(session) {
   return dbUser?.role === "admin";
 }
 
-function buildPayload(reply, userEmail = "") {
+function buildPayload(reply, userEmail = "", isAdmin = false) {
   const reactions = reply?.reactions || { likeUsers: [], dislikeUsers: [] };
   const likes = Array.isArray(reactions.likeUsers) ? reactions.likeUsers : [];
   const dislikes = Array.isArray(reactions.dislikeUsers) ? reactions.dislikeUsers : [];
@@ -43,6 +43,11 @@ function buildPayload(reply, userEmail = "") {
         id: String(c._id || i),
         userName: c.userName || "User",
         userImage: c.userImage || "",
+        userEmail: c.userEmail || "",
+        canEdit:
+          !!isAdmin ||
+          (userEmail &&
+            String(c.userEmail || "").trim().toLowerCase() === String(userEmail).trim().toLowerCase()),
         text: c.text || "",
         createdAt: c.createdAt,
       })),
@@ -58,13 +63,14 @@ export async function GET(req, { params }) {
 
   const session = await getServerSession(authOptions);
   const userEmail = String(session?.user?.email || "").trim();
+  const admin = await isAdminUser(session);
 
   const reply = await ForumReply.findById(id, { reactions: 1, comments: 1 }).lean();
   if (!reply) {
     return Response.json({ ok: false, error: "Reply not found." }, { status: 404 });
   }
 
-  return Response.json(buildPayload(reply, userEmail));
+  return Response.json(buildPayload(reply, userEmail, admin));
 }
 
 export async function POST(req, { params }) {
@@ -131,15 +137,44 @@ export async function POST(req, { params }) {
       createdAt: new Date(),
     });
   } else if (action === "deleteComment") {
-    if (!admin) {
-      return Response.json({ ok: false, error: "Forbidden" }, { status: 403 });
-    }
     if (!commentId) {
       return Response.json({ ok: false, error: "commentId is required." }, { status: 400 });
+    }
+    const target = (reply.comments || []).find((c) => String(c?._id) === commentId);
+    if (!target) {
+      return Response.json({ ok: false, error: "Comment not found." }, { status: 404 });
+    }
+    const isOwner =
+      String(target?.userEmail || "").trim().toLowerCase() === userEmail.toLowerCase();
+    if (!admin && !isOwner) {
+      return Response.json({ ok: false, error: "Forbidden" }, { status: 403 });
     }
     reply.comments = (reply.comments || []).filter(
       (c) => String(c?._id) !== commentId
     );
+  } else if (action === "editComment") {
+    if (!commentId) {
+      return Response.json({ ok: false, error: "commentId is required." }, { status: 400 });
+    }
+    if (!text) {
+      return Response.json({ ok: false, error: "Comment is required." }, { status: 400 });
+    }
+    if (text.length > 800) {
+      return Response.json(
+        { ok: false, error: "Comment must be 800 characters or less." },
+        { status: 400 }
+      );
+    }
+    const target = (reply.comments || []).find((c) => String(c?._id) === commentId);
+    if (!target) {
+      return Response.json({ ok: false, error: "Comment not found." }, { status: 404 });
+    }
+    const isOwner =
+      String(target?.userEmail || "").trim().toLowerCase() === userEmail.toLowerCase();
+    if (!admin && !isOwner) {
+      return Response.json({ ok: false, error: "Forbidden" }, { status: 403 });
+    }
+    target.text = text;
   } else {
     return Response.json({ ok: false, error: "Invalid action." }, { status: 400 });
   }
@@ -148,5 +183,5 @@ export async function POST(req, { params }) {
   reply.markModified("comments");
   await reply.save();
 
-  return Response.json(buildPayload(reply.toObject(), userEmail));
+  return Response.json(buildPayload(reply.toObject(), userEmail, admin));
 }
