@@ -58,6 +58,7 @@ export default async function handler(req, res) {
         section,
         section_content,
         example_content: example_content ?? "",
+        summarized: req.body.summarized || false,
         user: req.body.user || null,
       });
 
@@ -81,6 +82,7 @@ export default async function handler(req, res) {
       if (typeof section === "string") update.section = section;
       if (typeof section_content === "string") update.section_content = section_content;
       if (typeof example_content === "string") update.example_content = example_content;
+      if (typeof req.body.summarized === "boolean") update.summarized = req.body.summarized;
       if (typeof req.body.user === "object") update.user = req.body.user;
 
 

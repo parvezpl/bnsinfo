@@ -9,7 +9,6 @@ export default function BlogAdminForm() {
     title: '',
     excerpt: '',
     content: '',
-    author: '',
     image: null,
   });
 
@@ -39,7 +38,7 @@ export default function BlogAdminForm() {
       formData.append('title', form.title);
       formData.append('excerpt', form.excerpt);
       formData.append('content', form.content);
-      formData.append('author', form.author);
+      formData.append('author', String(session?.user?.name || '').trim());
       formData.append('image', form.image);
       const userlogo = session?.user.image;
       if (userlogo) {
@@ -55,7 +54,7 @@ export default function BlogAdminForm() {
       console.log('Form data submitted:', getback);
       if (res.ok) {
         setMsg('Blog uploaded successfully!');
-        setForm({ title: '', excerpt: '', content: '', author: '', image: null });
+        setForm({ title: '', excerpt: '', content: '', image: null });
         setImagePreview(null);
       } else {
         const error = await res.json();
@@ -108,11 +107,9 @@ export default function BlogAdminForm() {
         <label className={styles.field}>
           <span className={styles.label}>Author</span>
           <input
-            name="author"
-            placeholder="Author"
-            value={form.author}
-            onChange={handleChange}
+            value={String(session?.user?.name || '')}
             className={styles.input}
+            readOnly
           />
         </label>
         <div className={styles.uploadRow}>

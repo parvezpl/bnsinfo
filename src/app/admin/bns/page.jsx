@@ -9,9 +9,11 @@ export default function AdminBnsPage() {
     section: "",
     section_content: "",
     example_content: "",
+    summarized: false,
   });
   const [items, setItems] = useState([]);
   const [query, setQuery] = useState("");
+  const [summarizedFilter, setSummarizedFilter] = useState("all");
   const [editingId, setEditingId] = useState(null);
   const [draft, setDraft] = useState({});
   const [loading, setLoading] = useState(false);
@@ -62,9 +64,8 @@ export default function AdminBnsPage() {
         }
       });
     }
-
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    setForm((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
   };
 
   const handleSubmit = async (e) => {
@@ -98,6 +99,7 @@ export default function AdminBnsPage() {
       section: item.section || "",
       section_content: item.section_content || "",
       example_content: item.example_content || "",
+      summarized: item.summarized || false,
     });
   };
 
@@ -213,6 +215,16 @@ export default function AdminBnsPage() {
           />
         </label>
 
+        <label className={styles.summarized}>
+          <input
+            name="summarized"
+            type="checkbox"
+            checked={form.summarized}
+            onChange={handleChange}
+          />
+          <span className={styles.label}>Summarized Content (Optional)</span> 
+        </label>
+
         <button className={styles.button} disabled={loading} type="submit">
           {loading ? "Saving..." : "Save Section"}
         </button>
@@ -223,25 +235,40 @@ export default function AdminBnsPage() {
       <div className={styles.list}>
         <h2 className={styles.listTitle}>Saved Sections</h2>
         <div className={styles.searchRow}>
-          <input
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search saved sections..."
-            className={styles.search}
-          />
+          <div className={styles.searchFilters}>
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search saved sections..."
+              className={styles.search}
+            />
+            <select
+              value={summarizedFilter}
+              onChange={(e) => setSummarizedFilter(e.target.value)}
+              className={styles.searchSelect}
+            >
+              <option value="all">All</option>
+              <option value="yes">Summarized</option>
+              <option value="no">Not Summarized</option>
+            </select>
+          </div>
         </div>
         {items.length === 0 && <p className={styles.muted}>No sections yet.</p>}
         <ul className={styles.listItems}>
           {items
             .filter((item) => {
               const q = query.trim().toLowerCase();
-              if (!q) return true;
-              return (
+              const textMatch = !q || (
                 item.section?.toLowerCase().includes(q) ||
                 item.section_content?.toLowerCase().includes(q) ||
                 item.example_content?.toLowerCase().includes(q)
               );
+              const summarizedMatch =
+                summarizedFilter === "all" ||
+                (summarizedFilter === "yes" && !!item.summarized) ||
+                (summarizedFilter === "no" && !item.summarized);
+              return textMatch && summarizedMatch;
             })
             .map((item) => {
               const isEditing = editingId === item._id;
@@ -266,6 +293,15 @@ export default function AdminBnsPage() {
                         value={draft.example_content}
                         onChange={(e) => updateDraft("example_content", e.target.value)}
                       />
+                      <label className={styles.summarized}>
+                        <input
+                          name="summarized"
+                          type="checkbox"
+                          checked={draft.summarized}
+                          onChange={(e) => updateDraft("summarized", e.target.checked)}
+                        />
+                        <span className={styles.label}>Summarized Content (Optional)</span>
+                      </label>
                       <div className={styles.actions}>
                         <button
                           className={styles.actionPrimary}
@@ -279,7 +315,10 @@ export default function AdminBnsPage() {
                     </div>
                   ) : (
                     <>
-                      <div className={styles.itemHead}>{item.section}</div>
+                      <div className={styles.itemHead}>
+                        <div className={styles.itemSection}>{item.section}</div>
+                        {item.summarized && <span className={styles.summarizedLabel}>Summarized</span>}
+                      </div>
                       <div className={styles.itemBody}>{item.section_content}</div>
                       {item.example_content ?
                         <div className={styles.itemExample}>{item.example_content}</div>

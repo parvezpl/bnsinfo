@@ -1,5 +1,6 @@
 ﻿import React from "react";
 import styles from "./blog_home.module.css";
+import BlogPostActions from "./blog-post-actions";
 
 export default async function Blog_home() {
     const getdata = async () => {
@@ -100,6 +101,7 @@ export default async function Blog_home() {
                                 </a>
                                 <span className={styles.readTime}>5 min read</span>
                             </div>
+                            <BlogPostActions post={featured} />
                         </div>
                     </div>
                 </section>
@@ -146,6 +148,7 @@ export default async function Blog_home() {
                                         <span className={styles.readTime}>4-6 min read</span>
                                         <a href={`/blog/${blog._id}`} className={styles.readMore}>Read more</a>
                                     </div>
+                                    <BlogPostActions post={blog} />
                                 </div>
                             </article>
                         ))}
