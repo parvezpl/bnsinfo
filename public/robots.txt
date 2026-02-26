@@ -1,9 +1,8 @@
 User-agent: *
-Allow: /
 Disallow: /api/
-Disallow: /admin
-Disallow: /dashboard
-Disallow: /login
-Disallow: /registration
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /login/
+Disallow: /registration/
 
-Sitemap: https://bnsinfo.in/sitemap.xml
+Sitemap: https://www.bnsinfo.in/sitemap.xml
