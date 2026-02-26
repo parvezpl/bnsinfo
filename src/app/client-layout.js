@@ -49,6 +49,16 @@ export default function ClientLayout({ children }) {
         style={{ paddingTop: `${navHeight}px`, '--nav-height': `${navHeight}px` }}
       >
         {children}
+        <a
+          href="https://play.google.com/store/apps/details?id=com.bnstoipc"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="app-store-bubble"
+          aria-label="Open Android app on Google Play"
+        >
+          <img src="/bnslogo.png" alt="App logo" className="app-store-bubble-logo" />
+          <span className="app-store-bubble-text">Android App</span>
+        </a>
         <footer className="app-footer">
           <p>
             <strong>Disclaimer:</strong> This is a non-governmental site created for educational purposes, aiming to simplify Bharatiya Nyaya Sanhita 2023 for easy understanding.

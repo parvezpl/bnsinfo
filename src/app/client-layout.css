@@ -29,3 +29,46 @@
 .app-footer strong {
   color: #0f1f16;
 }
+
+.app-store-bubble {
+  position: fixed;
+  right: 14px;
+  bottom: 16px;
+  z-index: 9998;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border-radius: 999px;
+  border: 1px solid #0f5c3d;
+  background: #148152;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 9px 12px;
+  box-shadow: 0 10px 22px rgba(20, 129, 82, 0.28);
+}
+
+.app-store-bubble:hover {
+  background: #0f6a43;
+}
+
+.app-store-bubble-logo {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+@media (max-width: 640px) {
+  .app-store-bubble {
+    padding: 8px;
+    gap: 0;
+  }
+
+  .app-store-bubble-text {
+    display: none;
+  }
+}
