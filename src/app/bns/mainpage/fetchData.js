@@ -1,6 +1,8 @@
-export async function getBnsData(page) {
-  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/bns/bnshindi/bnshi?all=1`;
+import { connectDB } from "../../../../lib/db";
+import Bnshi from "../../../../lib/schema/bnshi";
 
-  const response = await fetch(url, { cache: 'no-store' });
-  return await response.json();
+export async function getBnsData() {
+  await connectDB();
+  const bns = await Bnshi.find({}, { _id: 1, sections: 1 }).lean();
+  return { bns };
 }

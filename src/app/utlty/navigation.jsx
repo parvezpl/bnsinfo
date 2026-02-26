@@ -99,12 +99,12 @@ export default function Navigation({ className }) {
           <div className="nav-links-left">
             <Link href="/" className="nav-link">Home</Link>
             <Link href="/about" className="nav-link">About</Link>
-            <Link href="/bns" className="nav-link nav-hide-sm">भारतीय न्याय संहिता 2023</Link>
-            <Link href="/bns" className="nav-link nav-show-sm">वी0एन0एस0 2023</Link>
+            <Link href="/bns" prefetch className="nav-link nav-hide-sm">भारतीय न्याय संहिता 2023</Link>
+            <Link href="/bns" prefetch className="nav-link nav-show-sm">वी0एन0एस0 2023</Link>
             <Link href="/blog" prefetch className="nav-link">Blog</Link>
             <Link href={`/forums?user=${encodeURIComponent(user?.name || '')}`} prefetch className="nav-link">Forums</Link>
             {user && user.role === 'admin' && (
-              <Link href="/admin" className="nav-link">Admin</Link>
+              <Link href="/admin" prefetch className="nav-link">Admin</Link>
             )}
           </div>
           <div className="nav-links-right">
