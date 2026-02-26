@@ -5,8 +5,9 @@ import AdSlot from "../../components/ads/AdSlot";
 
 export default async function Blog_home() {
     const blogSlot = process.env.NEXT_PUBLIC_ADSENSE_BLOG_SLOT || "";
+    const imageSrc = (id) => `/api/blog-image?id=${encodeURIComponent(String(id || ""))}`;
     const getdata = async () => {
-        const tempblogs = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/blog?includeImage=1`, {
+        const tempblogs = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/blog`, {
             next: { revalidate: 60 },
         });
         if (!tempblogs.ok) throw new Error("Failed to fetch blogs");
@@ -82,7 +83,11 @@ export default async function Blog_home() {
             {featured && (
                 <section className={styles.featured}>
                     <div className={styles.featuredCard}>
-                        <img src={featured.image || "/default-image.jpg"} alt="featured" className={styles.featuredImage} />
+                        <img
+                            src={featured?._id ? imageSrc(featured._id) : "/default-image.jpg"}
+                            alt="featured"
+                            className={styles.featuredImage}
+                        />
                         <div className={styles.featuredBody}>
                             <p className={styles.featuredLabel}>Featured</p>
                             <h2 className={styles.featuredTitle}>
@@ -139,7 +144,11 @@ export default async function Blog_home() {
                     <div className={styles.cardList}>
                         {blogs.map((blog) => (
                             <article key={blog._id} className={styles.card}>
-                                <img src={blog.image || "/default-image.jpg"} alt="thumbnail" className={styles.cardImage} />
+                                <img
+                                    src={blog?._id ? imageSrc(blog._id) : "/default-image.jpg"}
+                                    alt="thumbnail"
+                                    className={styles.cardImage}
+                                />
                                 <div className={styles.cardBody}>
                                     <h2 className={styles.cardTitle}>
                                         <a href={`/blog/${blog._id}`} className={styles.cardLink}>
@@ -213,7 +222,11 @@ export default async function Blog_home() {
                         <ul className={styles.recentList}>
                             {recent.map((item) => (
                                 <li key={item._id} className={styles.recentItem}>
-                                    <img src={item.image || "/default-image.jpg"} alt="thumb" className={styles.recentThumb} />
+                                    <img
+                                        src={item?._id ? imageSrc(item._id) : "/default-image.jpg"}
+                                        alt="thumb"
+                                        className={styles.recentThumb}
+                                    />
                                     <a href={`/blog/${item._id}`} className={styles.recentLink}>
                                         {item.title}
                                     </a>
