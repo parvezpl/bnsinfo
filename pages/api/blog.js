@@ -42,23 +42,28 @@ export default async function handler(req, res) {
         return byName || byUserId;
     };
 
-    const serializeBlog = (blog, includeContent = false) => ({
-        _id: blog._id,
+    const serializeBlog = (blog, options = {}) => {
+        const includeContent = !!options.includeContent;
+        const includeImage = !!options.includeImage;
+        return ({
+        _id: String(blog._id),
         title: blog.title,
         author: blog.author,
         excerpt: blog.excerpt,
-        content: blog.content,
+        content: includeContent ? (blog.content || "") : undefined,
         likeCount: Array.isArray(blog?.reactions?.likes) ? blog.reactions.likes.length : 0,
         dislikeCount: Array.isArray(blog?.reactions?.dislikes) ? blog.reactions.dislikes.length : 0,
         commentCount: Array.isArray(blog?.comments) ? blog.comments.length : 0,
         date: blog.date,
         authorlogo: blog.authorlogo,
-        image: blog.image ? `data:${blog.image.contentType};base64,${blog.image.data.toString('base64')}` : null,
-        ...(includeContent ? { content: blog.content || "" } : {}),
-    });
+        image: includeImage && blog.image
+            ? `data:${blog.image.contentType};base64,${blog.image.data.toString('base64')}`
+            : null,
+        });
+    };
 
     if (req.method == "GET") {
-        const { search } = req.query
+        const { search, includeImage } = req.query
 
         if (search) {
             let blog = null;
@@ -71,11 +76,15 @@ export default async function handler(req, res) {
             if (!blog) {
                 return res.status(404).json({ error: "Blog not found" });
             }
-            return res.status(200).json(serializeBlog(blog, true));
+            const wantImage = String(includeImage || "1") !== "0";
+            return res.status(200).json(
+                serializeBlog(blog, { includeContent: true, includeImage: wantImage })
+            );
         }
 
         const blogs = await Blog.find({}).sort({ createdAt: -1, _id: -1 });
-        const data = blogs.map((blog) => serializeBlog(blog));
+        const wantImage = String(includeImage || "0") === "1";
+        const data = blogs.map((blog) => serializeBlog(blog, { includeImage: wantImage }));
         return res.status(200).json(data)
     }
     if (req.method == "POST") {
@@ -134,7 +143,10 @@ export default async function handler(req, res) {
             }
 
             await blog.save();
-            return res.status(200).json({ success: true, data: serializeBlog(blog, true) });
+            return res.status(200).json({
+                success: true,
+                data: serializeBlog(blog, { includeContent: true, includeImage: true }),
+            });
         });
     }
 

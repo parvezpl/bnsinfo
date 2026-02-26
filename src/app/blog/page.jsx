@@ -1,6 +1,25 @@
 ﻿// app/blog/page.jsx (SERVER COMPONENT)
 import Blog_home from "./blog_home";
 
+export const metadata = {
+    title: "Blog",
+    description: "BNS Info blog: legal explainers, updates, and analysis in simple language.",
+    alternates: {
+        canonical: "/blog",
+    },
+    openGraph: {
+        title: "BNS Info Blog",
+        description: "Legal explainers, updates, and analysis in simple language.",
+        url: "/blog",
+        type: "website",
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "BNS Info Blog",
+        description: "Legal explainers, updates, and analysis in simple language.",
+    },
+};
+
 export default function BlogPage() {
 
     return (

@@ -1,11 +1,13 @@
 ﻿import React from "react";
 import styles from "./blog_home.module.css";
 import BlogPostActions from "./blog-post-actions";
+import AdSlot from "../../components/ads/AdSlot";
 
 export default async function Blog_home() {
+    const blogSlot = process.env.NEXT_PUBLIC_ADSENSE_BLOG_SLOT || "";
     const getdata = async () => {
-        const tempblogs = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/blog`, {
-            cache: "no-store",
+        const tempblogs = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/blog?includeImage=1`, {
+            next: { revalidate: 60 },
         });
         if (!tempblogs.ok) throw new Error("Failed to fetch blogs");
         return tempblogs.json();
@@ -107,6 +109,14 @@ export default async function Blog_home() {
                 </section>
             )}
 
+            <section className={styles.adSection}>
+                <AdSlot
+                    slot={blogSlot}
+                    className={styles.pageAd}
+                    label="Sponsored"
+                />
+            </section>
+
             <section className={styles.highlights}>
                 <div className={styles.highlightsGrid}>
                     {highlights.map((item) => (
@@ -163,6 +173,13 @@ export default async function Blog_home() {
                 </main>
 
                 <aside className={styles.sidebar}>
+                    <section className={styles.panel}>
+                        <AdSlot
+                            slot={blogSlot}
+                            className={styles.sidebarAd}
+                            label="Sponsored"
+                        />
+                    </section>
                     <section className={styles.panel}>
                         <h3 className={styles.panelTitle}>Blog Snapshot</h3>
                         <div className={styles.stats}>

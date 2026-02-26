@@ -58,6 +58,7 @@ export async function GET(_req, { params }) {
     title: post.title,
     content: post.content || "",
     author: post.author,
+    authorImage: post.authorImage || "",
     authorEmail: post.authorEmail || "",
     canEdit: canEditPostByOwner(post, session),
     likes: Array.isArray(post?.reactions?.likeUsers) ? post.reactions.likeUsers.length : 0,

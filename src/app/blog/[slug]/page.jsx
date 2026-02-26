@@ -56,6 +56,18 @@ export default async function BlogPost({ params }) {
     const looksLikeHtml = /<\/?[a-z][\s\S]*>/i.test(content);
     const wordCount = normalizedContent.trim().split(/\s+/).filter(Boolean).length;
     const readMinutes = Math.max(1, Math.ceil(wordCount / 180));
+    const schema = {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        headline: post.title,
+        description: post.excerpt || "",
+        datePublished: post.date || undefined,
+        dateModified: post.date || undefined,
+        author: post.author ? { "@type": "Person", name: post.author } : undefined,
+        image: post.image || undefined,
+        mainEntityOfPage: absoluteUrl(`/blog/${slug}`),
+        articleBody: normalizedContent.slice(0, 5000),
+    };
 
     return (
         <main className={styles.page}>
@@ -128,6 +140,10 @@ export default async function BlogPost({ params }) {
                 </section>
 
                 <BlogInteractions blogId={post._id} />
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+                />
             </article>
         </main>
     );

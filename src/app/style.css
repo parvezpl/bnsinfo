@@ -151,6 +151,25 @@
   font-size: 14px;
 }
 
+.hero-ad-wrap {
+  margin-top: 12px;
+  background: #ffffff;
+  border: 1px solid #e2eee7;
+  border-radius: 14px;
+  padding: 10px;
+  box-shadow: 0 10px 22px rgba(9, 24, 14, 0.08);
+}
+
+.hero-ad-label {
+  font-size: 11px;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+
+.hero-ad {
+  min-height: 90px;
+}
+
 .ticker {
   overflow: hidden;
   padding: 10px 0 18px;

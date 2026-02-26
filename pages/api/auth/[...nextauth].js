@@ -40,6 +40,7 @@ export const authOptions = {
         session.user.id = dbUser._id;
         session.user.role = dbUser.role;
         session.user.isPaid = dbUser.isPaid;
+        session.user.image = dbUser.image || session.user.image || "";
       } else {
         session.user.id = null;
         session.user.role = "user";

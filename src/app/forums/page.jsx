@@ -1,6 +1,7 @@
 import "./style.css";
 import AdminDeleteButton from "./admin-delete-button";
 import PostInteractions from "./post-interactions";
+import AdSlot from "../../components/ads/AdSlot";
 
 export const metadata = {
   title: "Forums • BNS Info",
@@ -21,6 +22,7 @@ export const metadata = {
 };
 
 export default async function ForumsPage({ searchParams }) {
+  const forumsSlot = process.env.NEXT_PUBLIC_ADSENSE_FORUMS_SLOT || "";
   const params = await searchParams;
   const user = (params?.user || "").toString();
   const q = (params?.q || "").toString().trim();
@@ -37,8 +39,8 @@ export default async function ForumsPage({ searchParams }) {
   const postsUrl = `${apiBase}/api/forums/posts${qs.toString() ? `?${qs.toString()}` : ""}`;
 
   const [catRes, postRes] = await Promise.all([
-    fetch(`${apiBase}/api/forums/categories`, { cache: "no-store" }),
-    fetch(postsUrl, { cache: "no-store" }),
+    fetch(`${apiBase}/api/forums/categories`, { next: { revalidate: 30 } }),
+    fetch(postsUrl, { next: { revalidate: 30 } }),
   ]);
   const catsJson = await catRes.json();
   const postsJson = await postRes.json();
@@ -118,6 +120,14 @@ export default async function ForumsPage({ searchParams }) {
           <a className="forums-btn-ghost" href="/forums">Reset</a>
         </form>
       </section>
+      <section className="forums-ad-section">
+        <AdSlot
+          slot={forumsSlot}
+          className="forums-ad-box"
+          label="Sponsored"
+          format="autorelaxed"
+        />
+      </section>
       {popularTags.length > 0 && (
         <section className="forums-tags">
           <div className="forums-tags-head"># Tags</div>
@@ -149,8 +159,20 @@ export default async function ForumsPage({ searchParams }) {
             <article className="forums-post" key={p.id || p.title}>
               <div className="forums-post-tag">{p.tag}</div>
               <a className="forums-post-title" href={`/forums/${p.id}`}>{p.title}</a>
+              {p.content ? (
+                <div className="forums-post-content-preview">{p.content}</div>
+              ) : null}
               <div className="forums-post-meta">
-                <span>by {p.author}</span>
+                <span className="forums-post-author">
+                  {p.authorImage ? (
+                    <img
+                      src={p.authorImage}
+                      alt={p.author || "User"}
+                      className="forums-post-avatar"
+                    />
+                  ) : null}
+                  by {p.author}
+                </span>
                 <span>• {p.replies} replies</span>
                 <span>• {p.time}</span>
               </div>

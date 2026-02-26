@@ -216,6 +216,22 @@
     padding: 0 24px;
 }
 
+.adSection {
+    max-width: 1120px;
+    margin: 16px auto 0;
+    padding: 0 24px;
+}
+
+.pageAd {
+    border: 1px solid #e6d9c5;
+    background: #ffffff;
+    padding: 10px 12px;
+}
+
+.sidebarAd {
+    min-height: 100px;
+}
+
 .highlightsGrid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));

@@ -1,8 +1,37 @@
 'use client'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import './style.css'
 import Notification from '../components/notification/notification'
 import Search_comp from './bns/ai_search/search_comp'
+
+function GlanceAdSlot() {
+  const pushedRef = useRef(false)
+  const adSlot = process.env.NEXT_PUBLIC_ADSENSE_HOME_SLOT || '0000000000'
+
+  useEffect(() => {
+    if (pushedRef.current) return
+    try {
+      if (typeof window !== 'undefined') {
+        ;(window.adsbygoogle = window.adsbygoogle || []).push({})
+        pushedRef.current = true
+      }
+    } catch {}
+  }, [])
+
+  return (
+    <div className="hero-ad-wrap">
+      <div className="hero-ad-label">Sponsored</div>
+      <ins
+        className="adsbygoogle hero-ad"
+        style={{ display: 'block' }}
+        data-ad-client="ca-pub-7440927056234503"
+        data-ad-slot={adSlot}
+        data-ad-format="auto"
+        data-full-width-responsive="true"
+      />
+    </div>
+  )
+}
 
 export default function Mainpage() {
   const faqs = useMemo(
@@ -73,6 +102,7 @@ export default function Mainpage() {
                 यह पोर्टल नागरिकों, छात्रों और शिक्षकों के लिए बनाया गया है।
               </div>
             </div>
+            <GlanceAdSlot />
           </div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { connectDB } from "../../../../../lib/db";
 import ForumPost from "../../../../../lib/models/ForumPost";
 import ForumReply from "../../../../../lib/models/ForumReply";
+import User from "../../../../../lib/schema/user";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../../../../pages/api/auth/[...nextauth]";
 
@@ -74,6 +75,18 @@ export async function GET(req) {
   }
 
   const postIds = posts.map((p) => p._id);
+  const authorEmails = Array.from(new Set(posts.map((p) => String(p?.authorEmail || "").trim()).filter(Boolean)));
+  let userImageByEmail = new Map();
+  if (authorEmails.length) {
+    const users = await User.find(
+      { email: { $in: authorEmails } },
+      { email: 1, image: 1 }
+    ).lean();
+    userImageByEmail = new Map(
+      users.map((u) => [String(u.email || "").toLowerCase(), String(u.image || "")])
+    );
+  }
+
   const statsByPost = new Map();
   if (postIds.length) {
     const replyStats = await ForumReply.aggregate([
@@ -110,7 +123,12 @@ export async function GET(req) {
     posts: posts.map((p) => ({
       id: p._id.toString(),
       title: p.title,
+      content: p.content || "",
       author: p.author,
+      authorImage:
+        p.authorImage ||
+        userImageByEmail.get(String(p?.authorEmail || "").toLowerCase()) ||
+        "",
       likes: Array.isArray(p?.reactions?.likeUsers) ? p.reactions.likeUsers.length : 0,
       dislikes: Array.isArray(p?.reactions?.dislikeUsers) ? p.reactions.dislikeUsers.length : 0,
       replies: statsByPost.get(String(p._id))?.repliesCount ?? (p.replies ?? 0),
@@ -132,6 +150,11 @@ export async function POST(req) {
   const { title, author, tag, category, time, content } = body || {};
   const sessionEmail = String(session?.user?.email || "").trim();
   const sessionAuthor = String(session?.user?.name || "").trim();
+  let sessionAuthorImage = String(session?.user?.image || "").trim();
+  if (!sessionAuthorImage && sessionEmail) {
+    const dbUser = await User.findOne({ email: sessionEmail }, { image: 1 }).lean();
+    sessionAuthorImage = String(dbUser?.image || "").trim();
+  }
   const finalAuthor = sessionAuthor || String(author || "").trim();
 
   if (!title || !finalAuthor || !tag || !category) {
@@ -145,6 +168,7 @@ export async function POST(req) {
     title,
     author: finalAuthor,
     authorEmail: sessionEmail,
+    authorImage: sessionAuthorImage,
     tag,
     category,
     time: time || "",
@@ -156,6 +180,7 @@ export async function POST(req) {
     title: post.title,
     content: post.content || "",
     author: post.author,
+    authorImage: post.authorImage || "",
     replies: post.replies ?? 0,
     time: post.time || "अभी",
     tag: post.tag,
