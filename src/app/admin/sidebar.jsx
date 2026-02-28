@@ -14,6 +14,7 @@ export default function Sidebar() {
         <Link href="/admin/users" className={styles.link}>Manage Users</Link>
         <Link href="/admin/bns" className={styles.link}>Add BNS</Link>
         <Link href="/admin/qdrant" className={styles.link}>Qdrant Sync</Link>
+        <Link href="/admin/bnstoipc" className={styles.link}>BnsToIpc Logs</Link>
       </nav>
     </aside>
   );
